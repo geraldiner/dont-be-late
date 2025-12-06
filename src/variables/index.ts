@@ -3,3 +3,7 @@ export const SCENE_KEYS = {
   TITLE: "TITLE",
   GAME: "GAME",
 } as const;
+
+export const ASSET_KEYS = {
+  ALARM: "ALARM",
+} as const;
