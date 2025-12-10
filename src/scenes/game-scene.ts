@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 
 import { ASSET_KEYS, SCENE_KEYS } from "../variables";
 
-const DEBUG: boolean = false;
+const DEBUG: boolean = true;
 const DEFAULT_PADDING: number = 10;
 
 const PANEL_SCALE: number = 1.15;
@@ -18,7 +18,7 @@ const BUTTON_HEIGHT: number = 25;
 
 const TILE_BAR_Y_POSITION: number = 480;
 const TILE_BAR_HEIGHT: number = 120;
-const TILE_SIZE: number = 56;
+const TILE_SIZE: number = 80;
 
 const TILE_LAYOUT_MAP: {
   [key: number]: { x: number; y: number; width: number; height: number }[];
@@ -52,8 +52,29 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.createLayout(2);
+    this.createLayout(1);
     this.createTileBar();
+    this.createDragEvents();
+  }
+
+  private createTile(
+    x: number,
+    y: number,
+    imageKey: string,
+    frameNumber: number = 0,
+    scale: number = 1,
+    draggable: boolean = true,
+  ): Phaser.GameObjects.Image {
+    return this.add
+      .image(x, y, imageKey, frameNumber)
+      .setOrigin(0.5)
+      .setScale(scale)
+      .setInteractive({ useHandCursor: true, draggable: draggable })
+      .setData({
+        x,
+        y,
+        imageKey,
+      });
   }
 
   private createLayout(panelAmount: number, isPrelude: boolean = false): void {
@@ -72,18 +93,18 @@ export class GameScene extends Phaser.Scene {
         .setScale(isPrelude ? PANEL_SCALE : 1)
         .setStrokeStyle(2, 0x000000);
       panelContainer.add(panelObject);
-      // just to check the scale/fit of the image
-      if (i == 1) {
-        const preludeImage = this.add
-          .image(
-            PANEL_WIDTH / 2,
-            PANEL_HEIGHT / 2,
-            ASSET_KEYS.CHAPTER_1_PRELUDE,
-          )
-          .setOrigin(0.5)
-          .setScale(0.499);
-        panelContainer.add(preludeImage);
-      }
+      // // just to check the scale/fit of the image
+      // if (i == 1) {
+      //   const preludeImage = this.add
+      //     .image(
+      //       PANEL_WIDTH / 2,
+      //       PANEL_HEIGHT / 2,
+      //       ASSET_KEYS.CHAPTER_1_PRELUDE,
+      //     )
+      //     .setOrigin(0.5)
+      //     .setScale(0.499);
+      //   panelContainer.add(preludeImage);
+      // }
 
       if (i === panelAmount && !isPrelude) {
         this.createTilePlaces(panelContainer, 5);
@@ -118,19 +139,6 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  private createTile(
-    x: number,
-    y: number,
-    imageKey: string,
-    frameNumber: number = 0,
-    scale: number = 1,
-  ): Phaser.GameObjects.Image {
-    return this.add
-      .image(x, y, imageKey, frameNumber)
-      .setOrigin(0)
-      .setScale(scale);
-  }
-
   private createTilePlaces(
     panelContainer: Phaser.GameObjects.Container,
     tileAmount: number,
@@ -153,13 +161,29 @@ export class GameScene extends Phaser.Scene {
         .setOrigin(0)
         .setStrokeStyle(1, 0x000000);
       tileContainer.add(tilePlace);
-      const tileObj = this.createTile(
-        tile.x + tile.width / 2 - TILE_SIZE / 2,
-        tile.y + tile.height / 2 - TILE_SIZE / 2,
-        ASSET_KEYS.ALARM,
-      ).setVisible(false);
-      this.placedTiles.push(tileObj);
-      tileContainer.add(tileObj);
+      const tileZone = this.add
+        .zone(tile.x, tile.y, tile.width, tile.height)
+        .setRectangleDropZone(tile.width, tile.height)
+        .setOrigin(0)
+        .setData({
+          tilePlace,
+          tileContainer,
+          occupiedBy: null,
+        });
+      if (DEBUG) {
+        const debugZone = this.add
+          .rectangle(
+            tileZone.x,
+            tileZone.y,
+            tileZone.width,
+            tileZone.height,
+            0x00ff00,
+            0.3,
+          )
+          .setOrigin(0);
+        tileContainer.add(debugZone);
+      }
+      tileContainer.add(tileZone);
     });
   }
 
@@ -167,28 +191,146 @@ export class GameScene extends Phaser.Scene {
     this.availableTiles = [];
     const tileBarContainer = this.add.container(0, TILE_BAR_Y_POSITION, []);
     const tileBarBackground = this.add
-      .rectangle(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT, 0xffffff)
+      .rectangle(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT)
       .setOrigin(0)
-      .setStrokeStyle(1, 0x000000);
+      .setStrokeStyle(2, 0x000000);
     tileBarContainer.add(tileBarBackground);
+    const tileBarZone = this.add
+      .zone(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT)
+      .setOrigin(0)
+      .setRectangleDropZone(this.game.canvas.width, TILE_BAR_HEIGHT);
+    tileBarContainer.add(tileBarZone);
+    if (DEBUG) {
+      const tileBarDebugBg = this.add
+        .rectangle(
+          tileBarZone.x,
+          tileBarZone.y,
+          tileBarZone.width,
+          tileBarZone.height,
+          0x00ff00,
+          0.3,
+        )
+        .setOrigin(0);
+      tileBarContainer.add(tileBarDebugBg);
+    }
 
     const tilesListContainer = this.add.container(
-      tileBarBackground.width / 2,
-      tileBarBackground.height / 2 - TILE_SIZE / 2 - DEFAULT_PADDING / 2,
+      tileBarBackground.width / 2 - (TILE_SIZE * AVAILABLE_TILES.length) / 2,
+      TILE_SIZE / 2,
       [],
     );
     tileBarContainer.add(tilesListContainer);
 
     for (let i = 0; i < AVAILABLE_TILES.length; i++) {
       const tileObj = this.createTile(
-        (TILE_SIZE + DEFAULT_PADDING * 3) * i -
-          (AVAILABLE_TILES.length * (TILE_SIZE + DEFAULT_PADDING * 3)) / 2 +
-          DEFAULT_PADDING / 2,
-        0,
+        i * (TILE_SIZE + DEFAULT_PADDING * 2),
+        DEFAULT_PADDING * 2,
         AVAILABLE_TILES[i],
-      );
+      )
+        .setOrigin(0.5)
+        .setData({ from: "tileBar" });
+      if (DEBUG) {
+        const tileDebugBg = this.add
+          .rectangle(tileObj.x, tileObj.y, TILE_SIZE, TILE_SIZE, 0x0000ff, 0.3)
+          .setOrigin(0.5);
+        tilesListContainer.add(tileDebugBg);
+      }
       this.availableTiles.push(tileObj);
       tilesListContainer.add(tileObj);
     }
+  }
+
+  private createDragEvents(): void {
+    this.createDragEventStartEventListener();
+    this.createDragEventListener();
+    this.createDragEndEventListener();
+    this.createDropEventListener();
+  }
+
+  private createDragEventStartEventListener(): void {
+    this.input.on(
+      Phaser.Input.Events.DRAG_START,
+      (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image) => {
+        gameObject.setAlpha(0.7);
+        gameObject.setDepth(2);
+      },
+    );
+  }
+
+  private createDragEventListener(): void {
+    this.input.on(
+      Phaser.Input.Events.DRAG,
+      (
+        pointer: Phaser.Input.Pointer,
+        gameObject: Phaser.GameObjects.Image,
+        dragX: number,
+        dragY: number,
+      ) => {
+        gameObject.setPosition(dragX, dragY);
+        gameObject.setDepth(2);
+      },
+    );
+  }
+
+  private createDragEndEventListener(): void {
+    this.input.on(
+      Phaser.Input.Events.DRAG_END,
+      (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image) => {
+        gameObject.setAlpha(1);
+        const originalX = gameObject.getData("x") as number;
+        const originalY = gameObject.getData("y") as number;
+        if (gameObject.getData("from") === "tileBar") {
+          gameObject.setPosition(originalX, originalY);
+        } else {
+          gameObject.destroy();
+        }
+      },
+    );
+  }
+
+  private createDropEventListener(): void {
+    this.input.on(
+      Phaser.Input.Events.DROP,
+      (
+        pointer: Phaser.Input.Pointer,
+        gameObject: Phaser.GameObjects.Image,
+        dropZone: Phaser.GameObjects.Zone,
+      ) => {
+        const tilePlace = dropZone.getData("tilePlace") as
+          | Phaser.GameObjects.Rectangle
+          | undefined;
+        if (tilePlace) {
+          this.handleTileDropOnZone(gameObject, dropZone);
+        }
+      },
+    );
+  }
+
+  private handleTileDropOnZone(
+    tile: Phaser.GameObjects.Image,
+    dropZone: Phaser.GameObjects.Zone,
+  ): void {
+    const imageKey = tile.getData("imageKey") as string;
+    const tilePlace = dropZone.getData(
+      "tilePlace",
+    ) as Phaser.GameObjects.Rectangle;
+    const tileContainer = dropZone.getData(
+      "tileContainer",
+    ) as Phaser.GameObjects.Container;
+    const tileObj = this.createTile(
+      tilePlace.x + tilePlace.width / 2,
+      tilePlace.y + tilePlace.height / 2,
+      imageKey,
+    ).setData({ from: "panel" });
+    // If tile place is already occupied, remove the previous tile
+    const occupiedBy = dropZone.getData(
+      "occupiedBy",
+    ) as Phaser.GameObjects.Image | null;
+    if (occupiedBy) {
+      occupiedBy.destroy();
+    }
+    dropZone.setData("occupiedBy", tileObj);
+    this.placedTiles.push(tileObj);
+    tileContainer.add(tileObj);
   }
 }
