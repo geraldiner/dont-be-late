@@ -16,9 +16,9 @@ const TITLE_Y_POSITION: number = 10;
 const BUTTON_WIDTH: number = 90;
 const BUTTON_HEIGHT: number = 25;
 
-const TILE_BAR_Y_POSITION: number = 460;
-const TILE_BAR_HEIGHT: number = 140;
-const TILE_SIZE: number = 80;
+const TILE_BAR_Y_POSITION: number = 480;
+const TILE_BAR_HEIGHT: number = 120;
+const TILE_SIZE: number = 56;
 
 const TILE_LAYOUT_MAP: {
   [key: number]: { x: number; y: number; width: number; height: number }[];
@@ -34,10 +34,10 @@ const TILE_LAYOUT_MAP: {
 
 const AVAILABLE_TILES = [
   ASSET_KEYS.ALARM,
-  ASSET_KEYS.ALARM,
-  ASSET_KEYS.ALARM,
-  ASSET_KEYS.ALARM,
-  ASSET_KEYS.ALARM,
+  ASSET_KEYS.BACKPACK,
+  ASSET_KEYS.SCROLL,
+  ASSET_KEYS.TOOTHBRUSH,
+  ASSET_KEYS.TRAIN,
 ];
 
 const CHAPTER_TITLE = "1-1: Seito has an 8am class";
@@ -52,7 +52,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.createLayout(1);
+    this.createLayout(2);
     this.createTileBar();
   }
 
@@ -63,7 +63,7 @@ export class GameScene extends Phaser.Scene {
         this.game.canvas.width / 2 -
           (PANEL_WIDTH * panelAmount) / 2 +
           PANEL_WIDTH * (i - 1),
-        DEFAULT_PADDING,
+        DEFAULT_PADDING * 2.5,
         [],
       );
       const panelObject = this.add
@@ -72,16 +72,28 @@ export class GameScene extends Phaser.Scene {
         .setScale(isPrelude ? PANEL_SCALE : 1)
         .setStrokeStyle(2, 0x000000);
       panelContainer.add(panelObject);
-      this.createTilePlaces(panelContainer, 5);
-      const titleObject = this.add
-        .text(TITLE_X_POSITION, TITLE_Y_POSITION, CHAPTER_TITLE, {
-          fontSize: "14px",
-          color: "#000000",
-        })
-        .setOrigin(0);
-      panelContainer.add(titleObject);
+      // just to check the scale/fit of the image
+      if (i == 1) {
+        const preludeImage = this.add
+          .image(
+            PANEL_WIDTH / 2,
+            PANEL_HEIGHT / 2,
+            ASSET_KEYS.CHAPTER_1_PRELUDE,
+          )
+          .setOrigin(0.5)
+          .setScale(0.499);
+        panelContainer.add(preludeImage);
+      }
+
       if (i === panelAmount && !isPrelude) {
-        console.log("Hello");
+        this.createTilePlaces(panelContainer, 5);
+        const titleObject = this.add
+          .text(TITLE_X_POSITION, TITLE_Y_POSITION, CHAPTER_TITLE, {
+            fontSize: "14px",
+            color: "#000000",
+          })
+          .setOrigin(0);
+        panelContainer.add(titleObject);
         const nextButtonContainer = this.add.container(
           panelObject.width - BUTTON_WIDTH - DEFAULT_PADDING * 2,
           panelObject.height - BUTTON_HEIGHT - DEFAULT_PADDING * 2,
@@ -155,34 +167,24 @@ export class GameScene extends Phaser.Scene {
     this.availableTiles = [];
     const tileBarContainer = this.add.container(0, TILE_BAR_Y_POSITION, []);
     const tileBarBackground = this.add
-      .rectangle(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT, 0xdddddd)
-      .setOrigin(0);
+      .rectangle(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT, 0xffffff)
+      .setOrigin(0)
+      .setStrokeStyle(1, 0x000000);
     tileBarContainer.add(tileBarBackground);
 
     const tilesListContainer = this.add.container(
       tileBarBackground.width / 2,
-      tileBarBackground.height / 2 - TILE_SIZE / 2,
+      tileBarBackground.height / 2 - TILE_SIZE / 2 - DEFAULT_PADDING / 2,
       [],
     );
     tileBarContainer.add(tilesListContainer);
 
     for (let i = 0; i < AVAILABLE_TILES.length; i++) {
-      const tilePlace = this.add
-        .rectangle(
-          (TILE_SIZE + DEFAULT_PADDING * 2.5) * i -
-            (AVAILABLE_TILES.length * (TILE_SIZE + DEFAULT_PADDING * 2.5)) / 2 +
-            DEFAULT_PADDING / 2,
-          0,
-          TILE_SIZE,
-          TILE_SIZE,
-          0xffffff,
-        )
-        .setOrigin(0)
-        .setRounded(4);
-      tilesListContainer.add(tilePlace);
       const tileObj = this.createTile(
-        tilePlace.x,
-        tilePlace.y,
+        (TILE_SIZE + DEFAULT_PADDING * 3) * i -
+          (AVAILABLE_TILES.length * (TILE_SIZE + DEFAULT_PADDING * 3)) / 2 +
+          DEFAULT_PADDING / 2,
+        0,
         AVAILABLE_TILES[i],
       );
       this.availableTiles.push(tileObj);

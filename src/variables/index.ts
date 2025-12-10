@@ -6,4 +6,9 @@ export const SCENE_KEYS = {
 
 export const ASSET_KEYS = {
   ALARM: "ALARM",
+  SCROLL: "SCROLL",
+  TOOTHBRUSH: "TOOTHBRUSH",
+  BACKPACK: "BACKPACK",
+  TRAIN: "TRAIN",
+  CHAPTER_1_PRELUDE: "CHAPTER_1_PRELUDE",
 } as const;
