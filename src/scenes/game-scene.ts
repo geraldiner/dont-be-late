@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 
+import { PreludeScreen } from "../game-screens/prelude";
 import { ASSET_KEYS, SCENE_KEYS } from "../variables";
 
 const DEBUG: boolean = true;
@@ -52,6 +53,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
+    new PreludeScreen(this, 0, 0, 1, 1);
+    this.time.delayedCall(2000, () => {
+      this.cameras.main.fadeIn(500);
+    });
     this.createLayout(1);
     this.createTileBar();
     this.createDragEvents();
