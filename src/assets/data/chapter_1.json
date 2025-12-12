@@ -1,0 +1,35 @@
+{
+  "title": "School",
+  "levels": [
+    {
+      "title": "Seito has an 8am class",
+      "sceneStartText": [
+        "The alarm goes off at 6am",
+        "Seito must catch the 7am train"
+      ],
+      "availableTiles": ["ALARM", "BACKPACK", "SCROLL", "TOOTHBRUSH", "TRAIN"],
+      "panelAmount": 1,
+      "tileLayoutKey": "5"
+    },
+    {
+      "title": "Toto needs to get the kids to school",
+      "sceneStartText": [
+        "I should have coffee before the kids wake up",
+        "We really need to beat the traffic"
+      ],
+      "availableTiles": ["SCROLL"],
+      "panelAmount": 1,
+      "tileLayoutKey": "8"
+    },
+    {
+      "title": "Mr. Sensei is starting a new unit today",
+      "sceneStartText": [
+        "I can't be late for the conference this morning",
+        "I also have a lot to set up before the first bell"
+      ],
+      "availableTiles": ["SCROLL"],
+      "panelAmount": 1,
+      "tileLayoutKey": "8"
+    }
+  ]
+}

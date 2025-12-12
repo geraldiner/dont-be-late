@@ -1,0 +1,56 @@
+import { SIZING } from "../../variables";
+
+export abstract class Button extends Phaser.GameObjects.Container {
+  private _text: Phaser.GameObjects.Text;
+  private _bg: Phaser.GameObjects.Image;
+  public isDisabled: boolean = false;
+
+  abstract onClick(): void;
+
+  constructor(scene: Phaser.Scene, x: number, y: number, text: string) {
+    super(scene, x, y);
+    scene.add.existing(this);
+
+    this._bg = scene.add.image(0, 0, "button").setOrigin(0.5);
+
+    this._text = scene.add
+      .text(0, 0, text, {
+        fontSize: 12,
+        color: "#000000",
+        align: "center",
+      })
+      .setOrigin(0.5);
+
+    this.add([this._bg, this._text]);
+
+    this.setSize(
+      SIZING.BUTTON_WIDTH + SIZING.PADDING,
+      SIZING.BUTTON_HEIGHT + SIZING.PADDING,
+    );
+
+    this.setInteractive({ useHandCursor: true });
+
+    this.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      if (!this.isDisabled) {
+        this.onClick();
+      }
+    });
+
+    this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.destroy();
+    });
+
+    this.once(Phaser.GameObjects.Events.DESTROY, () => {
+      this.removeAllListeners();
+    });
+  }
+
+  public setDisabled(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+    this._bg.setTexture(isDisabled ? "button-disabled" : "button");
+  }
+
+  public setText(text: string): void {
+    this._text.setText(text);
+  }
+}

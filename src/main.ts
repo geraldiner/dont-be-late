@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 
+import { GameCompleteScene } from "./scenes/game-complete-scene";
 import { GameScene } from "./scenes/game-scene";
 import { PreloadScene } from "./scenes/preload-scene";
 import { TitleScene } from "./scenes/title-scene";
@@ -15,7 +16,7 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [PreloadScene, TitleScene, GameScene],
+  scene: [PreloadScene, TitleScene, GameScene, GameCompleteScene],
 };
 
 export default new Phaser.Game(config);
