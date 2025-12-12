@@ -1,6 +1,6 @@
 import { GameManager } from "../manager/game-manager";
 import { NextButton, ResetButton } from "../ui/buttons";
-import { SIZING } from "../variables";
+import { FONT_KEYS, SIZING } from "../variables";
 
 export class OutcomeScreen extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number, outcome: string) {
@@ -17,6 +17,7 @@ export class OutcomeScreen extends Phaser.GameObjects.Container {
 
     const text = scene.add
       .text(0, 0, `${outcome}`, {
+        fontFamily: FONT_KEYS.REGULAR,
         fontSize: "48px",
         color: "#000000",
         align: "center",

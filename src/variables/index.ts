@@ -1,3 +1,4 @@
+// SCENE KEYS
 export const SCENE_KEYS = {
   PRELOAD: "PRELOAD",
   TITLE: "TITLE",
@@ -5,6 +6,12 @@ export const SCENE_KEYS = {
   GAME_COMPLETE: "GAME_COMPLETE",
 } as const;
 
+// FONT KEYS
+export const FONT_KEYS = {
+  REGULAR: "REGULAR",
+} as const;
+
+// ASSET_KEYS
 export const ASSET_KEYS = {
   ALARM: "ALARM",
   SCROLL: "SCROLL",
@@ -14,6 +21,7 @@ export const ASSET_KEYS = {
   CHAPTER_1_PRELUDE: "CHAPTER_1_PRELUDE",
 } as const;
 
+// SIZING CONSTANTS
 export const SIZING = {
   PADDING: 10,
   PANEL_WIDTH: 342,

@@ -1,22 +1,18 @@
 import * as Phaser from "phaser";
 
 import { DataManager } from "../manager/data-manager";
-import { SIZING } from "../variables";
+import { GameManager } from "../manager/game-manager";
+import { FONT_KEYS, SIZING } from "../variables";
 
 export class PreludeScreen extends Phaser.GameObjects.Container {
-  constructor(
-    scene: Phaser.Scene,
-    x: number,
-    y: number,
-    chapter: number,
-    level: number,
-  ) {
+  constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
     scene.cameras.main.fadeIn(500, 255, 255, 255);
     scene.add.existing(this);
     this.setDepth(1200);
 
     const dm = DataManager.getInstance();
+    const gm = GameManager.getInstance();
 
     const [width, height] = [scene.game.canvas.width, scene.game.canvas.height];
 
@@ -24,33 +20,44 @@ export class PreludeScreen extends Phaser.GameObjects.Container {
       .rectangle(0, 0, width, height, 0xffffff)
       .setOrigin(0.5);
 
-    const chapterData = dm.getChapterData(chapter);
-    const levelData = chapterData.levels[level - 1];
+    const chapterData = dm.getChapterData(gm.chapter);
+    const levelData = chapterData.levels[gm.level - 1];
+
+    const title = scene.add
+      .text(0, -60, "Don't Be Late for...", {
+        fontSize: "32px",
+        color: "#000000",
+        align: "center",
+        fontFamily: FONT_KEYS.REGULAR,
+      })
+      .setOrigin(0.5);
 
     const text = scene.add
-      .text(0, 0, `${chapterData.title} ${chapter}-${level}`, {
+      .text(0, 0, `${chapterData.title} ${gm.chapter}-${gm.level}`, {
         fontSize: "48px",
         color: "#000000",
         align: "center",
+        fontFamily: FONT_KEYS.REGULAR,
       })
       .setOrigin(0.5);
 
     const subTexts = levelData.sceneStartText.map(
       (line: string, index: number) => {
         return scene.add
-          .text(0, 50 + index * SIZING.PADDING * 4, line, {
+          .text(0, 60 + index * SIZING.PADDING * 4, line, {
             fontSize: "24px",
             color: "#000000",
             align: "center",
+            fontFamily: FONT_KEYS.REGULAR,
           })
           .setOrigin(0.5);
       },
     );
 
-    this.add([bg, text, ...subTexts]);
+    this.add([bg, title, text, ...subTexts]);
     this.setPosition(width / 2, height / 2);
 
-    const [centerX, centerY] = [
+    const [centerX, _] = [
       scene.game.canvas.width / 2,
       scene.game.canvas.height / 2,
     ];

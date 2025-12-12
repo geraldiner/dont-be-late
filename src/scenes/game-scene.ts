@@ -4,7 +4,7 @@ import { PreludeScreen } from "../game-screens/prelude";
 import { GameManager } from "../manager/game-manager";
 import { LetsGoButton } from "../ui/buttons";
 import type { Button } from "../ui/buttons/button";
-import { SCENE_KEYS, SIZING } from "../variables";
+import { FONT_KEYS, SCENE_KEYS, SIZING } from "../variables";
 
 const DEBUG: boolean = true;
 
@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
     const gm = GameManager.getInstance();
     // DEBUG: Comment out to skip prelude screen
-    // new PreludeScreen(this, 0, 0, gm.chapter, gm.level);
+    new PreludeScreen(this, 0, 0);
     gm.setupLevel();
     this.createLayout(gm);
     this.createTileBar(gm);
@@ -69,6 +69,7 @@ export class GameScene extends Phaser.Scene {
         this.createTilePlaces(panelContainer, gm.tileLayout);
         const titleObject = this.add
           .text(SIZING.PADDING * 2, SIZING.PADDING, gm.getTitle(), {
+            fontFamily: FONT_KEYS.REGULAR,
             fontSize: "14px",
             color: "#000000",
           })

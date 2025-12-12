@@ -1,12 +1,13 @@
 import * as Phaser from "phaser";
 
+import VigaFont from "../assets/fonts/Viga-Regular.ttf";
 import alarm from "../assets/images/1-1/alarm.png";
 import backpack from "../assets/images/1-1/backpack.png";
 import chapter1Prelude from "../assets/images/1-1/prelude.jpg";
 import scroll from "../assets/images/1-1/scroll.png";
 import toothbrush from "../assets/images/1-1/toothbrush.png";
 import train from "../assets/images/1-1/train.png";
-import { ASSET_KEYS, SCENE_KEYS, SIZING } from "../variables";
+import { ASSET_KEYS, FONT_KEYS, SCENE_KEYS, SIZING } from "../variables";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -14,6 +15,10 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   public preload(): void {
+    // Load fonts
+    this.load.font(FONT_KEYS.REGULAR, VigaFont);
+
+    // Chapter 1 assets
     this.load.image(ASSET_KEYS.ALARM, alarm);
     this.load.image(ASSET_KEYS.SCROLL, scroll);
     this.load.image(ASSET_KEYS.TOOTHBRUSH, toothbrush);
@@ -21,6 +26,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(ASSET_KEYS.TRAIN, train);
     this.load.image(ASSET_KEYS.CHAPTER_1_PRELUDE, chapter1Prelude);
 
+    // Generate button textures
     const graphics = new Phaser.GameObjects.Graphics(this);
     this._drawRoundedRectangle(
       graphics,
