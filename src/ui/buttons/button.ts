@@ -1,4 +1,4 @@
-import { FONT_KEYS, SIZING } from "../../variables";
+import { FONT_KEYS, SIZING, TEXTURE_KEYS } from "../../variables";
 
 export abstract class Button extends Phaser.GameObjects.Container {
   private _text: Phaser.GameObjects.Text;
@@ -11,7 +11,7 @@ export abstract class Button extends Phaser.GameObjects.Container {
     super(scene, x, y);
     scene.add.existing(this);
 
-    this._bg = scene.add.image(0, 0, "button").setOrigin(0.5);
+    this._bg = scene.add.image(0, 0, TEXTURE_KEYS.BUTTON).setOrigin(0.5);
 
     this._text = scene.add
       .text(0, 0, text, {
@@ -48,7 +48,9 @@ export abstract class Button extends Phaser.GameObjects.Container {
 
   public setDisabled(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
-    this._bg.setTexture(isDisabled ? "button-disabled" : "button");
+    this._bg.setTexture(
+      isDisabled ? TEXTURE_KEYS.BUTTON_DISABLED : TEXTURE_KEYS.BUTTON,
+    );
   }
 
   public setText(text: string): void {

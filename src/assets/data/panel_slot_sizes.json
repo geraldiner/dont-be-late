@@ -1,0 +1,6 @@
+{
+  "SQUARE": { "width": 94, "height": 98 },
+  "TWO_THIRDS_RECTANGLE": { "width": 198, "height": 98 },
+  "HALF_RECTANGLE": { "width": 146, "height": 98 },
+  "FULL_RECTANGLE": { "width": 302, "height": 98 }
+}

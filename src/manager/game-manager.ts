@@ -18,19 +18,17 @@ export class GameManager {
     return this._panelAmount;
   }
 
-  private _tileLayout: Array<{
+  private _panelLayout: Array<{
     x: number;
     y: number;
-    width: number;
-    height: number;
+    texture: string;
   }> = [];
-  public get tileLayout(): Array<{
+  public get panelLayout(): Array<{
     x: number;
     y: number;
-    width: number;
-    height: number;
+    texture: string;
   }> {
-    return this._tileLayout;
+    return this._panelLayout;
   }
 
   // Game states
@@ -65,11 +63,22 @@ export class GameManager {
     this._panelAmount = levelData.panelAmount;
     this._chapterTitle = chapterData.title;
     this._levelTitle = levelData.title;
-    this._tileLayout = dm.getTileLayout(levelData.tileLayoutKey);
+    this._panelLayout = dm.getPanelLayout(levelData.panelLayoutKey);
   }
 
-  public updatePlaceTiles(tileKey: string, removedTileKey?: string): void {
-    // Update placed tiles logic
+  public updatePlacedTiles(
+    addTileIndex: number,
+    addedTileKey: string,
+    removedTileKey?: string,
+  ): void {
+    this._placedTiles[addTileIndex] = addedTileKey;
+    if (removedTileKey) {
+      const index = this._placedTiles.indexOf(removedTileKey);
+      if (index !== -1) {
+        this._placedTiles.splice(index, 1);
+      }
+    }
+    console.log(this._placedTiles);
   }
 
   public showOutcomeScreen(scene: Phaser.Scene): void {

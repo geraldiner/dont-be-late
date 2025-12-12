@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
     const gm = GameManager.getInstance();
     // DEBUG: Comment out to skip prelude screen
-    new PreludeScreen(this, 0, 0);
+    // new PreludeScreen(this, 0, 0);
     gm.setupLevel();
     this.createLayout(gm);
     this.createTileBar(gm);
@@ -66,7 +66,7 @@ export class GameScene extends Phaser.Scene {
       panelContainer.add(panelObject);
 
       if (i === gm.panelAmount) {
-        this.createTilePlaces(panelContainer, gm.tileLayout);
+        this.createTilePlaces(panelContainer, gm.panelLayout);
         const titleObject = this.add
           .text(SIZING.PADDING * 2, SIZING.PADDING, gm.getTitle(), {
             fontFamily: FONT_KEYS.REGULAR,
@@ -89,34 +89,38 @@ export class GameScene extends Phaser.Scene {
 
   private createTilePlaces(
     panelContainer: Phaser.GameObjects.Container,
-    tileLayout: Array<{
+    panelLayout: Array<{
       x: number;
       y: number;
-      width: number;
-      height: number;
+      texture: string;
     }>,
   ): void {
-    const tileContainer = this.add.container(
+    const slotContainer = this.add.container(
       SIZING.PADDING * 2,
       SIZING.PADDING * 3,
       [],
     );
 
-    panelContainer.add(tileContainer);
+    panelContainer.add(slotContainer);
 
-    tileLayout.forEach((tile) => {
-      const tilePlace = this.add
-        .rectangle(tile.x, tile.y, tile.width, tile.height, 0xf0f0f0)
-        .setOrigin(0)
-        .setStrokeStyle(1, 0x000000);
-      tileContainer.add(tilePlace);
+    panelLayout.forEach((slot, index) => {
+      const slotTexture = this.add
+        .image(slot.x, slot.y, slot.texture)
+        .setOrigin(0);
+      slotContainer.add(slotTexture);
+      // const tilePlace = this.add
+      //   .rectangle(slot.x, slot.y, slot.width, slot.height, 0xf0f0f0)
+      //   .setOrigin(0)
+      //   .setStrokeStyle(1, 0x000000);
+      // slotContainer.add(tilePlace);
       const tileZone = this.add
-        .zone(tile.x, tile.y, tile.width, tile.height)
-        .setRectangleDropZone(tile.width, tile.height)
+        .zone(slot.x, slot.y, slotTexture.width, slotTexture.height)
+        .setRectangleDropZone(slotTexture.width, slotTexture.height)
         .setOrigin(0)
         .setData({
-          tilePlace,
-          tileContainer,
+          slotIndex: index,
+          slotTexture,
+          slotContainer,
           occupiedBy: null,
         });
       if (DEBUG) {
@@ -130,9 +134,9 @@ export class GameScene extends Phaser.Scene {
             0.3,
           )
           .setOrigin(0);
-        tileContainer.add(debugZone);
+        slotContainer.add(debugZone);
       }
-      tileContainer.add(tileZone);
+      slotContainer.add(tileZone);
     });
   }
 
@@ -206,7 +210,6 @@ export class GameScene extends Phaser.Scene {
     this.input.on(
       Phaser.Input.Events.DRAG_START,
       (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image) => {
-        gameObject.setAlpha(0.7);
         gameObject.setDepth(2);
       },
     );
@@ -231,7 +234,6 @@ export class GameScene extends Phaser.Scene {
     this.input.on(
       Phaser.Input.Events.DRAG_END,
       (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image) => {
-        gameObject.setAlpha(1);
         const originalX = gameObject.getData("x") as number;
         const originalY = gameObject.getData("y") as number;
         if (gameObject.getData("from") === "tileBar") {
@@ -251,10 +253,10 @@ export class GameScene extends Phaser.Scene {
         gameObject: Phaser.GameObjects.Image,
         dropZone: Phaser.GameObjects.Zone,
       ) => {
-        const tilePlace = dropZone.getData("tilePlace") as
-          | Phaser.GameObjects.Rectangle
+        const slotTexture = dropZone.getData("slotTexture") as
+          | Phaser.GameObjects.Image
           | undefined;
-        if (tilePlace) {
+        if (slotTexture) {
           this.handleTileDropOnZone(gm, gameObject, dropZone);
         }
       },
@@ -267,25 +269,33 @@ export class GameScene extends Phaser.Scene {
     dropZone: Phaser.GameObjects.Zone,
   ): void {
     const imageKey = tile.getData("imageKey") as string;
-    const tilePlace = dropZone.getData(
-      "tilePlace",
-    ) as Phaser.GameObjects.Rectangle;
-    const tileContainer = dropZone.getData(
-      "tileContainer",
+    const slotIndex = dropZone.getData("slotIndex") as number;
+    const slotTexture = dropZone.getData(
+      "slotTexture",
+    ) as Phaser.GameObjects.Image;
+    const slotContainer = dropZone.getData(
+      "slotContainer",
     ) as Phaser.GameObjects.Container;
     const tileObj = this.createTile(
-      tilePlace.x + tilePlace.width / 2,
-      tilePlace.y + tilePlace.height / 2,
+      slotTexture.x + slotTexture.width / 2,
+      slotTexture.y + slotTexture.height / 2,
       imageKey,
     ).setData({ from: "panel" });
+
     // If tile place is already occupied, remove the previous tile
     const occupiedBy = dropZone.getData(
       "occupiedBy",
     ) as Phaser.GameObjects.Image | null;
+
+    // Update placed tiles to add new tile to the specified index in the list
+    // and remove the previous tile if any
+    gm.updatePlacedTiles(slotIndex, imageKey, occupiedBy?.getData("imageKey"));
+
+    // Remove the previous tile
     if (occupiedBy) {
       occupiedBy.destroy();
     }
     dropZone.setData("occupiedBy", tileObj);
-    tileContainer.add(tileObj);
+    slotContainer.add(tileObj);
   }
 }
