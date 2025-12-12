@@ -35,10 +35,11 @@ export class GameManager {
 
   // Game states
   public chapter: number = 1;
+  private _chapterTitle: string = "";
   public level: number = 1;
-  private _title: string = "";
+  private _levelTitle: string = "";
   public getTitle(): string {
-    return this._title;
+    return `${this._chapterTitle} ${this.chapter}-${this.level}: ${this._levelTitle}`;
   }
 
   private _outcome: string = "You made it on time!";
@@ -56,14 +57,14 @@ export class GameManager {
   }
 
   public setupLevel(): void {
-    console.log(`Setting up Chapter ${this.chapter}, Level ${this.level}`);
     // Setup available tiles for the current chapter and level
     const dm = DataManager.getInstance();
     const chapterData = dm.getChapterData(this.chapter);
     const levelData = chapterData.levels[this.level - 1];
     this._availableTiles = levelData.availableTiles;
     this._panelAmount = levelData.panelAmount;
-    this._title = levelData.title;
+    this._chapterTitle = chapterData.title;
+    this._levelTitle = levelData.title;
     this._tileLayout = dm.getTileLayout(levelData.tileLayoutKey);
   }
 

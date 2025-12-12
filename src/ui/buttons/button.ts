@@ -1,4 +1,4 @@
-import { SIZING } from "../../variables";
+import { FONT_KEYS, SIZING } from "../../variables";
 
 export abstract class Button extends Phaser.GameObjects.Container {
   private _text: Phaser.GameObjects.Text;
@@ -18,6 +18,7 @@ export abstract class Button extends Phaser.GameObjects.Container {
         fontSize: 12,
         color: "#000000",
         align: "center",
+        fontFamily: FONT_KEYS.REGULAR,
       })
       .setOrigin(0.5);
 
