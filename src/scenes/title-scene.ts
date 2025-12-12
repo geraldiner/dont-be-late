@@ -8,8 +8,8 @@ export class TitleScene extends Phaser.Scene {
   }
 
   public create(): void {
-    // DEBUG: Skip title scene
-    // this.scene.start(SCENE_KEYS.GAME);
+    // DEBUG: Uncomment out to skip title scene
+    this.scene.start(SCENE_KEYS.GAME);
 
     this.add
       .text(this.scale.width / 2, this.scale.height / 2 - 25, "Don't Be Late!")
@@ -30,7 +30,7 @@ export class TitleScene extends Phaser.Scene {
     });
 
     this.input.once(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.cameras.main.fadeOut(500, 0, 0, 0, (_, progress: number) => {
+      this.cameras.main.fadeOut(500, 255, 255, 255, (_, progress: number) => {
         if (progress !== 1) {
           return;
         }

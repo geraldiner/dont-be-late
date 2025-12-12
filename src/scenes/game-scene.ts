@@ -1,65 +1,32 @@
 import * as Phaser from "phaser";
 
 import { PreludeScreen } from "../game-screens/prelude";
-import { ASSET_KEYS, SCENE_KEYS } from "../variables";
+import { GameManager } from "../manager/game-manager";
+import { LetsGoButton } from "../ui/buttons";
+import type { Button } from "../ui/buttons/button";
+import { SCENE_KEYS, SIZING } from "../variables";
 
 const DEBUG: boolean = true;
-const DEFAULT_PADDING: number = 10;
-
-const PANEL_SCALE: number = 1.15;
-const PRELUDE_PANEL_Y_POSITION: number = 60;
-const PANEL_WIDTH: number = 330;
-const PANEL_HEIGHT: number = 420;
-
-const TITLE_X_POSITION: number = 20;
-const TITLE_Y_POSITION: number = 10;
-
-const BUTTON_WIDTH: number = 90;
-const BUTTON_HEIGHT: number = 25;
 
 const TILE_BAR_Y_POSITION: number = 480;
 const TILE_BAR_HEIGHT: number = 120;
-const TILE_SIZE: number = 80;
-
-const TILE_LAYOUT_MAP: {
-  [key: number]: { x: number; y: number; width: number; height: number }[];
-} = {
-  5: [
-    { x: 0, y: 0, width: 170, height: 98 },
-    { x: 180, y: 0, width: 110, height: 98 },
-    { x: 0, y: 108, width: 110, height: 98 },
-    { x: 120, y: 108, width: 170, height: 98 },
-    { x: 0, y: 216, width: 290, height: 118 },
-  ],
-};
-
-const AVAILABLE_TILES = [
-  ASSET_KEYS.ALARM,
-  ASSET_KEYS.BACKPACK,
-  ASSET_KEYS.SCROLL,
-  ASSET_KEYS.TOOTHBRUSH,
-  ASSET_KEYS.TRAIN,
-];
-
-const CHAPTER_TITLE = "1-1: Seito has an 8am class";
 
 export class GameScene extends Phaser.Scene {
   private panelContainers: Phaser.GameObjects.Container[] = [];
-  private availableTiles: Phaser.GameObjects.Image[] = [];
-  private placedTiles: Phaser.GameObjects.Image[] = [];
+  private _letsGoButton: Button | null = null;
 
   constructor() {
     super({ key: SCENE_KEYS.GAME });
   }
 
   public create(): void {
-    new PreludeScreen(this, 0, 0, 1, 1);
-    this.time.delayedCall(2000, () => {
-      this.cameras.main.fadeIn(500);
-    });
-    this.createLayout(1);
-    this.createTileBar();
-    this.createDragEvents();
+    const gm = GameManager.getInstance();
+    // DEBUG: Comment out to skip prelude screen
+    // new PreludeScreen(this, 0, 0, gm.chapter, gm.level);
+    gm.setupLevel();
+    this.createLayout(gm);
+    this.createTileBar(gm);
+    this.createDragEvents(gm);
   }
 
   private createTile(
@@ -82,63 +49,38 @@ export class GameScene extends Phaser.Scene {
       });
   }
 
-  private createLayout(panelAmount: number, isPrelude: boolean = false): void {
+  private createLayout(gm: GameManager): void {
     this.panelContainers = [];
-    for (let i = 1; i <= panelAmount; i++) {
+    for (let i = 1; i <= gm.panelAmount; i++) {
       const panelContainer = this.add.container(
         this.game.canvas.width / 2 -
-          (PANEL_WIDTH * panelAmount) / 2 +
-          PANEL_WIDTH * (i - 1),
-        DEFAULT_PADDING * 2.5,
+          (SIZING.PANEL_WIDTH * gm.panelAmount) / 2 +
+          SIZING.PANEL_WIDTH * (i - 1),
+        SIZING.PADDING * 2.5,
         [],
       );
       const panelObject = this.add
-        .rectangle(0, 0, PANEL_WIDTH, PANEL_HEIGHT, 0xffffff)
+        .rectangle(0, 0, SIZING.PANEL_WIDTH, SIZING.PANEL_HEIGHT, 0xffffff)
         .setOrigin(0)
-        .setScale(isPrelude ? PANEL_SCALE : 1)
         .setStrokeStyle(2, 0x000000);
       panelContainer.add(panelObject);
-      // // just to check the scale/fit of the image
-      // if (i == 1) {
-      //   const preludeImage = this.add
-      //     .image(
-      //       PANEL_WIDTH / 2,
-      //       PANEL_HEIGHT / 2,
-      //       ASSET_KEYS.CHAPTER_1_PRELUDE,
-      //     )
-      //     .setOrigin(0.5)
-      //     .setScale(0.499);
-      //   panelContainer.add(preludeImage);
-      // }
 
-      if (i === panelAmount && !isPrelude) {
-        this.createTilePlaces(panelContainer, 5);
+      if (i === gm.panelAmount) {
+        this.createTilePlaces(panelContainer, gm.tileLayout);
         const titleObject = this.add
-          .text(TITLE_X_POSITION, TITLE_Y_POSITION, CHAPTER_TITLE, {
+          .text(SIZING.PADDING * 2, SIZING.PADDING, gm.getTitle(), {
             fontSize: "14px",
             color: "#000000",
           })
           .setOrigin(0);
         panelContainer.add(titleObject);
-        const nextButtonContainer = this.add.container(
-          panelObject.width - BUTTON_WIDTH - DEFAULT_PADDING * 2,
-          panelObject.height - BUTTON_HEIGHT - DEFAULT_PADDING * 2,
-          [],
+        const letsGoButton = new LetsGoButton(
+          this,
+          panelObject.width - SIZING.BUTTON_WIDTH / 2 - SIZING.PADDING * 2,
+          panelObject.height - SIZING.BUTTON_HEIGHT / 2 - SIZING.PADDING * 2,
         );
-        const nextButton = this.add
-          .rectangle(0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, 0xaaaaaa)
-          .setOrigin(0)
-          .setRounded(2)
-          .setInteractive({ useHandCursor: true });
-        const nextButtonText = this.add
-          .text(BUTTON_WIDTH / 2, BUTTON_HEIGHT / 2, "Next", {
-            fontSize: "12px",
-            color: "#000000",
-          })
-          .setOrigin(0.5);
-        nextButtonContainer.add(nextButton);
-        nextButtonContainer.add(nextButtonText);
-        panelContainer.add(nextButtonContainer);
+        this._letsGoButton = letsGoButton;
+        panelContainer.add(letsGoButton);
       }
       this.panelContainers.push(panelContainer);
     }
@@ -146,21 +88,22 @@ export class GameScene extends Phaser.Scene {
 
   private createTilePlaces(
     panelContainer: Phaser.GameObjects.Container,
-    tileAmount: number,
+    tileLayout: Array<{
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }>,
   ): void {
-    this.placedTiles = [];
-
     const tileContainer = this.add.container(
-      DEFAULT_PADDING * 2,
-      DEFAULT_PADDING * 3,
+      SIZING.PADDING * 2,
+      SIZING.PADDING * 3,
       [],
     );
 
     panelContainer.add(tileContainer);
 
-    const layoutMap = TILE_LAYOUT_MAP[tileAmount];
-
-    layoutMap.forEach((tile) => {
+    tileLayout.forEach((tile) => {
       const tilePlace = this.add
         .rectangle(tile.x, tile.y, tile.width, tile.height, 0xf0f0f0)
         .setOrigin(0)
@@ -192,8 +135,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  private createTileBar(): void {
-    this.availableTiles = [];
+  private createTileBar(gm: GameManager): void {
     const tileBarContainer = this.add.container(0, TILE_BAR_Y_POSITION, []);
     const tileBarBackground = this.add
       .rectangle(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT)
@@ -220,36 +162,43 @@ export class GameScene extends Phaser.Scene {
     }
 
     const tilesListContainer = this.add.container(
-      tileBarBackground.width / 2 - (TILE_SIZE * AVAILABLE_TILES.length) / 2,
-      TILE_SIZE / 2,
+      tileBarBackground.width / 2 -
+        (SIZING.TILE_SIZE * gm.availableTiles.length) / 2,
+      SIZING.TILE_SIZE / 2,
       [],
     );
     tileBarContainer.add(tilesListContainer);
 
-    for (let i = 0; i < AVAILABLE_TILES.length; i++) {
+    for (let i = 0; i < gm.availableTiles.length; i++) {
       const tileObj = this.createTile(
-        i * (TILE_SIZE + DEFAULT_PADDING * 2),
-        DEFAULT_PADDING * 2,
-        AVAILABLE_TILES[i],
+        i * (SIZING.TILE_SIZE + SIZING.PADDING * 2),
+        SIZING.PADDING * 2,
+        gm.availableTiles[i],
       )
         .setOrigin(0.5)
         .setData({ from: "tileBar" });
       if (DEBUG) {
         const tileDebugBg = this.add
-          .rectangle(tileObj.x, tileObj.y, TILE_SIZE, TILE_SIZE, 0x0000ff, 0.3)
+          .rectangle(
+            tileObj.x,
+            tileObj.y,
+            SIZING.TILE_SIZE,
+            SIZING.TILE_SIZE,
+            0x0000ff,
+            0.3,
+          )
           .setOrigin(0.5);
         tilesListContainer.add(tileDebugBg);
       }
-      this.availableTiles.push(tileObj);
       tilesListContainer.add(tileObj);
     }
   }
 
-  private createDragEvents(): void {
+  private createDragEvents(gm: GameManager): void {
     this.createDragEventStartEventListener();
     this.createDragEventListener();
     this.createDragEndEventListener();
-    this.createDropEventListener();
+    this.createDropEventListener(gm);
   }
 
   private createDragEventStartEventListener(): void {
@@ -293,7 +242,7 @@ export class GameScene extends Phaser.Scene {
     );
   }
 
-  private createDropEventListener(): void {
+  private createDropEventListener(gm: GameManager): void {
     this.input.on(
       Phaser.Input.Events.DROP,
       (
@@ -305,13 +254,14 @@ export class GameScene extends Phaser.Scene {
           | Phaser.GameObjects.Rectangle
           | undefined;
         if (tilePlace) {
-          this.handleTileDropOnZone(gameObject, dropZone);
+          this.handleTileDropOnZone(gm, gameObject, dropZone);
         }
       },
     );
   }
 
   private handleTileDropOnZone(
+    gm: GameManager,
     tile: Phaser.GameObjects.Image,
     dropZone: Phaser.GameObjects.Zone,
   ): void {
@@ -335,7 +285,6 @@ export class GameScene extends Phaser.Scene {
       occupiedBy.destroy();
     }
     dropZone.setData("occupiedBy", tileObj);
-    this.placedTiles.push(tileObj);
     tileContainer.add(tileObj);
   }
 }

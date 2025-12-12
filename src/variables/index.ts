@@ -2,6 +2,7 @@ export const SCENE_KEYS = {
   PRELOAD: "PRELOAD",
   TITLE: "TITLE",
   GAME: "GAME",
+  GAME_COMPLETE: "GAME_COMPLETE",
 } as const;
 
 export const ASSET_KEYS = {
@@ -11,4 +12,13 @@ export const ASSET_KEYS = {
   BACKPACK: "BACKPACK",
   TRAIN: "TRAIN",
   CHAPTER_1_PRELUDE: "CHAPTER_1_PRELUDE",
+} as const;
+
+export const SIZING = {
+  PADDING: 10,
+  PANEL_WIDTH: 342,
+  PANEL_HEIGHT: 410,
+  TILE_SIZE: 80,
+  BUTTON_WIDTH: 90,
+  BUTTON_HEIGHT: 25,
 } as const;
