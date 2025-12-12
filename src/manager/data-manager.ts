@@ -1,5 +1,6 @@
 import chapter1Data from "../assets/data/chapter_1.json";
-import tileLayoutData from "../assets/data/tile_layout.json";
+import panelLayoutData from "../assets/data/panel_layout.json";
+import panelSlotSizes from "../assets/data/panel_slot_sizes.json";
 
 export class DataManager {
   private static instance: DataManager;
@@ -21,15 +22,34 @@ export class DataManager {
     }
   }
 
-  public getTileLayout(key: string): Array<{
+  public getPanelSlotSizes(
+    key: string,
+  ): { width: number; height: number } | null {
+    switch (key) {
+      case "SQUARE":
+        return panelSlotSizes.SQUARE;
+      case "TWO_THIRDS_RECTANGLE":
+        return panelSlotSizes.TWO_THIRDS_RECTANGLE;
+      case "HALF_RECTANGLE":
+        return panelSlotSizes.HALF_RECTANGLE;
+      case "FULL_RECTANGLE":
+        return panelSlotSizes.FULL_RECTANGLE;
+      default:
+        console.error(`Panel slot size for key ${key} not found.`);
+        return null;
+    }
+  }
+
+  public getPanelLayout(key: string): Array<{
     x: number;
     y: number;
-    width: number;
-    height: number;
+    texture: string;
   }> {
     switch (key) {
       case "5":
-        return tileLayoutData["5"];
+        return panelLayoutData["5"];
+      case "8":
+        return panelLayoutData["8"];
       default:
         console.error(`Tile layout data for key ${key} not found.`);
         return [];

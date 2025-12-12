@@ -7,7 +7,14 @@ import chapter1Prelude from "../assets/images/1-1/prelude.jpg";
 import scroll from "../assets/images/1-1/scroll.png";
 import toothbrush from "../assets/images/1-1/toothbrush.png";
 import train from "../assets/images/1-1/train.png";
-import { ASSET_KEYS, FONT_KEYS, SCENE_KEYS, SIZING } from "../variables";
+import { DataManager } from "../manager/data-manager";
+import {
+  ASSET_KEYS,
+  FONT_KEYS,
+  SCENE_KEYS,
+  SIZING,
+  TEXTURE_KEYS,
+} from "../variables";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -26,11 +33,14 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(ASSET_KEYS.TRAIN, train);
     this.load.image(ASSET_KEYS.CHAPTER_1_PRELUDE, chapter1Prelude);
 
+    const dm = DataManager.getInstance();
+
     // Generate button textures
+    // Buttons
     const graphics = new Phaser.GameObjects.Graphics(this);
     this._drawRoundedRectangle(
       graphics,
-      "button",
+      TEXTURE_KEYS.BUTTON,
       SIZING.BUTTON_WIDTH,
       SIZING.BUTTON_HEIGHT,
       6,
@@ -38,11 +48,40 @@ export class PreloadScene extends Phaser.Scene {
     );
     this._drawRoundedRectangle(
       graphics,
-      "button-disabled",
+      TEXTURE_KEYS.BUTTON_DISABLED,
       SIZING.BUTTON_WIDTH,
       SIZING.BUTTON_HEIGHT,
       6,
       0xdddddd,
+    );
+    // Panel slots
+    this._drawShape(
+      graphics,
+      TEXTURE_KEYS.SQUARE,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.SQUARE)!.width,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.SQUARE)!.height,
+      0xffffff,
+    );
+    this._drawShape(
+      graphics,
+      TEXTURE_KEYS.TWO_THIRDS_RECTANGLE,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.TWO_THIRDS_RECTANGLE)!.width,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.TWO_THIRDS_RECTANGLE)!.height,
+      0xffffff,
+    );
+    this._drawShape(
+      graphics,
+      TEXTURE_KEYS.HALF_RECTANGLE,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.HALF_RECTANGLE)!.width,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.HALF_RECTANGLE)!.height,
+      0xffffff,
+    );
+    this._drawShape(
+      graphics,
+      TEXTURE_KEYS.FULL_RECTANGLE,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.FULL_RECTANGLE)!.width,
+      dm.getPanelSlotSizes(TEXTURE_KEYS.FULL_RECTANGLE)!.height,
+      0xffffff,
     );
   }
 
@@ -62,6 +101,19 @@ export class PreloadScene extends Phaser.Scene {
     graphics
       .fillStyle(fillColor, 1)
       .fillRoundedRect(0, 0, width, height, radius);
+    graphics.generateTexture(key, width, height);
+  }
+
+  private _drawShape(
+    graphics: Phaser.GameObjects.Graphics,
+    key: string,
+    width: number,
+    height: number,
+    fillColor: number,
+  ) {
+    graphics.clear();
+    graphics.lineStyle(2, 0x000000, 1);
+    graphics.fillStyle(fillColor, 1).fillRect(0, 0, width, height);
     graphics.generateTexture(key, width, height);
   }
 }

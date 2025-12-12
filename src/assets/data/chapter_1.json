@@ -9,7 +9,9 @@
       ],
       "availableTiles": ["ALARM", "BACKPACK", "SCROLL", "TOOTHBRUSH", "TRAIN"],
       "panelAmount": 1,
-      "tileLayoutKey": "5"
+      "panelLayoutKey": "5",
+      "startTime": "6:00 AM",
+      "targetTime": "7:00 AM"
     },
     {
       "title": "Toto needs to get the kids to school",
@@ -19,7 +21,9 @@
       ],
       "availableTiles": ["SCROLL"],
       "panelAmount": 1,
-      "tileLayoutKey": "8"
+      "panelLayoutKey": "8",
+      "startTime": "5:30 AM",
+      "targetTime": "7:25 AM"
     },
     {
       "title": "Mr. Sensei is starting a new unit today",
@@ -29,7 +33,9 @@
       ],
       "availableTiles": ["SCROLL"],
       "panelAmount": 1,
-      "tileLayoutKey": "8"
+      "panelLayoutKey": "8",
+      "startTime": "6:45 AM",
+      "targetTime": "8:25 AM"
     }
   ]
 }
