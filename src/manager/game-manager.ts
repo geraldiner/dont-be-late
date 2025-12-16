@@ -1,11 +1,19 @@
 import { OutcomeScreen } from "../game-screens/outcome";
-import { SCENE_KEYS } from "../variables";
+import { effectHandlers } from "../utils";
+import { OUTCOMES, SCENE_KEYS } from "../variables";
 import { DataManager } from "./data-manager";
+
+interface Tile {
+  key: string;
+  label: string;
+  duration: number;
+  penalties?: Array<{ type: string; extraMinutes: number }>;
+}
 
 export class GameManager {
   // Tiles
-  private _availableTiles: string[] = [];
-  public get availableTiles(): string[] {
+  private _availableTiles: Tile[] = [];
+  public get availableTiles(): Tile[] {
     return this._availableTiles;
   }
   private _placedTiles: string[] = [];
@@ -40,10 +48,33 @@ export class GameManager {
     return `${this._chapterTitle} ${this.chapter}-${this.level}: ${this._levelTitle}`;
   }
 
+  // Game conditions
+  private _startTime: Date = new Date();
+  public get startTime(): Date {
+    return this._startTime;
+  }
+  private _currentTime: Date = new Date();
+  public get currentTime(): Date {
+    return this._currentTime;
+  }
+  private _targetTime: Date = new Date();
+  public get targetTime(): Date {
+    return this._targetTime;
+  }
+  private _idealEndTime: Date = new Date();
   private _outcome: string = "You made it on time!";
   public get outcome(): string {
     return this._outcome;
   }
+
+  // Level rules
+  private _fixedPositions: Array<{ tileKey: string; position: number }> = [];
+  private _constraints: Array<{
+    type: string;
+    tileKey?: string;
+    position?: number;
+    second?: string;
+  }> = [];
 
   private static instance: GameManager;
   private constructor() {}
@@ -59,30 +90,73 @@ export class GameManager {
     const dm = DataManager.getInstance();
     const chapterData = dm.getChapterData(this.chapter);
     const levelData = chapterData.levels[this.level - 1];
-    this._availableTiles = levelData.availableTiles;
-    this._panelAmount = levelData.panelAmount;
+    // Level info
     this._chapterTitle = chapterData.title;
     this._levelTitle = levelData.title;
+    // Tiles & layout
+    this._availableTiles = levelData.availableTiles;
+    this._panelAmount = levelData.panelAmount;
     this._panelLayout = dm.getPanelLayout(levelData.panelLayoutKey);
+    // Game conditions
+    this._startTime = new Date(
+      `${new Date().toDateString()} ${levelData.startTime}`,
+    );
+    this._currentTime = this._startTime;
+    this._targetTime = new Date(
+      `${this._currentTime.toDateString()} ${levelData.targetTime}`,
+    );
+    // Level rules
+    this._idealEndTime = new Date(
+      `${new Date().toDateString()} ${levelData.idealEndTime}`,
+    );
+    this._fixedPositions = levelData.fixedPositions;
+    this._constraints = levelData.constraints;
   }
 
   public updatePlacedTiles(
-    addTileIndex: number,
-    addedTileKey: string,
-    removedTileKey?: string,
+    addTileIndex?: number,
+    addedTileKey?: string,
+    previousSlotIndex?: number | null,
   ): void {
-    this._placedTiles[addTileIndex] = addedTileKey;
-    if (removedTileKey) {
-      const index = this._placedTiles.indexOf(removedTileKey);
-      if (index !== -1) {
-        this._placedTiles.splice(index, 1);
+    // If there is already a tile at that index, remove it first
+    if (previousSlotIndex !== undefined && previousSlotIndex !== null) {
+      this._placedTiles[previousSlotIndex] = undefined!;
+      this.updateTimes();
+    }
+    // If adding a tile, set it at the given index
+    if (addTileIndex !== undefined && addedTileKey !== undefined) {
+      this._placedTiles[addTileIndex] = addedTileKey;
+      this.updateTimes();
+    }
+  }
+
+  // Update the current time based on placed tiles
+  public updateTimes(): void {
+    let accruedMinutes = 0; // time in minutes
+
+    // Add base duration from placed tiles
+    for (let i = 0; i < this._placedTiles.length; i++) {
+      const tileKey = this._placedTiles[i];
+      const tile = this._availableTiles.find((t) => t.key === tileKey);
+      if (tile) {
+        accruedMinutes += tile.duration;
+        tile.penalties?.forEach((penalty) => {
+          const handler = effectHandlers[penalty.type];
+          if (handler) {
+            accruedMinutes += handler(this._placedTiles, i, penalty);
+          }
+        });
       }
     }
-    console.log(this._placedTiles);
+
+    this._currentTime = new Date(
+      this._startTime.getTime() + accruedMinutes * 60000,
+    );
   }
 
   public showOutcomeScreen(scene: Phaser.Scene): void {
-    new OutcomeScreen(scene, 0, 0, this.outcome);
+    this._checkOutcome();
+    new OutcomeScreen(scene, 0, 0);
   }
 
   public setNextLevel(scene: Phaser.Scene): void {
@@ -101,6 +175,19 @@ export class GameManager {
 
   private _checkOutcome(): void {
     // Placeholder logic for determining outcome
+    const passesConstraints = this._validateConstraints();
+    if (!passesConstraints) {
+      this._outcome = OUTCOMES.FAIL;
+    } else if (
+      passesConstraints &&
+      this._currentTime.getTime() <= this._idealEndTime.getTime()
+    ) {
+      this._outcome = OUTCOMES.IDEAL;
+    } else if (passesConstraints) {
+      this._outcome = OUTCOMES.ON_TIME;
+    } else {
+      this._outcome = OUTCOMES.LATE;
+    }
   }
 
   public resetLevel(scene: Phaser.Scene): void {
@@ -112,5 +199,37 @@ export class GameManager {
   public goNextLevel(scene: Phaser.Scene): void {
     this.setNextLevel(scene);
     scene.scene.restart();
+  }
+
+  private _validateConstraints(): boolean {
+    for (const constraint of this._constraints) {
+      const index = this._placedTiles.findIndex(
+        (t) => t === constraint.tileKey,
+      );
+      if (index === -1) {
+        return false;
+      }
+
+      if (constraint.type === "mustBeFirst" && index !== 0) {
+        return false;
+      } else if (
+        constraint.type === "mustBeLast" &&
+        index !== this._placedTiles.length - 1
+      ) {
+        return false;
+      }
+      if (
+        constraint.type === "mustComeBefore" &&
+        constraint.second != undefined
+      ) {
+        const secondIndex = this._placedTiles.findIndex(
+          (t) => t === constraint.second,
+        );
+        if (index >= secondIndex) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

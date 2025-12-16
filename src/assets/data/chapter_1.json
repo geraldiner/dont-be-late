@@ -7,11 +7,37 @@
         "The alarm goes off at 6am",
         "Seito must catch the 7am train"
       ],
-      "availableTiles": ["ALARM", "BACKPACK", "SCROLL", "TOOTHBRUSH", "TRAIN"],
+      "availableTiles": [
+        { "key": "ALARM", "label": "Alarm Goes Off", "duration": 0 },
+        { "key": "BACKPACK", "label": "Pack Bag", "duration": 15 },
+        {
+          "key": "SCROLL",
+          "label": "Scroll a Bit",
+          "duration": 10,
+          "penalties": [
+            {
+              "type": "scrollingSecondAfterAlarm",
+              "extraMinutes": 20
+            },
+            {
+              "type": "scrollingElsewhere",
+              "extraMinutes": 5
+            }
+          ]
+        },
+        { "key": "TOOTHBRUSH", "label": "Get Ready", "duration": 20 },
+        { "key": "TRAIN", "label": "Catch Train", "duration": 5 }
+      ],
       "panelAmount": 1,
       "panelLayoutKey": "5",
       "startTime": "6:00 AM",
-      "targetTime": "7:00 AM"
+      "targetTime": "7:00 AM",
+      "idealEndTime": "6:55 AM",
+      "constraints": [
+        { "type": "mustBeFirst", "tileKey": "ALARM" },
+        { "type": "mustBeLast", "tileKey": "TRAIN" }
+      ],
+      "fixedPositions": [{ "tileKey": "TRAIN", "position": -1 }]
     },
     {
       "title": "Toto needs to get the kids to school",

@@ -3,7 +3,7 @@ import * as Phaser from "phaser";
 import { PreludeScreen } from "../game-screens/prelude";
 import { GameManager } from "../manager/game-manager";
 import { LetsGoButton } from "../ui/buttons";
-import type { Button } from "../ui/buttons/button";
+import { formatTime } from "../utils/date";
 import { FONT_KEYS, SCENE_KEYS, SIZING } from "../variables";
 
 const DEBUG: boolean = true;
@@ -13,7 +13,7 @@ const TILE_BAR_HEIGHT: number = 120;
 
 export class GameScene extends Phaser.Scene {
   private panelContainers: Phaser.GameObjects.Container[] = [];
-  private _letsGoButton: Button | null = null;
+  private currentTimeText: Phaser.GameObjects.Text = null!;
 
   constructor() {
     super({ key: SCENE_KEYS.GAME });
@@ -45,7 +45,6 @@ export class GameScene extends Phaser.Scene {
       .setData({
         x,
         y,
-        imageKey,
       });
   }
 
@@ -66,7 +65,7 @@ export class GameScene extends Phaser.Scene {
       panelContainer.add(panelObject);
 
       if (i === gm.panelAmount) {
-        this.createTilePlaces(panelContainer, gm.panelLayout);
+        this.createPanelSlots(panelContainer, gm.panelLayout);
         const titleObject = this.add
           .text(SIZING.PADDING * 2, SIZING.PADDING, gm.getTitle(), {
             fontFamily: FONT_KEYS.REGULAR,
@@ -80,14 +79,41 @@ export class GameScene extends Phaser.Scene {
           panelObject.width - SIZING.BUTTON_WIDTH / 2 - SIZING.PADDING * 2,
           panelObject.height - SIZING.BUTTON_HEIGHT / 2 - SIZING.PADDING * 2,
         );
-        this._letsGoButton = letsGoButton;
         panelContainer.add(letsGoButton);
+
+        const currentTimeText = this.add
+          .text(
+            SIZING.PADDING * 2,
+            panelObject.height - SIZING.BUTTON_HEIGHT - SIZING.PADDING * 2,
+            `${formatTime(gm.currentTime)}`,
+            {
+              fontFamily: FONT_KEYS.REGULAR,
+              fontSize: "14px",
+              color: "#000000",
+            },
+          )
+          .setOrigin(0);
+        const targetTimeText = this.add
+          .text(
+            currentTimeText.width + SIZING.PADDING * 2,
+            currentTimeText.y,
+            ` / ${formatTime(gm.targetTime)}`,
+            {
+              fontFamily: FONT_KEYS.REGULAR,
+              fontSize: "14px",
+              color: "#000000",
+            },
+          )
+          .setOrigin(0);
+        panelContainer.add(targetTimeText);
+        this.currentTimeText = currentTimeText;
+        panelContainer.add(currentTimeText);
       }
       this.panelContainers.push(panelContainer);
     }
   }
 
-  private createTilePlaces(
+  private createPanelSlots(
     panelContainer: Phaser.GameObjects.Container,
     panelLayout: Array<{
       x: number;
@@ -101,19 +127,13 @@ export class GameScene extends Phaser.Scene {
       [],
     );
 
-    panelContainer.add(slotContainer);
-
     panelLayout.forEach((slot, index) => {
       const slotTexture = this.add
         .image(slot.x, slot.y, slot.texture)
         .setOrigin(0);
       slotContainer.add(slotTexture);
-      // const tilePlace = this.add
-      //   .rectangle(slot.x, slot.y, slot.width, slot.height, 0xf0f0f0)
-      //   .setOrigin(0)
-      //   .setStrokeStyle(1, 0x000000);
-      // slotContainer.add(tilePlace);
-      const tileZone = this.add
+      // TODO: If there are fixed position tiles, need to render those and ensure they're not overwritten
+      const slotZone = this.add
         .zone(slot.x, slot.y, slotTexture.width, slotTexture.height)
         .setRectangleDropZone(slotTexture.width, slotTexture.height)
         .setOrigin(0)
@@ -126,18 +146,19 @@ export class GameScene extends Phaser.Scene {
       if (DEBUG) {
         const debugZone = this.add
           .rectangle(
-            tileZone.x,
-            tileZone.y,
-            tileZone.width,
-            tileZone.height,
+            slotZone.x,
+            slotZone.y,
+            slotZone.width,
+            slotZone.height,
             0x00ff00,
             0.3,
           )
           .setOrigin(0);
         slotContainer.add(debugZone);
       }
-      slotContainer.add(tileZone);
+      slotContainer.add(slotZone);
     });
+    panelContainer.add(slotContainer);
   }
 
   private createTileBar(gm: GameManager): void {
@@ -150,7 +171,8 @@ export class GameScene extends Phaser.Scene {
     const tileBarZone = this.add
       .zone(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT)
       .setOrigin(0)
-      .setRectangleDropZone(this.game.canvas.width, TILE_BAR_HEIGHT);
+      .setRectangleDropZone(this.game.canvas.width, TILE_BAR_HEIGHT)
+      .setData({ isTileBar: true });
     tileBarContainer.add(tileBarZone);
     if (DEBUG) {
       const tileBarDebugBg = this.add
@@ -178,10 +200,10 @@ export class GameScene extends Phaser.Scene {
       const tileObj = this.createTile(
         i * (SIZING.TILE_SIZE + SIZING.PADDING * 2),
         SIZING.PADDING * 2,
-        gm.availableTiles[i],
+        gm.availableTiles[i].key,
       )
         .setOrigin(0.5)
-        .setData({ from: "tileBar" });
+        .setData({ from: "tileBar", tileData: gm.availableTiles[i] });
       if (DEBUG) {
         const tileDebugBg = this.add
           .rectangle(
@@ -268,34 +290,64 @@ export class GameScene extends Phaser.Scene {
     tile: Phaser.GameObjects.Image,
     dropZone: Phaser.GameObjects.Zone,
   ): void {
-    const imageKey = tile.getData("imageKey") as string;
-    const slotIndex = dropZone.getData("slotIndex") as number;
-    const slotTexture = dropZone.getData(
-      "slotTexture",
-    ) as Phaser.GameObjects.Image;
-    const slotContainer = dropZone.getData(
-      "slotContainer",
-    ) as Phaser.GameObjects.Container;
-    const tileObj = this.createTile(
-      slotTexture.x + slotTexture.width / 2,
-      slotTexture.y + slotTexture.height / 2,
-      imageKey,
-    ).setData({ from: "panel" });
+    const isTileBar = dropZone.getData("isTileBar") as boolean | undefined;
+    // If tile is dropped into tile bar, remove from panel slots and from placed tiles
+    if (isTileBar) {
+      const currentSlotIndex = tile.getData("currentSlotIndex") as
+        | number
+        | null;
+      if (currentSlotIndex !== null) {
+        // Remove tile from placed tiles
+        gm.updatePlacedTiles(undefined, undefined, currentSlotIndex);
+        tile.destroy();
+      }
+    } else {
+      // Otherwise, tile is dropped into a panel slot
+      const tileData = tile.getData("tileData") as {
+        key: string;
+        label: string;
+        duration: number;
+      };
+      const slotIndex = dropZone.getData("slotIndex") as number;
+      const slotTexture = dropZone.getData(
+        "slotTexture",
+      ) as Phaser.GameObjects.Image;
+      const slotContainer = dropZone.getData(
+        "slotContainer",
+      ) as Phaser.GameObjects.Container;
+      const newTile = this.createTile(
+        slotTexture.x + slotTexture.width / 2,
+        slotTexture.y + slotTexture.height / 2,
+        tileData.key,
+      ).setData({
+        currentSlotIndex: slotIndex,
+        tileData: tile.getData("tileData"),
+      });
 
-    // If tile place is already occupied, remove the previous tile
-    const occupiedBy = dropZone.getData(
-      "occupiedBy",
-    ) as Phaser.GameObjects.Image | null;
+      // If tile place is already occupied, remove the previous tile
+      const occupiedBy = dropZone.getData(
+        "occupiedBy",
+      ) as Phaser.GameObjects.Image | null;
+      const currentSlotIndex = tile.getData("currentSlotIndex") as
+        | number
+        | null;
 
-    // Update placed tiles to add new tile to the specified index in the list
-    // and remove the previous tile if any
-    gm.updatePlacedTiles(slotIndex, imageKey, occupiedBy?.getData("imageKey"));
+      // Update placed tiles to add new tile to the specified index in the list
+      // and remove it from the previous index if applicable
+      gm.updatePlacedTiles(slotIndex, tileData.key, currentSlotIndex);
 
-    // Remove the previous tile
-    if (occupiedBy) {
-      occupiedBy.destroy();
+      // Remove the previous tile
+      if (occupiedBy) {
+        occupiedBy.destroy();
+      }
+      dropZone.setData("occupiedBy", newTile);
+      slotContainer.add(newTile);
+      this.currentTimeText.setText(formatTime(gm.currentTime));
+      if (gm.currentTime.getTime() > gm.targetTime.getTime()) {
+        this.currentTimeText.setColor("#b31515ff");
+      } else {
+        this.currentTimeText.setColor("#2cb335ff");
+      }
     }
-    dropZone.setData("occupiedBy", tileObj);
-    slotContainer.add(tileObj);
   }
 }
