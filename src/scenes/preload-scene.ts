@@ -5,7 +5,7 @@ import alarm from "../assets/images/1-1/alarm.png";
 import backpack from "../assets/images/1-1/backpack.png";
 import chapter1Prelude from "../assets/images/1-1/prelude.jpg";
 import scroll from "../assets/images/1-1/scroll.png";
-import toothbrush from "../assets/images/1-1/toothbrush.png";
+import toilet from "../assets/images/1-1/toilet.png";
 import train from "../assets/images/1-1/train.png";
 import { DataManager } from "../manager/data-manager";
 import {
@@ -28,7 +28,7 @@ export class PreloadScene extends Phaser.Scene {
     // Chapter 1 assets
     this.load.image(ASSET_KEYS.ALARM, alarm);
     this.load.image(ASSET_KEYS.SCROLL, scroll);
-    this.load.image(ASSET_KEYS.TOOTHBRUSH, toothbrush);
+    this.load.image(ASSET_KEYS.TOILET, toilet);
     this.load.image(ASSET_KEYS.BACKPACK, backpack);
     this.load.image(ASSET_KEYS.TRAIN, train);
     this.load.image(ASSET_KEYS.CHAPTER_1_PRELUDE, chapter1Prelude);
@@ -113,7 +113,10 @@ export class PreloadScene extends Phaser.Scene {
   ) {
     graphics.clear();
     graphics.lineStyle(2, 0x000000, 1);
-    graphics.fillStyle(fillColor, 1).fillRect(0, 0, width, height);
+    graphics
+      .fillStyle(fillColor, 1)
+      .fillRect(0, 0, width, height)
+      .strokeRect(0, 0, width, height);
     graphics.generateTexture(key, width, height);
   }
 }

@@ -9,7 +9,7 @@ export class OutcomeScreen extends Phaser.GameObjects.Container {
     this.setDepth(1200);
     const gm = GameManager.getInstance();
     const outcome = gm.outcome;
-    const failed = gm.outcome === OUTCOMES.LATE;
+    const failed = gm.outcome === OUTCOMES.LATE || gm.outcome === OUTCOMES.FAIL;
 
     const [width, height] = [scene.game.canvas.width, scene.game.canvas.height];
 
@@ -26,21 +26,23 @@ export class OutcomeScreen extends Phaser.GameObjects.Container {
       })
       .setOrigin(0.5);
 
-    const nextButton = new NextButton(scene, 0, SIZING.PADDING * 2);
+    const nextButton = new NextButton(
+      scene,
+      0,
+      text.y + text.height + SIZING.PADDING * 2,
+    );
 
     const resetButton = new ResetButton(
       scene,
       0,
       failed
-        ? SIZING.PADDING * 2
+        ? text.height + SIZING.PADDING
         : nextButton.y + SIZING.BUTTON_HEIGHT + SIZING.PADDING * 2,
-      gm.outcome === OUTCOMES.LATE || gm.outcome === OUTCOMES.FAIL
-        ? "Try Again"
-        : "Run it Back",
+      failed ? "Try Again" : "Run it Back",
     );
 
     this.add([bg, text, resetButton]);
-    if (gm.outcome !== OUTCOMES.LATE && gm.outcome !== OUTCOMES.FAIL) {
+    if (!failed) {
       this.add(nextButton);
     }
     this.setPosition(width / 2, height / 2);

@@ -133,7 +133,6 @@ export class GameManager {
   // Update the current time based on placed tiles
   public updateTimes(): void {
     let accruedMinutes = 0; // time in minutes
-
     // Add base duration from placed tiles
     for (let i = 0; i < this._placedTiles.length; i++) {
       const tileKey = this._placedTiles[i];
@@ -148,7 +147,6 @@ export class GameManager {
         });
       }
     }
-
     this._currentTime = new Date(
       this._startTime.getTime() + accruedMinutes * 60000,
     );
@@ -230,6 +228,6 @@ export class GameManager {
         }
       }
     }
-    return true;
+    return new Set(this._placedTiles).size === this._placedTiles.length;
   }
 }

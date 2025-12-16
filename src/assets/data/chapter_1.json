@@ -25,7 +25,7 @@
             }
           ]
         },
-        { "key": "TOOTHBRUSH", "label": "Get Ready", "duration": 20 },
+        { "key": "TOILET", "label": "Get Ready", "duration": 20 },
         { "key": "TRAIN", "label": "Catch Train", "duration": 5 }
       ],
       "panelAmount": 1,

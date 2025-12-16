@@ -88,7 +88,7 @@ export class GameScene extends Phaser.Scene {
             `${formatTime(gm.currentTime)}`,
             {
               fontFamily: FONT_KEYS.REGULAR,
-              fontSize: "14px",
+              fontSize: "16px",
               color: "#000000",
             },
           )
@@ -97,10 +97,10 @@ export class GameScene extends Phaser.Scene {
           .text(
             currentTimeText.width + SIZING.PADDING * 2,
             currentTimeText.y,
-            ` / ${formatTime(gm.targetTime)}`,
+            ` | ${formatTime(gm.targetTime)}`,
             {
               fontFamily: FONT_KEYS.REGULAR,
-              fontSize: "14px",
+              fontSize: "16px",
               color: "#000000",
             },
           )
@@ -123,7 +123,7 @@ export class GameScene extends Phaser.Scene {
   ): void {
     const slotContainer = this.add.container(
       SIZING.PADDING * 2,
-      SIZING.PADDING * 3,
+      SIZING.PADDING * 3.5,
       [],
     );
 
@@ -143,19 +143,6 @@ export class GameScene extends Phaser.Scene {
           slotContainer,
           occupiedBy: null,
         });
-      if (DEBUG) {
-        const debugZone = this.add
-          .rectangle(
-            slotZone.x,
-            slotZone.y,
-            slotZone.width,
-            slotZone.height,
-            0x00ff00,
-            0.3,
-          )
-          .setOrigin(0);
-        slotContainer.add(debugZone);
-      }
       slotContainer.add(slotZone);
     });
     panelContainer.add(slotContainer);
@@ -174,19 +161,6 @@ export class GameScene extends Phaser.Scene {
       .setRectangleDropZone(this.game.canvas.width, TILE_BAR_HEIGHT)
       .setData({ isTileBar: true });
     tileBarContainer.add(tileBarZone);
-    if (DEBUG) {
-      const tileBarDebugBg = this.add
-        .rectangle(
-          tileBarZone.x,
-          tileBarZone.y,
-          tileBarZone.width,
-          tileBarZone.height,
-          0x00ff00,
-          0.3,
-        )
-        .setOrigin(0);
-      tileBarContainer.add(tileBarDebugBg);
-    }
 
     const tilesListContainer = this.add.container(
       tileBarBackground.width / 2 -
@@ -199,24 +173,19 @@ export class GameScene extends Phaser.Scene {
     for (let i = 0; i < gm.availableTiles.length; i++) {
       const tileObj = this.createTile(
         i * (SIZING.TILE_SIZE + SIZING.PADDING * 2),
-        SIZING.PADDING * 2,
+        SIZING.PADDING,
         gm.availableTiles[i].key,
       )
         .setOrigin(0.5)
         .setData({ from: "tileBar", tileData: gm.availableTiles[i] });
-      if (DEBUG) {
-        const tileDebugBg = this.add
-          .rectangle(
-            tileObj.x,
-            tileObj.y,
-            SIZING.TILE_SIZE,
-            SIZING.TILE_SIZE,
-            0x0000ff,
-            0.3,
-          )
-          .setOrigin(0.5);
-        tilesListContainer.add(tileDebugBg);
-      }
+      const labelText = this.add
+        .text(tileObj.x, tileObj.height + 5, gm.availableTiles[i].label, {
+          fontFamily: FONT_KEYS.REGULAR,
+          fontSize: "14px",
+          color: "#000000",
+        })
+        .setOrigin(0.5);
+      tilesListContainer.add(labelText);
       tilesListContainer.add(tileObj);
     }
   }
@@ -258,11 +227,7 @@ export class GameScene extends Phaser.Scene {
       (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image) => {
         const originalX = gameObject.getData("x") as number;
         const originalY = gameObject.getData("y") as number;
-        if (gameObject.getData("from") === "tileBar") {
-          gameObject.setPosition(originalX, originalY);
-        } else {
-          gameObject.destroy();
-        }
+        gameObject.setPosition(originalX, originalY);
       },
     );
   }
@@ -275,11 +240,11 @@ export class GameScene extends Phaser.Scene {
         gameObject: Phaser.GameObjects.Image,
         dropZone: Phaser.GameObjects.Zone,
       ) => {
-        const slotTexture = dropZone.getData("slotTexture") as
-          | Phaser.GameObjects.Image
-          | undefined;
-        if (slotTexture) {
+        if (dropZone) {
           this.handleTileDropOnZone(gm, gameObject, dropZone);
+          if (gameObject.getData("from") !== "tileBar") {
+            gameObject.destroy();
+          }
         }
       },
     );
@@ -296,10 +261,11 @@ export class GameScene extends Phaser.Scene {
       const currentSlotIndex = tile.getData("currentSlotIndex") as
         | number
         | null;
-      if (currentSlotIndex !== null) {
+      if (currentSlotIndex !== null && currentSlotIndex !== undefined) {
         // Remove tile from placed tiles
         gm.updatePlacedTiles(undefined, undefined, currentSlotIndex);
         tile.destroy();
+        // TODO: Enable the previously disabled tile in the tile bar
       }
     } else {
       // Otherwise, tile is dropped into a panel slot
@@ -342,12 +308,20 @@ export class GameScene extends Phaser.Scene {
       }
       dropZone.setData("occupiedBy", newTile);
       slotContainer.add(newTile);
-      this.currentTimeText.setText(formatTime(gm.currentTime));
-      if (gm.currentTime.getTime() > gm.targetTime.getTime()) {
-        this.currentTimeText.setColor("#b31515ff");
-      } else {
-        this.currentTimeText.setColor("#2cb335ff");
-      }
+      // tile.setPosition(tile.getData("x"), tile.getData("y"));
+      // tile.setInteractive({ useHandCursor: false });
+      // tile.disableInteractive();
+    }
+    this.updateTimeText();
+  }
+
+  private updateTimeText(): void {
+    const gm = GameManager.getInstance();
+    this.currentTimeText.setText(formatTime(gm.currentTime));
+    if (gm.currentTime.getTime() > gm.targetTime.getTime()) {
+      this.currentTimeText.setColor("#b31515ff");
+    } else {
+      this.currentTimeText.setColor("#2cb335ff");
     }
   }
 }
