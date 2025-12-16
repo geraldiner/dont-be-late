@@ -11,6 +11,7 @@ export const FONT_KEYS = {
   REGULAR: "REGULAR",
 } as const;
 
+// TEXTURE_KEYS
 export const TEXTURE_KEYS = {
   BUTTON: "BUTTON",
   BUTTON_DISABLED: "BUTTON_DISABLED",
@@ -38,4 +39,12 @@ export const SIZING = {
   TILE_SIZE: 80,
   BUTTON_WIDTH: 90,
   BUTTON_HEIGHT: 25,
+} as const;
+
+// OUTCOME CONSTANTS
+export const OUTCOMES = {
+  IDEAL: "IDEAL",
+  ON_TIME: "ON_TIME",
+  LATE: "LATE",
+  FAIL: "FAIL", // TODO: Will there be a difference between late and fail?
 } as const;
