@@ -1,19 +1,19 @@
 {
   "5": [
-    { "x": 0, "y": 0, "texture": "TWO_THIRDS_RECTANGLE" },
-    { "x": 208, "y": 0, "texture": "SQUARE" },
-    { "x": 0, "y": 108, "texture": "SQUARE" },
-    { "x": 104, "y": 108, "texture": "TWO_THIRDS_RECTANGLE" },
-    { "x": 0, "y": 216, "texture": "FULL_RECTANGLE" }
+    { "x": 0, "y": 0, "texture": "two_thirds_rectangle" },
+    { "x": 208, "y": 0, "texture": "square" },
+    { "x": 0, "y": 108, "texture": "square" },
+    { "x": 104, "y": 108, "texture": "two_thirds_rectangle" },
+    { "x": 0, "y": 216, "texture": "full_rectangle" }
   ],
   "8": [
-    { "x": 0, "y": 0, "texture": "SQUARE" },
-    { "x": 104, "y": 0, "texture": "SQUARE" },
-    { "x": 208, "y": 0, "texture": "SQUARE" },
-    { "x": 0, "y": 108, "texture": "HALF_RECTANGLE" },
-    { "x": 156, "y": 108, "texture": "HALF_RECTANGLE" },
-    { "x": 0, "y": 216, "texture": "SQUARE" },
-    { "x": 104, "y": 216, "texture": "SQUARE" },
-    { "x": 208, "y": 216, "texture": "SQUARE" }
+    { "x": 0, "y": 0, "texture": "square" },
+    { "x": 104, "y": 0, "texture": "square" },
+    { "x": 208, "y": 0, "texture": "square" },
+    { "x": 0, "y": 108, "texture": "half_rectangle" },
+    { "x": 156, "y": 108, "texture": "half_rectangle" },
+    { "x": 0, "y": 216, "texture": "square" },
+    { "x": 104, "y": 216, "texture": "square" },
+    { "x": 208, "y": 216, "texture": "square" }
   ]
 }

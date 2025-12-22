@@ -26,14 +26,14 @@ export class DataManager {
     key: string,
   ): { width: number; height: number } | null {
     switch (key) {
-      case "SQUARE":
-        return panelSlotSizes.SQUARE;
-      case "TWO_THIRDS_RECTANGLE":
-        return panelSlotSizes.TWO_THIRDS_RECTANGLE;
-      case "HALF_RECTANGLE":
-        return panelSlotSizes.HALF_RECTANGLE;
-      case "FULL_RECTANGLE":
-        return panelSlotSizes.FULL_RECTANGLE;
+      case "square":
+        return panelSlotSizes.square;
+      case "two_thirds_rectangle":
+        return panelSlotSizes.two_thirds_rectangle;
+      case "half_rectangle":
+        return panelSlotSizes.half_rectangle;
+      case "full_rectangle":
+        return panelSlotSizes.full_rectangle;
       default:
         console.error(`Panel slot size for key ${key} not found.`);
         return null;

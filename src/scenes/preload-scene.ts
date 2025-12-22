@@ -1,12 +1,26 @@
 import * as Phaser from "phaser";
 
 import VigaFont from "../assets/fonts/Viga-Regular.ttf";
-import alarm from "../assets/images/1-1/alarm.png";
-import backpack from "../assets/images/1-1/backpack.png";
-import chapter1Prelude from "../assets/images/1-1/prelude.jpg";
-import scroll from "../assets/images/1-1/scroll.png";
-import toilet from "../assets/images/1-1/toilet.png";
-import train from "../assets/images/1-1/train.png";
+import chapter1Prelude from "../assets/images/chapter-dividers/1-1.jpg";
+import alarm from "../assets/images/tiles/alarm.png";
+import backpack from "../assets/images/tiles/backpack.png";
+import bell from "../assets/images/tiles/bell.png";
+import board from "../assets/images/tiles/board.png";
+import charge from "../assets/images/tiles/charge.png";
+import coffee from "../assets/images/tiles/coffee.png";
+import email from "../assets/images/tiles/email.png";
+import folders from "../assets/images/tiles/folders.png";
+import food from "../assets/images/tiles/food.png";
+import group from "../assets/images/tiles/group.png";
+import hoodie from "../assets/images/tiles/hoodie.png";
+import kid from "../assets/images/tiles/kid.png";
+import lego from "../assets/images/tiles/lego.png";
+import lunchbox from "../assets/images/tiles/lunchbox.png";
+import openDoor from "../assets/images/tiles/open_door.png";
+import scroll from "../assets/images/tiles/scroll.png";
+import toilet from "../assets/images/tiles/toilet.png";
+import train from "../assets/images/tiles/train.png";
+import van from "../assets/images/tiles/van.png";
 import { DataManager } from "../manager/data-manager";
 import {
   ASSET_KEYS,
@@ -25,12 +39,28 @@ export class PreloadScene extends Phaser.Scene {
     // Load fonts
     this.load.font(FONT_KEYS.REGULAR, VigaFont);
 
-    // Chapter 1 assets
+    // Tiles
     this.load.image(ASSET_KEYS.ALARM, alarm);
+    this.load.image(ASSET_KEYS.BACKPACK, backpack);
+    this.load.image(ASSET_KEYS.BELL, bell);
+    this.load.image(ASSET_KEYS.BOARD, board);
+    this.load.image(ASSET_KEYS.CHARGE, charge);
+    this.load.image(ASSET_KEYS.COFFEE, coffee);
+    this.load.image(ASSET_KEYS.EMAIL, email);
+    this.load.image(ASSET_KEYS.FOLDERS, folders);
+    this.load.image(ASSET_KEYS.FOOD, food);
+    this.load.image(ASSET_KEYS.GROUP, group);
+    this.load.image(ASSET_KEYS.HOODIE, hoodie);
+    this.load.image(ASSET_KEYS.KID, kid);
+    this.load.image(ASSET_KEYS.LEGO, lego);
+    this.load.image(ASSET_KEYS.LUNCHBOX, lunchbox);
+    this.load.image(ASSET_KEYS.OPEN_DOOR, openDoor);
     this.load.image(ASSET_KEYS.SCROLL, scroll);
     this.load.image(ASSET_KEYS.TOILET, toilet);
-    this.load.image(ASSET_KEYS.BACKPACK, backpack);
     this.load.image(ASSET_KEYS.TRAIN, train);
+    this.load.image(ASSET_KEYS.VAN, van);
+
+    // Chapter 1 Assets
     this.load.image(ASSET_KEYS.CHAPTER_1_PRELUDE, chapter1Prelude);
 
     const dm = DataManager.getInstance();

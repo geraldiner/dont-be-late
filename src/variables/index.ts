@@ -1,34 +1,48 @@
 // SCENE KEYS
 export const SCENE_KEYS = {
-  PRELOAD: "PRELOAD",
-  TITLE: "TITLE",
-  GAME: "GAME",
-  GAME_COMPLETE: "GAME_COMPLETE",
+  PRELOAD: "preload",
+  TITLE: "title",
+  GAME: "game",
+  GAME_COMPLETE: "game_complete",
 } as const;
 
 // FONT KEYS
 export const FONT_KEYS = {
-  REGULAR: "REGULAR",
+  REGULAR: "regular",
 } as const;
 
 // TEXTURE_KEYS
 export const TEXTURE_KEYS = {
-  BUTTON: "BUTTON",
-  BUTTON_DISABLED: "BUTTON_DISABLED",
-  SQUARE: "SQUARE",
-  TWO_THIRDS_RECTANGLE: "TWO_THIRDS_RECTANGLE",
-  HALF_RECTANGLE: "HALF_RECTANGLE",
-  FULL_RECTANGLE: "FULL_RECTANGLE",
+  BUTTON: "button",
+  BUTTON_DISABLED: "button_disabled",
+  SQUARE: "square",
+  TWO_THIRDS_RECTANGLE: "two_thirds_rectangle",
+  HALF_RECTANGLE: "half_rectangle",
+  FULL_RECTANGLE: "full_rectangle",
 } as const;
 
 // ASSET_KEYS
 export const ASSET_KEYS = {
-  ALARM: "ALARM",
-  SCROLL: "SCROLL",
-  TOILET: "TOILET",
-  BACKPACK: "BACKPACK",
-  TRAIN: "TRAIN",
-  CHAPTER_1_PRELUDE: "CHAPTER_1_PRELUDE",
+  ALARM: "alarm",
+  BACKPACK: "backpack",
+  BELL: "bell",
+  BOARD: "board",
+  CHARGE: "charge",
+  COFFEE: "coffee",
+  EMAIL: "email",
+  FOLDERS: "folders",
+  FOOD: "food",
+  GROUP: "group",
+  HOODIE: "hoodie",
+  KID: "kid",
+  LEGO: "lego",
+  LUNCHBOX: "lunchbox",
+  OPEN_DOOR: "open_door",
+  SCROLL: "scroll",
+  TOILET: "toilet",
+  TRAIN: "train",
+  VAN: "van",
+  CHAPTER_1_PRELUDE: "chapter_1_prelude",
 } as const;
 
 // SIZING CONSTANTS
@@ -43,8 +57,8 @@ export const SIZING = {
 
 // OUTCOME CONSTANTS
 export const OUTCOMES = {
-  IDEAL: "IDEAL",
-  ON_TIME: "ON_TIME",
-  LATE: "LATE",
-  FAIL: "FAIL", // TODO: Will there be a difference between late and fail?
+  IDEAL: "ideal",
+  ON_TIME: "on_time",
+  LATE: "late",
+  FAIL: "fail", // TODO: Will there be a difference between late and fail?
 } as const;

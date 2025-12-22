@@ -8,10 +8,10 @@
         "Seito must catch the 7am train"
       ],
       "availableTiles": [
-        { "key": "ALARM", "label": "Alarm Goes Off", "duration": 0 },
-        { "key": "BACKPACK", "label": "Pack Bag", "duration": 15 },
+        { "key": "alarm", "label": "Alarm Goes Off", "duration": 0 },
+        { "key": "backpack", "label": "Pack Bag", "duration": 15 },
         {
-          "key": "SCROLL",
+          "key": "scroll",
           "label": "Scroll a Bit",
           "duration": 10,
           "penalties": [
@@ -25,8 +25,8 @@
             }
           ]
         },
-        { "key": "TOILET", "label": "Get Ready", "duration": 20 },
-        { "key": "TRAIN", "label": "Catch Train", "duration": 5 }
+        { "key": "toilet", "label": "Get Ready", "duration": 20 },
+        { "key": "train", "label": "Catch Train", "duration": 5 }
       ],
       "panelAmount": 1,
       "panelLayoutKey": "5",
@@ -34,10 +34,10 @@
       "targetTime": "7:00 AM",
       "idealEndTime": "6:55 AM",
       "constraints": [
-        { "type": "mustBeFirst", "tileKey": "ALARM" },
-        { "type": "mustBeLast", "tileKey": "TRAIN" }
+        { "type": "mustBeFirst", "tileKey": "alarm" },
+        { "type": "mustBeLast", "tileKey": "train" }
       ],
-      "fixedPositions": [{ "tileKey": "TRAIN", "position": -1 }]
+      "fixedPositions": [{ "tileKey": "train", "position": -1 }]
     },
     {
       "title": "Toto needs to get the kids to school",
@@ -45,23 +45,121 @@
         "I should have coffee before the kids wake up",
         "We really need to beat the traffic"
       ],
-      "availableTiles": ["SCROLL"],
+      "availableTiles": [
+        {
+          "key": "alarm",
+          "label": "Alarm Goes Off",
+          "duration": 0
+        },
+        {
+          "key": "coffee",
+          "label": "Make Coffee",
+          "duration": 10,
+          "penalties": [{ "type": "beforeCoffee", "extraMinutes": 5 }]
+        },
+        { "key": "kid", "label": "Wake Kids", "duration": 15 },
+        {
+          "key": "food",
+          "label": "Make Breakfast",
+          "duration": 20
+        },
+        {
+          "key": "lunchbox",
+          "label": "Pack Lunches",
+          "duration": 15,
+          "bonuses": [
+            {
+              "type": "kitchenBonus",
+              "reducedMinutes": 5
+            }
+          ]
+        },
+        {
+          "key": "scroll",
+          "label": "Scroll a Bit",
+          "duration": 10,
+          "penalties": [
+            {
+              "type": "scrollingSecondAfterAlarm",
+              "extraMinutes": 20
+            },
+            {
+              "type": "scrollingElsewhere",
+              "extraMinutes": 5
+            }
+          ]
+        },
+        { "key": "hoodie", "label": "Get Ready", "duration": 30 },
+        { "key": "van", "label": "Load & Go", "duration": 20 }
+      ],
       "panelAmount": 1,
       "panelLayoutKey": "8",
       "startTime": "5:30 AM",
-      "targetTime": "7:25 AM"
+      "targetTime": "7:25 AM",
+      "constraints": [
+        { "type": "mustBeFirst", "tileKey": "alarm" },
+        { "type": "mustBeLast", "tileKey": "van" },
+        { "type": "mustComeBefore", "before": "kid", "after": "hoodie" }
+      ],
+      "fixedPositions": [{ "tileKey": "van", "position": -1 }]
     },
     {
-      "title": "Mr. Sensei is starting a new unit today",
+      "title": "Mr. Sensei is starting a new unit",
       "sceneStartText": [
         "I can't be late for the conference this morning",
         "I also have a lot to set up before the first bell"
       ],
-      "availableTiles": ["SCROLL"],
+      "availableTiles": [
+        {
+          "key": "bell",
+          "label": "First Bell Rings",
+          "duration": 0
+        },
+        {
+          "key": "board",
+          "label": "Setup Classroom",
+          "duration": 10
+        },
+        {
+          "key": "email",
+          "label": "Check Emails",
+          "duration": 10
+        },
+        {
+          "key": "lego",
+          "label": "Pick Up Materials",
+          "duration": 20
+        },
+        {
+          "key": "charge",
+          "label": "Charge Laptop",
+          "duration": 1
+        },
+        {
+          "key": "folders",
+          "label": "Make Copies",
+          "duration": 2
+        },
+        {
+          "key": "group",
+          "label": "Parent Conference",
+          "duration": 35
+        },
+        {
+          "key": "open_door",
+          "label": "Go To Classroom",
+          "duration": 10
+        }
+      ],
       "panelAmount": 1,
       "panelLayoutKey": "8",
       "startTime": "6:45 AM",
-      "targetTime": "8:25 AM"
+      "targetTime": "8:25 AM",
+      "idealEndTime": "",
+      "constraints": [
+        { "type": "mustBe", "tileKey": "group", "position": 3 },
+        { "type": "mustBeLast", "tileKey": "bell" }
+      ]
     }
   ]
 }

@@ -6,8 +6,6 @@ import { LetsGoButton } from "../ui/buttons";
 import { formatTime } from "../utils/date";
 import { FONT_KEYS, SCENE_KEYS, SIZING } from "../variables";
 
-const DEBUG: boolean = true;
-
 const TILE_BAR_Y_POSITION: number = 480;
 const TILE_BAR_HEIGHT: number = 120;
 
@@ -179,11 +177,21 @@ export class GameScene extends Phaser.Scene {
         .setOrigin(0.5)
         .setData({ from: "tileBar", tileData: gm.availableTiles[i] });
       const labelText = this.add
-        .text(tileObj.x, tileObj.height + 5, gm.availableTiles[i].label, {
-          fontFamily: FONT_KEYS.REGULAR,
-          fontSize: "14px",
-          color: "#000000",
-        })
+        .text(
+          tileObj.x,
+          tileObj.height + SIZING.PADDING / 2,
+          gm.availableTiles[i].label,
+          {
+            align: "center",
+            fontFamily: FONT_KEYS.REGULAR,
+            fontSize: "14px",
+            color: "#000000",
+            wordWrap: {
+              width: SIZING.TILE_SIZE,
+              useAdvancedWrap: true,
+            },
+          },
+        )
         .setOrigin(0.5);
       tilesListContainer.add(labelText);
       tilesListContainer.add(tileObj);

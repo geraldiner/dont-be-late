@@ -8,6 +8,7 @@ interface Tile {
   label: string;
   duration: number;
   penalties?: Array<{ type: string; extraMinutes: number }>;
+  bonuses?: Array<{ type: string; reducedMinutes: number }>;
 }
 
 export class GameManager {
@@ -145,6 +146,12 @@ export class GameManager {
             accruedMinutes += handler(this._placedTiles, i, penalty);
           }
         });
+        tile.bonuses?.forEach((bonus) => {
+          const handler = effectHandlers[bonus.type];
+          if (handler) {
+            accruedMinutes -= handler(this._placedTiles, i, bonus);
+          }
+        });
       }
     }
     this._currentTime = new Date(
@@ -186,6 +193,7 @@ export class GameManager {
     } else {
       this._outcome = OUTCOMES.LATE;
     }
+    this._outcome = OUTCOMES.ON_TIME;
   }
 
   public resetLevel(scene: Phaser.Scene): void {
@@ -228,6 +236,9 @@ export class GameManager {
         }
       }
     }
-    return new Set(this._placedTiles).size === this._placedTiles.length;
+    return (
+      new Set(this._placedTiles.filter((t) => t !== undefined)).size ===
+      this._placedTiles.length
+    );
   }
 }
