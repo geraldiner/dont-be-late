@@ -22,24 +22,6 @@ export class GameManager {
     return this._placedTiles;
   }
 
-  private _panelAmount: number = 1;
-  public get panelAmount(): number {
-    return this._panelAmount;
-  }
-
-  private _panelLayout: Array<{
-    x: number;
-    y: number;
-    texture: string;
-  }> = [];
-  public get panelLayout(): Array<{
-    x: number;
-    y: number;
-    texture: string;
-  }> {
-    return this._panelLayout;
-  }
-
   // Game states
   public chapter: number = 1;
   private _chapterTitle: string = "";
@@ -94,10 +76,9 @@ export class GameManager {
     // Level info
     this._chapterTitle = chapterData.title;
     this._levelTitle = levelData.title;
-    // Tiles & layout
+    // Tiles
     this._availableTiles = levelData.availableTiles;
-    this._panelAmount = levelData.panelAmount;
-    this._panelLayout = dm.getPanelLayout(levelData.panelLayoutKey);
+
     // Game conditions
     this._startTime = new Date(
       `${new Date().toDateString()} ${levelData.startTime}`,

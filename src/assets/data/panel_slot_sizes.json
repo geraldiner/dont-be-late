@@ -1,6 +1,0 @@
-{
-  "square": { "width": 94, "height": 98 },
-  "two_thirds_rectangle": { "width": 198, "height": 98 },
-  "half_rectangle": { "width": 146, "height": 98 },
-  "full_rectangle": { "width": 302, "height": 98 }
-}
