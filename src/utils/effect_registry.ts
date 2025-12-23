@@ -1,4 +1,4 @@
-import { ASSET_KEYS } from "../variables";
+import { TILE_KEYS } from "../variables";
 
 interface EffectRule {
   type: string;
@@ -15,7 +15,7 @@ type EffectHandler = (
 
 export const effectHandlers: Record<string, EffectHandler> = {
   scrollingSecondAfterAlarm(sequence, index) {
-    return index === 1 && sequence[index - 1] === ASSET_KEYS.ALARM ? 20 : 0;
+    return index === 1 && sequence[index - 1] === TILE_KEYS.ALARM ? 20 : 0;
   },
   scrollingElsewhere(_, index) {
     return index !== 1 ? 5 : 0;

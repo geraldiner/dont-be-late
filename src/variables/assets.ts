@@ -1,0 +1,17 @@
+export const ASSET_KEYS = {
+  HEADER_ENDGAME: "header_endgame",
+  HEADER_FOREST: "header_forest",
+  HEADER_SCHOOL: "header_school",
+  ICON_CLOCK: "icon_clock",
+  ICON_DISAPPOINTED_EMOJI: "icon_disappointed_emoji",
+  ICON_LIST: "icon_list",
+  ICON_MEDAL_FIRST: "icon_medal_first",
+  ICON_SIX_DOTS: "icon_six_dots",
+  ICON_STAR: "icon_star",
+  ICON_THREE_DOTS: "icon_three_dots",
+  ICON_TRIANGULAR_RULER: "icon_triangular_ruler",
+  ICON_TROPHY: "icon_trophy",
+  VERTICAL_BANNER_ENDGAME: "vertical_banner_endgame",
+  VERTICAL_BANNER_FOREST: "vertical_banner_forest",
+  VERTICAL_BANNER_SCHOOL: "vertical_banner_school",
+} as const;

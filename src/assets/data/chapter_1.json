@@ -25,7 +25,7 @@
             }
           ]
         },
-        { "key": "toilet", "label": "🪞 Get Ready", "duration": 20 },
+        { "key": "toilet", "label": "🚽 Get Ready", "duration": 20 },
         {
           "key": "train",
           "label": "🚃 Catch Train",

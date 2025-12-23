@@ -1,4 +1,4 @@
-import { FONT_KEYS, SIZING, TEXTURE_KEYS } from "../../variables";
+import { FONT_KEYS, PADDING, SIZES, TEXTURE_KEYS } from "../../variables";
 
 export abstract class Button extends Phaser.GameObjects.Container {
   private _text: Phaser.GameObjects.Text;
@@ -18,15 +18,15 @@ export abstract class Button extends Phaser.GameObjects.Container {
         fontSize: "14px",
         color: "#000000",
         align: "center",
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
       })
       .setOrigin(0.5);
 
     this.add([this._bg, this._text]);
 
     this.setSize(
-      SIZING.BUTTON_WIDTH + SIZING.PADDING,
-      SIZING.BUTTON_HEIGHT + SIZING.PADDING,
+      SIZES.BUTTON_WIDTH + PADDING.TEN,
+      SIZES.BUTTON_HEIGHT + PADDING.TEN,
     );
 
     this.setInteractive({ useHandCursor: true });

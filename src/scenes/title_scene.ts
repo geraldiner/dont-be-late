@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 
-import { FONT_KEYS, SCENE_KEYS } from "../variables";
+import { Navbar } from "../ui/navbar";
+import { FONT_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
 
 export class TitleScene extends Phaser.Scene {
   constructor() {
@@ -9,7 +10,13 @@ export class TitleScene extends Phaser.Scene {
 
   public create(): void {
     // DEBUG: Uncomment out to skip title scene
-    this.scene.start(SCENE_KEYS.GAME);
+    // this.scene.start(SCENE_KEYS.GAME);
+
+    new Navbar(this, 0, PADDING.TWENTY, [
+      "Codedex.io 2025 Game Jam",
+      "GeraldineDesu",
+      "Don't Be Late!",
+    ]);
 
     this.add
       .text(
@@ -17,7 +24,7 @@ export class TitleScene extends Phaser.Scene {
         this.scale.height / 2 - 40,
         "Don't Be Late!",
         {
-          fontFamily: FONT_KEYS.REGULAR,
+          fontFamily: FONT_KEYS.SERIF,
           fontSize: "48px",
           color: "#000000",
         },
@@ -30,7 +37,7 @@ export class TitleScene extends Phaser.Scene {
         this.scale.height / 2 + 40,
         "Click to Start",
         {
-          fontFamily: FONT_KEYS.REGULAR,
+          fontFamily: FONT_KEYS.SERIF,
           fontSize: "24px",
           color: "#000000",
         },
