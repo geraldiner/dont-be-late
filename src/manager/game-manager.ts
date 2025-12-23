@@ -3,10 +3,11 @@ import { effectHandlers } from "../utils";
 import { OUTCOMES, SCENE_KEYS } from "../variables";
 import { DataManager } from "./data-manager";
 
-interface Tile {
+export interface Tile {
   key: string;
   label: string;
   duration: number;
+  fixedPositionIndex?: number;
   penalties?: Array<{ type: string; extraMinutes: number }>;
   bonuses?: Array<{ type: string; reducedMinutes: number }>;
 }
@@ -50,8 +51,6 @@ export class GameManager {
     return this._outcome;
   }
 
-  // Level rules
-  private _fixedPositions: Array<{ tileKey: string; position: number }> = [];
   private _constraints: Array<{
     type: string;
     tileKey?: string;
@@ -91,13 +90,26 @@ export class GameManager {
     this._idealEndTime = new Date(
       `${new Date().toDateString()} ${levelData.idealEndTime}`,
     );
-    this._fixedPositions = levelData.fixedPositions;
     this._constraints = levelData.constraints;
+  }
+
+  public getFixedTiles(): Array<Tile> {
+    return this._availableTiles.filter((tile) =>
+      Object.prototype.hasOwnProperty.call(tile, "fixedPositionIndex"),
+    );
+  }
+
+  public getFreeTiles(): Array<Tile> {
+    return this._availableTiles.filter(
+      (tile) =>
+        !Object.prototype.hasOwnProperty.call(tile, "fixedPositionIndex"),
+    );
   }
 
   public updateSequence(tiles: Array<string>): void {
     this._currentSequence = tiles;
     this.updateTimes();
+    console.log("Updated sequence:", this._currentSequence);
   }
 
   // Update the current time based on placed tiles
@@ -133,17 +145,18 @@ export class GameManager {
     new OutcomeScreen(scene, 0, 0);
   }
 
-  public setNextLevel(scene: Phaser.Scene): void {
+  public goNextLevel(scene: Phaser.Scene): void {
     this.level += 1;
     if (this.level > 3) {
       this.chapter += 1;
       this.level = 1;
     }
-
-    if (this.chapter > 2) {
+    if (this.chapter > 1) {
       scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
+      scene.scene.stop();
     } else {
       this.setupLevel();
+      scene.scene.restart();
     }
   }
 
@@ -169,11 +182,6 @@ export class GameManager {
   public resetLevel(scene: Phaser.Scene): void {
     this._currentSequence = [];
     this.setupLevel();
-    scene.scene.restart();
-  }
-
-  public goNextLevel(scene: Phaser.Scene): void {
-    this.setNextLevel(scene);
     scene.scene.restart();
   }
 

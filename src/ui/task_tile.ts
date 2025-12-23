@@ -16,14 +16,17 @@ export class TaskTile extends Phaser.GameObjects.Container {
     y: number,
     text: string,
     key: string,
+    isFixed: boolean = false,
   ) {
     super(scene, x, y);
     scene.add.existing(this);
 
     this._key = key;
 
+    const bgColor = isFixed ? 0xf3f4f6 : 0xffffff;
+
     const bg = scene.add
-      .rectangle(0, -1, 378, 40, 0xffffff)
+      .rectangle(0, -1, 378, 40, bgColor)
       .setStrokeStyle(1, 0xe5e7eb)
       .setOrigin(0.5, 0);
     const label = scene.add
@@ -34,27 +37,37 @@ export class TaskTile extends Phaser.GameObjects.Container {
       })
       .setOrigin(0, 0.5);
     this.add([bg, label]);
-    this.setSize(TILE_WIDTH, TILE_HEIGHT)
-      .setInteractive({ useHandCursor: true })
-      .setDepth(TILE_DEPTH);
-    scene.input.setDraggable(this);
+    this.setSize(TILE_WIDTH, TILE_HEIGHT).setDepth(TILE_DEPTH);
+
+    if (isFixed) {
+      this.disableInteractive();
+    } else {
+      this.setInteractive({ useHandCursor: true });
+      scene.input.setDraggable(this);
+    }
 
     this.on("dragstart", () => {
-      this.setDepth(TILE_DEPTH + 1);
-      this.emit("tile-drag-start", this);
+      if (!isFixed) {
+        this.setDepth(TILE_DEPTH + 1);
+        this.emit("tile-drag-start", this);
+      }
     });
 
     this.on(
       "drag",
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-        this.y = dragY;
-        this.emit("tile-drag-move", this);
+        if (!isFixed) {
+          this.y = dragY;
+          this.emit("tile-drag-move", this);
+        }
       },
     );
 
     this.on("dragend", () => {
-      this.setDepth(TILE_DEPTH);
-      this.emit("tile-drag-end", this);
+      if (!isFixed) {
+        this.setDepth(TILE_DEPTH);
+        this.emit("tile-drag-end", this);
+      }
     });
   }
 

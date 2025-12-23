@@ -8,11 +8,11 @@
         "Seito must catch the 7am train"
       ],
       "availableTiles": [
-        { "key": "alarm", "label": "Alarm Goes Off", "duration": 0 },
-        { "key": "backpack", "label": "Pack Bag", "duration": 15 },
+        { "key": "alarm", "label": "⏰ Alarm Goes Off", "duration": 0 },
+        { "key": "backpack", "label": "💼 Pack Bag", "duration": 15 },
         {
           "key": "scroll",
-          "label": "Scroll a Bit",
+          "label": "📱 Scroll a Bit",
           "duration": 10,
           "penalties": [
             {
@@ -25,8 +25,13 @@
             }
           ]
         },
-        { "key": "toilet", "label": "Get Ready", "duration": 20 },
-        { "key": "train", "label": "Catch Train", "duration": 5 }
+        { "key": "toilet", "label": "🪞 Get Ready", "duration": 20 },
+        {
+          "key": "train",
+          "label": "🚃 Catch Train",
+          "duration": 5,
+          "fixedPositionIndex": 4
+        }
       ],
       "startTime": "6:00 AM",
       "targetTime": "7:00 AM",
@@ -34,8 +39,7 @@
       "constraints": [
         { "type": "mustBeFirst", "tileKey": "alarm" },
         { "type": "mustBeLast", "tileKey": "train" }
-      ],
-      "fixedPositions": [{ "tileKey": "train", "position": -1 }]
+      ]
     },
     {
       "title": "Toto needs to get the kids to school",
@@ -88,7 +92,12 @@
           ]
         },
         { "key": "hoodie", "label": "Get Ready", "duration": 30 },
-        { "key": "van", "label": "Load & Go", "duration": 20 }
+        {
+          "key": "van",
+          "label": "Load & Go",
+          "duration": 20,
+          "fixedPositionIndex": 7
+        }
       ],
       "startTime": "5:30 AM",
       "targetTime": "7:25 AM",
@@ -96,8 +105,7 @@
         { "type": "mustBeFirst", "tileKey": "alarm" },
         { "type": "mustBeLast", "tileKey": "van" },
         { "type": "mustComeBefore", "before": "kid", "after": "hoodie" }
-      ],
-      "fixedPositions": [{ "tileKey": "van", "position": -1 }]
+      ]
     },
     {
       "title": "Mr. Sensei is starting a new unit",
@@ -139,7 +147,8 @@
         {
           "key": "group",
           "label": "Parent Conference",
-          "duration": 35
+          "duration": 35,
+          "fixedPositionIndex": 3
         },
         {
           "key": "open_door",
