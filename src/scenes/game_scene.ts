@@ -1,11 +1,11 @@
 import * as Phaser from "phaser";
 
-import { PreludeScreen } from "../game-screens/prelude";
-import { GameManager, type Tile } from "../manager/game-manager";
+import { PreludeScreen } from "../game_screens/prelude_screen";
+import { GameManager, type Tile } from "../manager/game_manager";
 import { LetsGoButton } from "../ui/buttons";
 import { TaskTile } from "../ui/task_tile";
 import { formatTime, shuffleArray } from "../utils";
-import { FONT_KEYS, SCENE_KEYS, SIZING, TEXTURE_KEYS } from "../variables";
+import { FONT_KEYS, PADDING, SCENE_KEYS, TEXTURE_KEYS } from "../variables";
 
 export class GameScene extends Phaser.Scene {
   private _fixedTiles: Array<Tile> = [];
@@ -39,11 +39,11 @@ export class GameScene extends Phaser.Scene {
       .setStrokeStyle(2, 0x000000)
       .setOrigin(0.5);
     const titleText = this.add.text(
-      pageBackground.x - pageBackground.width / 2 + SIZING.PADDING * 2,
-      pageBackground.y - pageBackground.height / 2 + SIZING.PADDING,
+      pageBackground.x - pageBackground.width / 2 + PADDING.TWENTY,
+      pageBackground.y - pageBackground.height / 2 + PADDING.TEN,
       gm.getTitle(),
       {
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
         fontSize: "16px",
         color: "#111111",
       },
@@ -51,17 +51,17 @@ export class GameScene extends Phaser.Scene {
     const agendaHeadingBackground = this.add
       .image(
         titleText.x,
-        titleText.y + titleText.height + SIZING.PADDING,
+        titleText.y + titleText.height + PADDING.TEN,
         TEXTURE_KEYS.AGENDA_HEADING_ROUNDED_RECTANGLE,
       )
       .setOrigin(0);
     this.add
       .text(
-        agendaHeadingBackground.x + SIZING.PADDING * 2,
+        agendaHeadingBackground.x + PADDING.TWENTY,
         agendaHeadingBackground.height / 2 + agendaHeadingBackground.y,
         "TODAY'S AGENDA",
         {
-          fontFamily: FONT_KEYS.REGULAR,
+          fontFamily: FONT_KEYS.SERIF,
           fontSize: "14px",
           color: "#111111",
         },
@@ -74,7 +74,7 @@ export class GameScene extends Phaser.Scene {
       pageBackground.height / 2 +
       titleText.height +
       agendaHeadingBackground.height +
-      SIZING.PADDING * 2;
+      PADDING.TWENTY;
     this.startY = startY;
     const occupied = new Set<number>();
 
@@ -124,11 +124,11 @@ export class GameScene extends Phaser.Scene {
     const currentTimeLabel = this.add.text(
       agendaSummaryBackground.x -
         agendaSummaryBackground.width / 2 +
-        SIZING.PADDING * 2,
-      agendaSummaryBackground.y + SIZING.PADDING,
+        PADDING.TWENTY,
+      agendaSummaryBackground.y + PADDING.TEN,
       "CURRENT TIME",
       {
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
         fontSize: "14px",
         color: "#111111",
       },
@@ -137,11 +137,11 @@ export class GameScene extends Phaser.Scene {
     this.currentTimeText = this.add.text(
       agendaSummaryBackground.x -
         agendaSummaryBackground.width / 2 +
-        SIZING.PADDING * 2,
-      currentTimeLabel.y + currentTimeLabel.height + SIZING.PADDING,
+        PADDING.TWENTY,
+      currentTimeLabel.y + currentTimeLabel.height + PADDING.TEN,
       `${formatTime(gm.currentTime)}`,
       {
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
         fontSize: "16px",
         color: "#111111",
       },
@@ -149,10 +149,10 @@ export class GameScene extends Phaser.Scene {
 
     const targetTimeLabel = this.add.text(
       agendaSummaryBackground.x,
-      agendaSummaryBackground.y + SIZING.PADDING,
+      agendaSummaryBackground.y + PADDING.TEN,
       "TARGET TIME",
       {
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
         fontSize: "14px",
         color: "#111111",
       },
@@ -160,10 +160,10 @@ export class GameScene extends Phaser.Scene {
 
     this.add.text(
       agendaSummaryBackground.x,
-      targetTimeLabel.y + targetTimeLabel.height + SIZING.PADDING,
+      targetTimeLabel.y + targetTimeLabel.height + PADDING.TEN,
       `${formatTime(gm.targetTime)}`,
       {
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
         fontSize: "16px",
         color: "#111111",
       },

@@ -1,8 +1,8 @@
 import * as Phaser from "phaser";
 
-import { DataManager } from "../manager/data-manager";
-import { GameManager } from "../manager/game-manager";
-import { FONT_KEYS, SIZING } from "../variables";
+import { DataManager } from "../manager/data_manager";
+import { GameManager } from "../manager/game_manager";
+import { FONT_KEYS, PADDING } from "../variables";
 
 export class PreludeScreen extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -28,7 +28,7 @@ export class PreludeScreen extends Phaser.GameObjects.Container {
         fontSize: "32px",
         color: "#000000",
         align: "center",
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
       })
       .setOrigin(0.5);
 
@@ -37,18 +37,18 @@ export class PreludeScreen extends Phaser.GameObjects.Container {
         fontSize: "48px",
         color: "#000000",
         align: "center",
-        fontFamily: FONT_KEYS.REGULAR,
+        fontFamily: FONT_KEYS.SERIF,
       })
       .setOrigin(0.5);
 
     const subTexts = levelData.sceneStartText.map(
       (line: string, index: number) => {
         return scene.add
-          .text(0, 60 + index * SIZING.PADDING * 4, line, {
+          .text(0, 60 + index * PADDING.FORTY, line, {
             fontSize: "24px",
             color: "#000000",
             align: "center",
-            fontFamily: FONT_KEYS.REGULAR,
+            fontFamily: FONT_KEYS.SERIF,
           })
           .setOrigin(0.5);
       },

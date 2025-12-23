@@ -1,4 +1,4 @@
-import { GameManager } from "../../manager/game-manager";
+import { GameManager } from "../../manager/game_manager";
 import { Button } from "./button";
 
 export class ResetButton extends Button {

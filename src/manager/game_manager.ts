@@ -1,7 +1,7 @@
-import { OutcomeScreen } from "../game-screens/outcome";
+import { OutcomeScreen } from "../game_screens/outcome_screen";
 import { effectHandlers } from "../utils";
 import { OUTCOMES, SCENE_KEYS } from "../variables";
-import { DataManager } from "./data-manager";
+import { DataManager } from "./data_manager";
 
 export interface Tile {
   key: string;

@@ -1,7 +1,24 @@
-import * as Phaser from "phaser";
-
-import VigaFont from "../assets/fonts/Viga-Regular.ttf";
-import { FONT_KEYS, SCENE_KEYS, SIZING, TEXTURE_KEYS } from "../variables";
+import NotoSerifFont from "../assets/fonts/NotoSerif-VariableFont_wdth,wght.ttf";
+import HeaderEndgame from "../assets/images/headers/header_endgame.jpg";
+import HeaderForest from "../assets/images/headers/header_forest.jpg";
+import HeaderSchool from "../assets/images/headers/header_school.jpg";
+import IconClock from "../assets/images/icons/icon_clock.png";
+import IconDisappointedEmoji from "../assets/images/icons/icon_disappointed_emoji.png";
+import IconList from "../assets/images/icons/icon_list.png";
+import IconMedalFirst from "../assets/images/icons/icon_medal_first.png";
+import IconSixDots from "../assets/images/icons/icon_six_dots.png";
+import IconStar from "../assets/images/icons/icon_star.png";
+import IconThreeDots from "../assets/images/icons/icon_three_dots.png";
+import IconTriangularRuler from "../assets/images/icons/icon_triangular_ruler.png";
+import IconTrophy from "../assets/images/icons/icon_trophy.png";
+import {
+  ASSET_KEYS,
+  COLORS,
+  FONT_KEYS,
+  SCENE_KEYS,
+  SIZES,
+  TEXTURE_KEYS,
+} from "../variables";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -9,8 +26,22 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   public preload(): void {
-    // Load fonts
-    this.load.font(FONT_KEYS.REGULAR, VigaFont);
+    // Load font
+    this.load.font(FONT_KEYS.SERIF, NotoSerifFont);
+
+    // Load images
+    this.load.image(ASSET_KEYS.HEADER_ENDGAME, HeaderEndgame);
+    this.load.image(ASSET_KEYS.HEADER_FOREST, HeaderForest);
+    this.load.image(ASSET_KEYS.HEADER_SCHOOL, HeaderSchool);
+    this.load.image(ASSET_KEYS.ICON_CLOCK, IconClock);
+    this.load.image(ASSET_KEYS.ICON_DISAPPOINTED_EMOJI, IconDisappointedEmoji);
+    this.load.image(ASSET_KEYS.ICON_LIST, IconList);
+    this.load.image(ASSET_KEYS.ICON_MEDAL_FIRST, IconMedalFirst);
+    this.load.image(ASSET_KEYS.ICON_SIX_DOTS, IconSixDots);
+    this.load.image(ASSET_KEYS.ICON_STAR, IconStar);
+    this.load.image(ASSET_KEYS.ICON_THREE_DOTS, IconThreeDots);
+    this.load.image(ASSET_KEYS.ICON_TRIANGULAR_RULER, IconTriangularRuler);
+    this.load.image(ASSET_KEYS.ICON_TROPHY, IconTrophy);
 
     // Generate button textures
     // Buttons
@@ -18,18 +49,18 @@ export class PreloadScene extends Phaser.Scene {
     this._drawRoundedRectangle(
       graphics,
       TEXTURE_KEYS.BUTTON,
-      SIZING.BUTTON_WIDTH,
-      SIZING.BUTTON_HEIGHT,
+      SIZES.BUTTON_WIDTH,
+      SIZES.BUTTON_HEIGHT,
       6,
-      0x11aaaa,
+      COLORS.WHITE,
     );
     this._drawRoundedRectangle(
       graphics,
       TEXTURE_KEYS.BUTTON_DISABLED,
-      SIZING.BUTTON_WIDTH,
-      SIZING.BUTTON_HEIGHT,
+      SIZES.BUTTON_WIDTH,
+      SIZES.BUTTON_HEIGHT,
       6,
-      0xdddddd,
+      COLORS.GRAY,
     );
 
     // Top rounded rectangle for agenda heading
@@ -120,8 +151,10 @@ export class PreloadScene extends Phaser.Scene {
   ) {
     graphics.clear();
     graphics
+      .lineStyle(2, COLORS.LIGHT_GRAY, 1)
       .fillStyle(fillColor, 1)
-      .fillRoundedRect(0, 0, width, height, radius);
+      .fillRoundedRect(0, 0, width, height, radius)
+      .strokeRoundedRect(0, 0, width, height, radius);
     graphics.generateTexture(key, width, height);
   }
 }

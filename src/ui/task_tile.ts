@@ -1,4 +1,4 @@
-import { FONT_KEYS, SIZING } from "../variables";
+import { FONT_KEYS, PADDING } from "../variables";
 
 const TILE_WIDTH = 378;
 const TILE_HEIGHT = 40;
@@ -30,8 +30,8 @@ export class TaskTile extends Phaser.GameObjects.Container {
       .setStrokeStyle(1, 0xe5e7eb)
       .setOrigin(0.5, 0);
     const label = scene.add
-      .text(bg.x - bg.width / 2 + SIZING.PADDING * 2, bg.height / 2, text, {
-        fontFamily: FONT_KEYS.REGULAR,
+      .text(bg.x - bg.width / 2 + PADDING.TWENTY, bg.height / 2, text, {
+        fontFamily: FONT_KEYS.SERIF,
         fontSize: "16px",
         color: "#111111",
       })
