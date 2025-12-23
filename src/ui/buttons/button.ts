@@ -15,7 +15,7 @@ export abstract class Button extends Phaser.GameObjects.Container {
 
     this._text = scene.add
       .text(0, 0, text, {
-        fontSize: 12,
+        fontSize: "14px",
         color: "#000000",
         align: "center",
         fontFamily: FONT_KEYS.REGULAR,
