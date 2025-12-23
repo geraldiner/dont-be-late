@@ -28,8 +28,6 @@
         { "key": "toilet", "label": "Get Ready", "duration": 20 },
         { "key": "train", "label": "Catch Train", "duration": 5 }
       ],
-      "panelAmount": 1,
-      "panelLayoutKey": "5",
       "startTime": "6:00 AM",
       "targetTime": "7:00 AM",
       "idealEndTime": "6:55 AM",
@@ -92,8 +90,6 @@
         { "key": "hoodie", "label": "Get Ready", "duration": 30 },
         { "key": "van", "label": "Load & Go", "duration": 20 }
       ],
-      "panelAmount": 1,
-      "panelLayoutKey": "8",
       "startTime": "5:30 AM",
       "targetTime": "7:25 AM",
       "constraints": [
@@ -151,8 +147,6 @@
           "duration": 10
         }
       ],
-      "panelAmount": 1,
-      "panelLayoutKey": "8",
       "startTime": "6:45 AM",
       "targetTime": "8:25 AM",
       "idealEndTime": "",

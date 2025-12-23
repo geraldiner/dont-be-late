@@ -19,6 +19,8 @@ export const TEXTURE_KEYS = {
   TWO_THIRDS_RECTANGLE: "two_thirds_rectangle",
   HALF_RECTANGLE: "half_rectangle",
   FULL_RECTANGLE: "full_rectangle",
+  AGENDA_HEADING_ROUNDED_RECTANGLE: "agenda_heading_rounded_rectangle",
+  AGENDA_SUMMARY_ROUNDED_RECTANGLE: "agenda_summary_rounded_rectangle",
 } as const;
 
 // ASSET_KEYS
@@ -48,8 +50,6 @@ export const ASSET_KEYS = {
 // SIZING CONSTANTS
 export const SIZING = {
   PADDING: 10,
-  PANEL_WIDTH: 342,
-  PANEL_HEIGHT: 410,
   TILE_SIZE: 80,
   BUTTON_WIDTH: 90,
   BUTTON_HEIGHT: 25,

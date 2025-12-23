@@ -3,14 +3,17 @@ import * as Phaser from "phaser";
 import { PreludeScreen } from "../game-screens/prelude";
 import { GameManager } from "../manager/game-manager";
 import { LetsGoButton } from "../ui/buttons";
-import { formatTime } from "../utils/date";
-import { FONT_KEYS, SCENE_KEYS, SIZING } from "../variables";
-
-const TILE_BAR_Y_POSITION: number = 480;
-const TILE_BAR_HEIGHT: number = 120;
+import { TaskTile } from "../ui/task_tile";
+import { formatTime, shuffleArray } from "../utils";
+import { FONT_KEYS, SCENE_KEYS, SIZING, TEXTURE_KEYS } from "../variables";
 
 export class GameScene extends Phaser.Scene {
-  private panelContainers: Phaser.GameObjects.Container[] = [];
+  private _shuffledAvailableTiles: Array<{
+    key: string;
+    label: string;
+    duration: number;
+  }> = [];
+  private lastTilePosition: { x: number; y: number } = { x: 0, y: 0 };
   private currentTimeText: Phaser.GameObjects.Text = null!;
 
   constructor() {
@@ -22,187 +25,131 @@ export class GameScene extends Phaser.Scene {
     // DEBUG: Comment out to skip prelude screen
     // new PreludeScreen(this, 0, 0);
     gm.setupLevel();
-    this.createLayout(gm);
-    this.createTileBar(gm);
-    this.createDragEvents(gm);
-  }
+    this._shuffledAvailableTiles = shuffleArray(gm.availableTiles);
+    // Create page layout
 
-  private createTile(
-    x: number,
-    y: number,
-    imageKey: string,
-    frameNumber: number = 0,
-    scale: number = 1,
-    draggable: boolean = true,
-  ): Phaser.GameObjects.Image {
-    return this.add
-      .image(x, y, imageKey, frameNumber)
-      .setOrigin(0.5)
-      .setScale(scale)
-      .setInteractive({ useHandCursor: true, draggable: draggable })
-      .setData({
-        x,
-        y,
-      });
-  }
-
-  private createLayout(gm: GameManager): void {
-    this.panelContainers = [];
-    for (let i = 1; i <= gm.panelAmount; i++) {
-      const panelContainer = this.add.container(
-        this.game.canvas.width / 2 -
-          (SIZING.PANEL_WIDTH * gm.panelAmount) / 2 +
-          SIZING.PANEL_WIDTH * (i - 1),
-        SIZING.PADDING * 2.5,
-        [],
-      );
-      const panelObject = this.add
-        .rectangle(0, 0, SIZING.PANEL_WIDTH, SIZING.PANEL_HEIGHT, 0xffffff)
-        .setOrigin(0)
-        .setStrokeStyle(2, 0x000000);
-      panelContainer.add(panelObject);
-
-      if (i === gm.panelAmount) {
-        this.createPanelSlots(panelContainer, gm.panelLayout);
-        const titleObject = this.add
-          .text(SIZING.PADDING * 2, SIZING.PADDING, gm.getTitle(), {
-            fontFamily: FONT_KEYS.REGULAR,
-            fontSize: "14px",
-            color: "#000000",
-          })
-          .setOrigin(0);
-        panelContainer.add(titleObject);
-        const letsGoButton = new LetsGoButton(
-          this,
-          panelObject.width - SIZING.BUTTON_WIDTH / 2 - SIZING.PADDING * 2,
-          panelObject.height - SIZING.BUTTON_HEIGHT / 2 - SIZING.PADDING * 2,
-        );
-        panelContainer.add(letsGoButton);
-
-        const currentTimeText = this.add
-          .text(
-            SIZING.PADDING * 2,
-            panelObject.height - SIZING.BUTTON_HEIGHT - SIZING.PADDING * 2,
-            `${formatTime(gm.currentTime)}`,
-            {
-              fontFamily: FONT_KEYS.REGULAR,
-              fontSize: "16px",
-              color: "#000000",
-            },
-          )
-          .setOrigin(0);
-        const targetTimeText = this.add
-          .text(
-            currentTimeText.width + SIZING.PADDING * 2,
-            currentTimeText.y,
-            ` | ${formatTime(gm.targetTime)}`,
-            {
-              fontFamily: FONT_KEYS.REGULAR,
-              fontSize: "16px",
-              color: "#000000",
-            },
-          )
-          .setOrigin(0);
-        panelContainer.add(targetTimeText);
-        this.currentTimeText = currentTimeText;
-        panelContainer.add(currentTimeText);
-      }
-      this.panelContainers.push(panelContainer);
-    }
-  }
-
-  private createPanelSlots(
-    panelContainer: Phaser.GameObjects.Container,
-    panelLayout: Array<{
-      x: number;
-      y: number;
-      texture: string;
-    }>,
-  ): void {
-    const slotContainer = this.add.container(
-      SIZING.PADDING * 2,
-      SIZING.PADDING * 3.5,
-      [],
-    );
-
-    panelLayout.forEach((slot, index) => {
-      const slotTexture = this.add
-        .image(slot.x, slot.y, slot.texture)
-        .setOrigin(0);
-      slotContainer.add(slotTexture);
-      // TODO: If there are fixed position tiles, need to render those and ensure they're not overwritten
-      const slotZone = this.add
-        .zone(slot.x, slot.y, slotTexture.width, slotTexture.height)
-        .setRectangleDropZone(slotTexture.width, slotTexture.height)
-        .setOrigin(0)
-        .setData({
-          slotIndex: index,
-          slotTexture,
-          slotContainer,
-          occupiedBy: null,
-        });
-      slotContainer.add(slotZone);
-    });
-    panelContainer.add(slotContainer);
-  }
-
-  private createTileBar(gm: GameManager): void {
-    const tileBarContainer = this.add.container(0, TILE_BAR_Y_POSITION, []);
-    const tileBarBackground = this.add
-      .rectangle(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT)
-      .setOrigin(0)
-      .setStrokeStyle(2, 0x000000);
-    tileBarContainer.add(tileBarBackground);
-    const tileBarZone = this.add
-      .zone(0, 0, this.game.canvas.width, TILE_BAR_HEIGHT)
-      .setOrigin(0)
-      .setRectangleDropZone(this.game.canvas.width, TILE_BAR_HEIGHT)
-      .setData({ isTileBar: true });
-    tileBarContainer.add(tileBarZone);
-
-    const tilesListContainer = this.add.container(
-      tileBarBackground.width / 2 -
-        (SIZING.TILE_SIZE * gm.availableTiles.length) / 2,
-      SIZING.TILE_SIZE / 2,
-      [],
-    );
-    tileBarContainer.add(tilesListContainer);
-
-    for (let i = 0; i < gm.availableTiles.length; i++) {
-      const tileObj = this.createTile(
-        i * (SIZING.TILE_SIZE + SIZING.PADDING * 2),
-        SIZING.PADDING,
-        gm.availableTiles[i].key,
+    const pageBackground = this.add
+      .rectangle(
+        this.game.canvas.width / 2,
+        this.game.canvas.height / 2,
+        420,
+        560,
+        0xffffff,
       )
-        .setOrigin(0.5)
-        .setData({ from: "tileBar", tileData: gm.availableTiles[i] });
-      const labelText = this.add
-        .text(
-          tileObj.x,
-          tileObj.height + SIZING.PADDING / 2,
-          gm.availableTiles[i].label,
-          {
-            align: "center",
-            fontFamily: FONT_KEYS.REGULAR,
-            fontSize: "14px",
-            color: "#000000",
-            wordWrap: {
-              width: SIZING.TILE_SIZE,
-              useAdvancedWrap: true,
-            },
-          },
-        )
-        .setOrigin(0.5);
-      tilesListContainer.add(labelText);
-      tilesListContainer.add(tileObj);
-    }
-  }
+      .setOrigin(0.5)
+      .setStrokeStyle(2, 0x000000);
+    const titleText = this.add.text(
+      pageBackground.x - pageBackground.width / 2 + SIZING.PADDING * 2,
+      pageBackground.y - pageBackground.height / 2 + SIZING.PADDING,
+      gm.getTitle(),
+      {
+        fontFamily: FONT_KEYS.REGULAR,
+        fontSize: "16px",
+        color: "#111111",
+      },
+    );
+    const agendaHeadingBackground = this.add
+      .image(
+        titleText.x,
+        titleText.y + titleText.height + SIZING.PADDING,
+        TEXTURE_KEYS.AGENDA_HEADING_ROUNDED_RECTANGLE,
+      )
+      .setOrigin(0);
+    this.add
+      .text(
+        agendaHeadingBackground.x + SIZING.PADDING * 2,
+        agendaHeadingBackground.height / 2 + agendaHeadingBackground.y,
+        "TODAY'S AGENDA",
+        {
+          fontFamily: FONT_KEYS.REGULAR,
+          fontSize: "14px",
+          color: "#111111",
+        },
+      )
+      .setOrigin(0, 0.5);
 
-  private createDragEvents(gm: GameManager): void {
-    this.createDragEventStartEventListener();
-    this.createDragEventListener();
-    this.createDragEndEventListener();
-    this.createDropEventListener(gm);
+    for (let i = 0; i < this._shuffledAvailableTiles.length; i++) {
+      new TaskTile(
+        this,
+        this.game.canvas.width / 2,
+        this.game.canvas.height / 2 -
+          pageBackground.height / 2 +
+          titleText.height +
+          agendaHeadingBackground.height +
+          SIZING.PADDING * 2 +
+          i * 40,
+        this._shuffledAvailableTiles[i].label,
+      );
+      if (i === this._shuffledAvailableTiles.length - 1) {
+        this.lastTilePosition.x = this.game.canvas.width / 2;
+        this.lastTilePosition.y =
+          this.game.canvas.height / 2 -
+          pageBackground.height / 2 +
+          titleText.height +
+          agendaHeadingBackground.height +
+          SIZING.PADDING * 2 +
+          i * 40;
+      }
+    }
+
+    const agendaSummaryBackground = this.add
+      .image(
+        this.lastTilePosition.x,
+        this.lastTilePosition.y + 40,
+        TEXTURE_KEYS.AGENDA_SUMMARY_ROUNDED_RECTANGLE,
+      )
+      .setOrigin(0.5, 0);
+
+    const currentTimeLabel = this.add.text(
+      agendaSummaryBackground.x -
+        agendaSummaryBackground.width / 2 +
+        SIZING.PADDING * 2,
+      agendaSummaryBackground.y + SIZING.PADDING,
+      "CURRENT TIME",
+      {
+        fontFamily: FONT_KEYS.REGULAR,
+        fontSize: "14px",
+        color: "#111111",
+      },
+    );
+
+    this.add.text(
+      agendaSummaryBackground.x -
+        agendaSummaryBackground.width / 2 +
+        SIZING.PADDING * 2,
+      currentTimeLabel.y + currentTimeLabel.height + SIZING.PADDING,
+      `${formatTime(gm.currentTime)}`,
+      {
+        fontFamily: FONT_KEYS.REGULAR,
+        fontSize: "16px",
+        color: "#111111",
+      },
+    );
+
+    const targetTimeLabel = this.add.text(
+      agendaSummaryBackground.x,
+      agendaSummaryBackground.y + SIZING.PADDING,
+      "TARGET TIME",
+      {
+        fontFamily: FONT_KEYS.REGULAR,
+        fontSize: "14px",
+        color: "#111111",
+      },
+    );
+
+    this.add.text(
+      agendaSummaryBackground.x,
+      targetTimeLabel.y + targetTimeLabel.height + SIZING.PADDING,
+      `${formatTime(gm.targetTime)}`,
+      {
+        fontFamily: FONT_KEYS.REGULAR,
+        fontSize: "16px",
+        color: "#111111",
+      },
+    );
+    // this.createLayout(gm);
+    // this.createTileBar(gm);
+    // this.createDragEvents(gm);
   }
 
   private createDragEventStartEventListener(): void {
