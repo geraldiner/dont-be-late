@@ -17,9 +17,9 @@ export class GameManager {
   public get availableTiles(): Tile[] {
     return this._availableTiles;
   }
-  private _placedTiles: string[] = [];
-  public get placedTiles(): string[] {
-    return this._placedTiles;
+  private _currentSequence: string[] = [];
+  public get currentSequence(): string[] {
+    return this._currentSequence;
   }
 
   // Game states
@@ -95,42 +95,30 @@ export class GameManager {
     this._constraints = levelData.constraints;
   }
 
-  public updatePlacedTiles(
-    addTileIndex?: number,
-    addedTileKey?: string,
-    previousSlotIndex?: number | null,
-  ): void {
-    // If there is already a tile at that index, remove it first
-    if (previousSlotIndex !== undefined && previousSlotIndex !== null) {
-      this._placedTiles[previousSlotIndex] = undefined!;
-      this.updateTimes();
-    }
-    // If adding a tile, set it at the given index
-    if (addTileIndex !== undefined && addedTileKey !== undefined) {
-      this._placedTiles[addTileIndex] = addedTileKey;
-      this.updateTimes();
-    }
+  public updateSequence(tiles: Array<string>): void {
+    this._currentSequence = tiles;
+    this.updateTimes();
   }
 
   // Update the current time based on placed tiles
   public updateTimes(): void {
     let accruedMinutes = 0; // time in minutes
     // Add base duration from placed tiles
-    for (let i = 0; i < this._placedTiles.length; i++) {
-      const tileKey = this._placedTiles[i];
+    for (let i = 0; i < this._currentSequence.length; i++) {
+      const tileKey = this._currentSequence[i];
       const tile = this._availableTiles.find((t) => t.key === tileKey);
       if (tile) {
         accruedMinutes += tile.duration;
         tile.penalties?.forEach((penalty) => {
           const handler = effectHandlers[penalty.type];
           if (handler) {
-            accruedMinutes += handler(this._placedTiles, i, penalty);
+            accruedMinutes += handler(this._currentSequence, i, penalty);
           }
         });
         tile.bonuses?.forEach((bonus) => {
           const handler = effectHandlers[bonus.type];
           if (handler) {
-            accruedMinutes -= handler(this._placedTiles, i, bonus);
+            accruedMinutes -= handler(this._currentSequence, i, bonus);
           }
         });
       }
@@ -174,11 +162,12 @@ export class GameManager {
     } else {
       this._outcome = OUTCOMES.LATE;
     }
+    // DEBUG: For testing purposes, always set to ON_TIME
     this._outcome = OUTCOMES.ON_TIME;
   }
 
   public resetLevel(scene: Phaser.Scene): void {
-    this._placedTiles = [];
+    this._currentSequence = [];
     this.setupLevel();
     scene.scene.restart();
   }
@@ -190,7 +179,7 @@ export class GameManager {
 
   private _validateConstraints(): boolean {
     for (const constraint of this._constraints) {
-      const index = this._placedTiles.findIndex(
+      const index = this._currentSequence.findIndex(
         (t) => t === constraint.tileKey,
       );
       if (index === -1) {
@@ -201,7 +190,7 @@ export class GameManager {
         return false;
       } else if (
         constraint.type === "mustBeLast" &&
-        index !== this._placedTiles.length - 1
+        index !== this._currentSequence.length - 1
       ) {
         return false;
       }
@@ -209,7 +198,7 @@ export class GameManager {
         constraint.type === "mustComeBefore" &&
         constraint.second != undefined
       ) {
-        const secondIndex = this._placedTiles.findIndex(
+        const secondIndex = this._currentSequence.findIndex(
           (t) => t === constraint.second,
         );
         if (index >= secondIndex) {
@@ -218,8 +207,8 @@ export class GameManager {
       }
     }
     return (
-      new Set(this._placedTiles.filter((t) => t !== undefined)).size ===
-      this._placedTiles.length
+      new Set(this._currentSequence.filter((t) => t !== undefined)).size ===
+      this._currentSequence.length
     );
   }
 }

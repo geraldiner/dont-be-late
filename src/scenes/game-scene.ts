@@ -13,6 +13,8 @@ export class GameScene extends Phaser.Scene {
     label: string;
     duration: number;
   }> = [];
+  private _tileViews: Array<TaskTile> = [];
+  private startY: number = 0;
   private lastTilePosition: { x: number; y: number } = { x: 0, y: 0 };
   private currentTimeText: Phaser.GameObjects.Text = null!;
 
@@ -26,8 +28,8 @@ export class GameScene extends Phaser.Scene {
     // new PreludeScreen(this, 0, 0);
     gm.setupLevel();
     this._shuffledAvailableTiles = shuffleArray(gm.availableTiles);
-    // Create page layout
 
+    // Create page layout
     const pageBackground = this.add
       .rectangle(
         this.game.canvas.width / 2,
@@ -68,30 +70,39 @@ export class GameScene extends Phaser.Scene {
       )
       .setOrigin(0, 0.5);
 
+    // Create moveable tiles
     for (let i = 0; i < this._shuffledAvailableTiles.length; i++) {
-      new TaskTile(
-        this,
-        this.game.canvas.width / 2,
-        this.game.canvas.height / 2 -
-          pageBackground.height / 2 +
-          titleText.height +
-          agendaHeadingBackground.height +
-          SIZING.PADDING * 2 +
-          i * 40,
-        this._shuffledAvailableTiles[i].label,
-      );
-      if (i === this._shuffledAvailableTiles.length - 1) {
-        this.lastTilePosition.x = this.game.canvas.width / 2;
-        this.lastTilePosition.y =
+      if (i === 0) {
+        this.startY =
           this.game.canvas.height / 2 -
           pageBackground.height / 2 +
           titleText.height +
           agendaHeadingBackground.height +
-          SIZING.PADDING * 2 +
-          i * 40;
+          SIZING.PADDING * 2;
       }
+      const taskTile = new TaskTile(
+        this,
+        this.game.canvas.width / 2,
+        this.startY + i * 40,
+        this._shuffledAvailableTiles[i].label,
+        this._shuffledAvailableTiles[i].key,
+      );
+
+      if (i === this._shuffledAvailableTiles.length - 1) {
+        this.lastTilePosition.x = this.game.canvas.width / 2;
+        this.lastTilePosition.y = this.startY + i * 40;
+      }
+      this._tileViews.push(taskTile);
+      taskTile.on("tile-drag-start", this.onTileDragStart, this);
+      taskTile.on("tile-drag-move", this.onTileDragMove, this);
+      taskTile.on("tile-drag-end", this.onTileDragEnd, this);
+
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+        this._tileViews = [];
+      });
     }
 
+    // Add agenda summary with current/target times
     const agendaSummaryBackground = this.add
       .image(
         this.lastTilePosition.x,
@@ -113,7 +124,7 @@ export class GameScene extends Phaser.Scene {
       },
     );
 
-    this.add.text(
+    this.currentTimeText = this.add.text(
       agendaSummaryBackground.x -
         agendaSummaryBackground.width / 2 +
         SIZING.PADDING * 2,
@@ -147,126 +158,52 @@ export class GameScene extends Phaser.Scene {
         color: "#111111",
       },
     );
-    // this.createLayout(gm);
-    // this.createTileBar(gm);
-    // this.createDragEvents(gm);
-  }
 
-  private createDragEventStartEventListener(): void {
-    this.input.on(
-      Phaser.Input.Events.DRAG_START,
-      (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image) => {
-        gameObject.setDepth(2);
-      },
+    // Add Let's Go button
+    new LetsGoButton(
+      this,
+      pageBackground.x,
+      pageBackground.y + pageBackground.height / 2 - 40,
     );
   }
 
-  private createDragEventListener(): void {
-    this.input.on(
-      Phaser.Input.Events.DRAG,
-      (
-        pointer: Phaser.Input.Pointer,
-        gameObject: Phaser.GameObjects.Image,
-        dragX: number,
-        dragY: number,
-      ) => {
-        gameObject.setPosition(dragX, dragY);
-        gameObject.setDepth(2);
-      },
+  private _getIndexFromY(y: number): number {
+    return Phaser.Math.Clamp(
+      Math.floor((y - this.startY) / 40 + 0.5),
+      0,
+      this._tileViews.length - 1,
     );
   }
 
-  private createDragEndEventListener(): void {
-    this.input.on(
-      Phaser.Input.Events.DRAG_END,
-      (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.Image) => {
-        const originalX = gameObject.getData("x") as number;
-        const originalY = gameObject.getData("y") as number;
-        gameObject.setPosition(originalX, originalY);
-      },
-    );
-  }
-
-  private createDropEventListener(gm: GameManager): void {
-    this.input.on(
-      Phaser.Input.Events.DROP,
-      (
-        pointer: Phaser.Input.Pointer,
-        gameObject: Phaser.GameObjects.Image,
-        dropZone: Phaser.GameObjects.Zone,
-      ) => {
-        if (dropZone) {
-          this.handleTileDropOnZone(gm, gameObject, dropZone);
-          if (gameObject.getData("from") !== "tileBar") {
-            gameObject.destroy();
-          }
-        }
-      },
-    );
-  }
-
-  private handleTileDropOnZone(
-    gm: GameManager,
-    tile: Phaser.GameObjects.Image,
-    dropZone: Phaser.GameObjects.Zone,
-  ): void {
-    const isTileBar = dropZone.getData("isTileBar") as boolean | undefined;
-    // If tile is dropped into tile bar, remove from panel slots and from placed tiles
-    if (isTileBar) {
-      const currentSlotIndex = tile.getData("currentSlotIndex") as
-        | number
-        | null;
-      if (currentSlotIndex !== null && currentSlotIndex !== undefined) {
-        // Remove tile from placed tiles
-        gm.updatePlacedTiles(undefined, undefined, currentSlotIndex);
-        tile.destroy();
-        // TODO: Enable the previously disabled tile in the tile bar
+  private _repositionTiles(exclude?: TaskTile) {
+    this._tileViews.forEach((tile) => {
+      if (tile !== exclude) {
+        tile.snapTo(this.startY + this._tileViews.indexOf(tile) * 40);
       }
-    } else {
-      // Otherwise, tile is dropped into a panel slot
-      const tileData = tile.getData("tileData") as {
-        key: string;
-        label: string;
-        duration: number;
-      };
-      const slotIndex = dropZone.getData("slotIndex") as number;
-      const slotTexture = dropZone.getData(
-        "slotTexture",
-      ) as Phaser.GameObjects.Image;
-      const slotContainer = dropZone.getData(
-        "slotContainer",
-      ) as Phaser.GameObjects.Container;
-      const newTile = this.createTile(
-        slotTexture.x + slotTexture.width / 2,
-        slotTexture.y + slotTexture.height / 2,
-        tileData.key,
-      ).setData({
-        currentSlotIndex: slotIndex,
-        tileData: tile.getData("tileData"),
-      });
+    });
+  }
 
-      // If tile place is already occupied, remove the previous tile
-      const occupiedBy = dropZone.getData(
-        "occupiedBy",
-      ) as Phaser.GameObjects.Image | null;
-      const currentSlotIndex = tile.getData("currentSlotIndex") as
-        | number
-        | null;
+  private onTileDragStart(tile: TaskTile): void {}
 
-      // Update placed tiles to add new tile to the specified index in the list
-      // and remove it from the previous index if applicable
-      gm.updatePlacedTiles(slotIndex, tileData.key, currentSlotIndex);
+  private onTileDragMove(tile: TaskTile): void {
+    const oldIndex = this._tileViews.indexOf(tile);
+    const newIndex = this._getIndexFromY(tile.y);
 
-      // Remove the previous tile
-      if (occupiedBy) {
-        occupiedBy.destroy();
-      }
-      dropZone.setData("occupiedBy", newTile);
-      slotContainer.add(newTile);
-      // tile.setPosition(tile.getData("x"), tile.getData("y"));
-      // tile.setInteractive({ useHandCursor: false });
-      // tile.disableInteractive();
+    if (newIndex !== oldIndex) {
+      this._tileViews.splice(oldIndex, 1);
+      this._tileViews.splice(newIndex, 0, tile);
+      this._repositionTiles(tile);
     }
+  }
+
+  private onTileDragEnd(tile: TaskTile): void {
+    const gm = GameManager.getInstance();
+    this._repositionTiles();
+    gm.updateSequence(
+      this._tileViews.map((tile) => {
+        return tile.key;
+      }),
+    );
     this.updateTimeText();
   }
 
