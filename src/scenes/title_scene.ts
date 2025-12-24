@@ -1,7 +1,10 @@
 import * as Phaser from "phaser";
 
+import { Header } from "../ui/header";
+import { StartLink } from "../ui/links/start_link";
 import { Navbar } from "../ui/navbar";
-import { FONT_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
+import { Page } from "../ui/page";
+import { ASSET_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
 
 export class TitleScene extends Phaser.Scene {
   constructor() {
@@ -12,53 +15,28 @@ export class TitleScene extends Phaser.Scene {
     // DEBUG: Uncomment out to skip title scene
     // this.scene.start(SCENE_KEYS.GAME);
 
-    new Navbar(this, 0, PADDING.TWENTY, [
+    const navbar = new Navbar(this, 0, PADDING.TWENTY, [
       "Codedex.io 2025 Game Jam",
       "GeraldineDesu",
       "Don't Be Late!",
     ]);
 
-    this.add
-      .text(
-        this.scale.width / 2,
-        this.scale.height / 2 - 40,
-        "Don't Be Late!",
-        {
-          fontFamily: FONT_KEYS.SERIF,
-          fontSize: "48px",
-          color: "#000000",
-        },
-      )
-      .setOrigin(0.5);
+    const header = new Header(
+      this,
+      0,
+      navbar.y + SIZES.NAVBAR_HEIGHT,
+      ASSET_KEYS.HEADER_FOREST,
+    );
 
-    const clickToStartText = this.add
-      .text(
-        this.scale.width / 2,
-        this.scale.height / 2 + 40,
-        "Click to Start",
-        {
-          fontFamily: FONT_KEYS.SERIF,
-          fontSize: "24px",
-          color: "#000000",
-        },
-      )
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on(Phaser.Input.Events.POINTER_DOWN, () => {
-        this.cameras.main.fadeOut(500, 255, 255, 255, (_, progress: number) => {
-          if (progress !== 1) {
-            return;
-          }
-          this.scene.start(SCENE_KEYS.GAME);
-        });
-      });
+    const page = new Page(
+      this,
+      0,
+      header.y + SIZES.HEADER_HEIGHT,
+      ASSET_KEYS.ICON_HERB,
+      "Don't Be Late!",
+      ASSET_KEYS.ACCENT_FOREST,
+    );
 
-    this.tweens.add({
-      targets: clickToStartText,
-      alpha: { from: 1, to: 0 },
-      duration: 700,
-      yoyo: true,
-      repeat: -1,
-    });
+    page.addChild(new StartLink(this, 0, 0));
   }
 }
