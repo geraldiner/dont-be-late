@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 
 import { GameCompleteScene } from "./scenes/game_complete_scene";
 import { GameScene } from "./scenes/game_scene";
+import { OutcomeScene } from "./scenes/outcome_scene";
 import { PreloadScene } from "./scenes/preload_scene";
 import { PrologueScene } from "./scenes/prologue_scene";
 import { TitleScene } from "./scenes/title_scene";
@@ -24,6 +25,7 @@ const config = {
     TitleScene,
     PrologueScene,
     GameScene,
+    OutcomeScene,
     GameCompleteScene,
   ],
 };

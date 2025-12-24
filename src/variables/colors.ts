@@ -1,3 +1,8 @@
+export type Color = {
+  hex: string;
+  number: number;
+};
+
 export const COLORS = {
   BLACK: { hex: "#383836", number: 0x383836 },
   LIGHT_BROWN: { hex: "#cfac8c", number: 0xcfac8c },

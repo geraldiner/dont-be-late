@@ -1,4 +1,5 @@
 import { GameManager } from "../../manager/game_manager";
+import { SCENE_KEYS } from "../../variables";
 import { Button } from "./button";
 
 export class NextButton extends Button {
@@ -8,6 +9,12 @@ export class NextButton extends Button {
 
   onClick(): void {
     const gm = GameManager.getInstance();
-    gm.goNextLevel(this.scene);
+    gm.advanceLevel();
+    this.scene.scene.stop();
+    if (gm.shouldGoToEndGame()) {
+      this.scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
+    } else {
+      this.scene.scene.start(SCENE_KEYS.PROLOGUE);
+    }
   }
 }
