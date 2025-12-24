@@ -17,7 +17,4 @@ export const effectHandlers: Record<string, EffectHandler> = {
   scrollingSecondAfterAlarm(sequence, index) {
     return index === 1 && sequence[index - 1] === TILE_KEYS.ALARM ? 20 : 0;
   },
-  scrollingElsewhere(_, index) {
-    return index !== 1 ? 5 : 0;
-  },
 };

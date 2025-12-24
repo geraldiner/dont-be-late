@@ -73,5 +73,6 @@ export class Navbar extends Phaser.GameObjects.Container {
     iconsContainer.add([clockIcon, starIcon, threeDotsIcon]);
 
     this.add([bg, menuIcon, breadcrumbText, iconsContainer]);
+    this.setSize(bg.width, bg.height);
   }
 }

@@ -1,61 +1,52 @@
 import * as Phaser from "phaser";
 
 import { GameManager, type Tile } from "../manager/game_manager";
-import { LetsGoButton } from "../ui/buttons";
-import { Navbar } from "../ui/navbar";
-import { Page } from "../ui/pages/page";
+import { GamePage } from "../ui/pages/game_page";
 import { TaskTile } from "../ui/task_tile";
-import { formatTime, shuffleArray } from "../utils";
-import {
-  FONT_KEYS,
-  PADDING,
-  SCENE_KEYS,
-  SIZES,
-  TEXTURE_KEYS,
-} from "../variables";
+import { shuffleArray } from "../utils";
+import { ASSET_KEYS, COLORS, SCENE_KEYS, SIZES } from "../variables";
 
 export class GameScene extends Phaser.Scene {
   private _fixedTiles: Array<Tile> = [];
+  private _occupiedIndices: Set<number> = new Set();
   private _freeTiles: Array<Tile> = [];
   private _tileViews: Array<TaskTile> = [];
-  private startY: number = 0;
-  private currentTimeText: Phaser.GameObjects.Text = null!;
+  private _startY: number = 0;
+  private _page: GamePage = null!;
 
   constructor() {
     super({ key: SCENE_KEYS.GAME });
   }
 
   public create(): void {
+    this.cameras.main.fadeIn(300, 207, 172, 140);
     const gm = GameManager.getInstance();
     gm.setupLevel();
     this._fixedTiles = gm.getFixedTiles();
     this._freeTiles = shuffleArray(gm.getFreeTiles());
 
-    // Create page layout
-    const pageBackground = this.add
-      .rectangle(
-        this.game.canvas.width / 2,
-        this.game.canvas.height / 2,
-        420,
-        560,
-        0xffffff,
-      )
-      .setRounded(6)
-      .setStrokeStyle(2, 0x000000)
-      .setOrigin(0.5);
+    const breadcrumbs = ["Don't Be Late!", gm.chapterTitle, gm.levelTitle];
+
+    const page = new GamePage(
+      this,
+      0,
+      0,
+      breadcrumbs,
+      ASSET_KEYS.ACCENT_SCHOOL,
+      COLORS.YELLOW.number,
+    );
+    this._page = page;
 
     // Create moveable tiles
-    const startY =
-      this.game.canvas.height / 2 - pageBackground.height / 2 + PADDING.TWENTY;
-    this.startY = startY;
+    this._startY = page.startY;
     const occupied = new Set<number>();
 
     this._fixedTiles.forEach((tile) => {
       if (tile.fixedPositionIndex !== undefined) {
         new TaskTile(
           this,
-          this.game.canvas.width / 2,
-          this.startY + tile.fixedPositionIndex * 40,
+          page.columnOneX + SIZES.COLUMN_ONE_WIDTH / 2,
+          this._startY + tile.fixedPositionIndex * SIZES.TILE_HEIGHT,
           tile.label,
           tile.key,
           true,
@@ -63,13 +54,13 @@ export class GameScene extends Phaser.Scene {
         occupied.add(tile.fixedPositionIndex);
       }
     });
-
+    this._occupiedIndices = occupied;
     this._freeTiles.forEach((tile, index) => {
-      if (!occupied.has(this._tileViews.length)) {
+      if (!occupied.has(index)) {
         const taskTile = new TaskTile(
           this,
-          this.game.canvas.width / 2,
-          this.startY + index * 40,
+          page.columnOneX + SIZES.COLUMN_ONE_WIDTH / 2,
+          this._startY + index * SIZES.TILE_HEIGHT,
           tile.label,
           tile.key,
           false,
@@ -81,72 +72,12 @@ export class GameScene extends Phaser.Scene {
       }
     });
 
-    const lastTilePositionX = this.game.canvas.width / 2;
-    const lastTilePositionY = gm.availableTiles.length * 40 + this.startY;
-
-    // Add agenda summary with current/target times
-    const agendaSummaryBackground = this.add
-      .image(
-        lastTilePositionX,
-        lastTilePositionY,
-        TEXTURE_KEYS.AGENDA_SUMMARY_ROUNDED_RECTANGLE,
-      )
-      .setOrigin(0.5, 0);
-
-    const currentTimeLabel = this.add.text(
-      agendaSummaryBackground.x -
-        agendaSummaryBackground.width / 2 +
-        PADDING.TWENTY,
-      agendaSummaryBackground.y + PADDING.TEN,
-      "CURRENT TIME",
-      {
-        fontFamily: FONT_KEYS.SERIF,
-        fontSize: "14px",
-        color: "#111111",
-      },
-    );
-
-    this.currentTimeText = this.add.text(
-      agendaSummaryBackground.x -
-        agendaSummaryBackground.width / 2 +
-        PADDING.TWENTY,
-      currentTimeLabel.y + currentTimeLabel.height + PADDING.TEN,
-      `${formatTime(gm.currentTime)}`,
-      {
-        fontFamily: FONT_KEYS.SERIF,
-        fontSize: "16px",
-        color: "#111111",
-      },
-    );
-
-    const targetTimeLabel = this.add.text(
-      agendaSummaryBackground.x,
-      agendaSummaryBackground.y + PADDING.TEN,
-      "TARGET TIME",
-      {
-        fontFamily: FONT_KEYS.SERIF,
-        fontSize: "14px",
-        color: "#111111",
-      },
-    );
-
-    this.add.text(
-      agendaSummaryBackground.x,
-      targetTimeLabel.y + targetTimeLabel.height + PADDING.TEN,
-      `${formatTime(gm.targetTime)}`,
-      {
-        fontFamily: FONT_KEYS.SERIF,
-        fontSize: "16px",
-        color: "#111111",
-      },
-    );
-
-    // Add Let's Go button
-    new LetsGoButton(
-      this,
-      pageBackground.x,
-      pageBackground.y + pageBackground.height / 2 - 40,
-    );
+    this.tweens.add({
+      targets: [this],
+      alpha: { from: 0, to: 1 },
+      duration: 1500,
+      ease: "EaseInOut",
+    });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this._tileViews = [];
@@ -155,20 +86,20 @@ export class GameScene extends Phaser.Scene {
 
   private _getIndexFromY(y: number): number {
     return Phaser.Math.Clamp(
-      Math.floor((y - this.startY) / 40 + 0.5),
+      Math.floor((y - this._startY) / 40 + 0.5),
       0,
       this._tileViews.length - 1,
     );
   }
 
   private _getYFromIndex(index: number): number {
-    return this.startY + index * 40;
+    return this._startY + index * 40;
   }
 
   private _repositionTiles(exclude?: TaskTile) {
     this._tileViews.forEach((tile) => {
       if (tile !== exclude) {
-        tile.snapTo(this.startY + this._tileViews.indexOf(tile) * 40);
+        tile.snapTo(this._startY + this._tileViews.indexOf(tile) * 40);
       }
     });
   }
@@ -179,7 +110,7 @@ export class GameScene extends Phaser.Scene {
     const oldIndex = this._tileViews.indexOf(tile);
     const newIndex = this._getIndexFromY(tile.y);
 
-    if (newIndex !== oldIndex) {
+    if (newIndex !== oldIndex && !this._occupiedIndices.has(newIndex)) {
       this._tileViews.splice(oldIndex, 1);
       this._tileViews.splice(newIndex, 0, tile);
       this._repositionTiles(tile);
@@ -189,30 +120,18 @@ export class GameScene extends Phaser.Scene {
   private onTileDragEnd(tile: TaskTile): void {
     const gm = GameManager.getInstance();
     this._repositionTiles();
-    const occupied = new Set<number>();
     const newSequence: Array<string> = [];
     this._fixedTiles.forEach((tile) => {
       newSequence[tile.fixedPositionIndex!] = tile.key;
-      occupied.add(tile.fixedPositionIndex!);
     });
 
     this._tileViews.forEach((tile, index) => {
-      if (!occupied.has(index)) {
+      if (!this._occupiedIndices.has(index)) {
         newSequence[index] = tile.key;
       }
     });
 
     gm.updateSequence(newSequence);
-    this.updateTimeText();
-  }
-
-  private updateTimeText(): void {
-    const gm = GameManager.getInstance();
-    this.currentTimeText.setText(formatTime(gm.currentTime));
-    if (gm.currentTime.getTime() > gm.targetTime.getTime()) {
-      this.currentTimeText.setColor("#b31515ff");
-    } else {
-      this.currentTimeText.setColor("#2cb335ff");
-    }
+    this._page.updateCurrentTimeText();
   }
 }

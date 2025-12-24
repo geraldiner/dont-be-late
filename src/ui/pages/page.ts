@@ -1,9 +1,8 @@
-import { PADDING, SIZES } from "../../variables";
+import { PADDING } from "../../variables";
 import { Navbar } from "../navbar";
 
 export abstract class Page extends Phaser.GameObjects.Container {
   public navbar: Navbar;
-  abstract addChild(child: Phaser.GameObjects.GameObject): void;
 
   constructor(
     scene: Phaser.Scene,

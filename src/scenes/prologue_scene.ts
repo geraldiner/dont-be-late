@@ -2,7 +2,7 @@ import { DataManager } from "../manager/data_manager";
 import { GameManager } from "../manager/game_manager";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
-import { SectionHeading } from "../ui/section_heading";
+import { SectionHeadingWithDivider } from "../ui/section_heading_divider";
 import { ASSET_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
 
 export class PrologueScene extends Phaser.Scene {
@@ -31,7 +31,7 @@ export class PrologueScene extends Phaser.Scene {
     );
 
     page.addChild(
-      new SectionHeading(
+      new SectionHeadingWithDivider(
         this,
         0,
         0,
@@ -49,6 +49,7 @@ export class PrologueScene extends Phaser.Scene {
     this.tweens.add({
       targets: [page],
       x: -SIZES.PAGE_WIDTH * 2,
+      alpha: { from: 1, to: 0 },
       duration: 1000,
       ease: "EaseInOut",
       delay: 2700,

@@ -3,4 +3,5 @@ export const PADDING = {
   TWENTY: 20,
   THIRTY: 30,
   FORTY: 40,
+  ONE_TWENTY: 120,
 };

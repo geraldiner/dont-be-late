@@ -10,7 +10,7 @@ import IconDisappointedEmoji from "../assets/images/icons/icon_disappointed_emoj
 import IconHerb from "../assets/images/icons/icon_herb.png";
 import IconList from "../assets/images/icons/icon_list.png";
 import IconMedalFirst from "../assets/images/icons/icon_medal_first.png";
-import IconSixDots from "../assets/images/icons/icon_six_dots.png";
+import IconSixDots from "../assets/images/icons/icon_six_dots_gray.png";
 import IconStar from "../assets/images/icons/icon_star.png";
 import IconThreeDots from "../assets/images/icons/icon_three_dots.png";
 import IconTriangularRuler from "../assets/images/icons/icon_triangular_ruler.png";
@@ -70,83 +70,10 @@ export class PreloadScene extends Phaser.Scene {
       6,
       COLORS.GRAY.number,
     );
-
-    // Top rounded rectangle for agenda heading
-    this._drawAgendaHeadingShape(
-      graphics,
-      TEXTURE_KEYS.AGENDA_HEADING_ROUNDED_RECTANGLE,
-      380,
-      40,
-      6,
-      0xf5f4f0,
-    );
-    // Bottom rounded rectangle for agenda summary
-    this._drawAgendaSummaryShape(
-      graphics,
-      TEXTURE_KEYS.AGENDA_SUMMARY_ROUNDED_RECTANGLE,
-      380,
-      80,
-      6,
-      0xf5f4f0,
-    );
   }
 
   public create(): void {
     this.scene.start(SCENE_KEYS.TITLE);
-  }
-
-  private _drawAgendaHeadingShape(
-    graphics: Phaser.GameObjects.Graphics,
-    key: string,
-    width: number,
-    height: number,
-    radius: number,
-    fillColor: number,
-  ) {
-    graphics.clear();
-    graphics
-      .lineStyle(2, 0xe5e7eb, 1)
-      .fillStyle(fillColor, 1)
-      .fillRoundedRect(0, 0, width, height, {
-        tl: radius,
-        tr: radius,
-        bl: 0,
-        br: 0,
-      })
-      .strokeRoundedRect(0, 0, width, height, {
-        tl: radius,
-        tr: radius,
-        bl: 0,
-        br: 0,
-      });
-    graphics.generateTexture(key, width, height);
-  }
-
-  private _drawAgendaSummaryShape(
-    graphics: Phaser.GameObjects.Graphics,
-    key: string,
-    width: number,
-    height: number,
-    radius: number,
-    fillColor: number,
-  ) {
-    graphics.clear();
-    graphics
-      .lineStyle(2, 0xe5e7eb, 1)
-      .fillStyle(fillColor, 1)
-      .fillRoundedRect(0, 0, width, height, {
-        tl: 0,
-        tr: 0,
-        bl: radius,
-        br: radius,
-      })
-      .strokeRoundedRect(0, 0, width, height, {
-        tl: 0,
-        tr: 0,
-        bl: radius,
-        br: radius,
-      });
-    graphics.generateTexture(key, width, height);
   }
 
   private _drawRoundedRectangle(

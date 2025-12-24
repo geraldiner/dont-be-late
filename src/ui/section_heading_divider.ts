@@ -1,6 +1,6 @@
 import { COLORS, FONT_KEYS, FONT_SIZES, PADDING, SIZES } from "../variables";
 
-export class SectionHeading extends Phaser.GameObjects.Container {
+export class SectionHeadingWithDivider extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number, text: string) {
     super(scene, x, y);
     scene.add.existing(this);

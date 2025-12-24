@@ -13,15 +13,11 @@
         {
           "key": "scroll",
           "label": "📱 Scroll a Bit",
-          "duration": 10,
+          "duration": 15,
           "penalties": [
             {
               "type": "scrollingSecondAfterAlarm",
               "extraMinutes": 20
-            },
-            {
-              "type": "scrollingElsewhere",
-              "extraMinutes": 5
             }
           ]
         },
@@ -48,26 +44,23 @@
         "We really need to beat the traffic"
       ],
       "availableTiles": [
-        {
-          "key": "alarm",
-          "label": "Alarm Goes Off",
-          "duration": 0
-        },
+        { "key": "alarm", "label": "⏰ Alarm Goes Off", "duration": 0 },
+
         {
           "key": "coffee",
-          "label": "Make Coffee",
+          "label": "☕ Make Coffee",
           "duration": 10,
           "penalties": [{ "type": "beforeCoffee", "extraMinutes": 5 }]
         },
-        { "key": "kid", "label": "Wake Kids", "duration": 15 },
+        { "key": "kid", "label": "👶 Wake Kids", "duration": 15 },
         {
           "key": "food",
-          "label": "Make Breakfast",
+          "label": "🍳 Make Breakfast",
           "duration": 20
         },
         {
           "key": "lunchbox",
-          "label": "Pack Lunches",
+          "label": "🥪 Pack Lunches",
           "duration": 15,
           "bonuses": [
             {
@@ -78,23 +71,19 @@
         },
         {
           "key": "scroll",
-          "label": "Scroll a Bit",
-          "duration": 10,
+          "label": "📱 Scroll a Bit",
+          "duration": 15,
           "penalties": [
             {
               "type": "scrollingSecondAfterAlarm",
               "extraMinutes": 20
-            },
-            {
-              "type": "scrollingElsewhere",
-              "extraMinutes": 5
             }
           ]
         },
-        { "key": "hoodie", "label": "Get Ready", "duration": 30 },
+        { "key": "hoodie", "label": "👕 Get Kids Ready", "duration": 30 },
         {
           "key": "van",
-          "label": "Load & Go",
+          "label": "🚐 Load & Go",
           "duration": 20,
           "fixedPositionIndex": 7
         }
@@ -116,43 +105,43 @@
       "availableTiles": [
         {
           "key": "bell",
-          "label": "First Bell Rings",
+          "label": "🔔 First Bell Rings",
           "duration": 0
         },
         {
           "key": "board",
-          "label": "Setup Classroom",
+          "label": "🏫 Setup Classroom",
           "duration": 10
         },
         {
           "key": "email",
-          "label": "Check Emails",
+          "label": "📧 Check Emails",
           "duration": 10
         },
         {
           "key": "lego",
-          "label": "Pick Up Materials",
+          "label": "🧱 Pick Up Materials",
           "duration": 20
         },
         {
           "key": "charge",
-          "label": "Charge Laptop",
+          "label": "🔌 Charge Laptop",
           "duration": 1
         },
         {
           "key": "folders",
-          "label": "Make Copies",
+          "label": "📄 Make Copies",
           "duration": 2
         },
         {
           "key": "group",
-          "label": "Parent Conference",
+          "label": "📞 Parent Conference",
           "duration": 35,
           "fixedPositionIndex": 3
         },
         {
           "key": "open_door",
-          "label": "Go To Classroom",
+          "label": "🚪 Go To Classroom",
           "duration": 10
         }
       ],
