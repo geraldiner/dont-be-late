@@ -47,7 +47,7 @@ export class TaskTile extends Phaser.GameObjects.Container {
 
     const labelX = sixDotsIcon
       ? sixDotsIcon.x + SIZES.ICON + PADDING.TEN
-      : bg.x - bg.width / 2 + PADDING.TWENTY;
+      : bg.x + SIZES.ICON - bg.width / 2 + PADDING.TWENTY;
     const label = scene.add
       .text(labelX, bg.y, text, {
         fontFamily: FONT_KEYS.SERIF,
