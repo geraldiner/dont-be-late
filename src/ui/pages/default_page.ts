@@ -34,7 +34,7 @@ export class DefaultPage extends Page {
     );
 
     const contentContainer = scene.add.container(
-      contentBg.x - contentBg.width / 2 + 120,
+      contentBg.x - contentBg.width / 2 + PADDING.ONE_TWENTY,
       contentBg.y - contentBg.height / 2,
       [],
     );

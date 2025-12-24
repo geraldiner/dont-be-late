@@ -1,7 +1,12 @@
-import { FONT_KEYS, PADDING } from "../variables";
+import {
+  ASSET_KEYS,
+  COLORS,
+  FONT_KEYS,
+  FONT_SIZES,
+  PADDING,
+  SIZES,
+} from "../variables";
 
-const TILE_WIDTH = 378;
-const TILE_HEIGHT = 40;
 const TILE_DEPTH = 200;
 
 export class TaskTile extends Phaser.GameObjects.Container {
@@ -26,18 +31,35 @@ export class TaskTile extends Phaser.GameObjects.Container {
     const bgColor = isFixed ? 0xf3f4f6 : 0xffffff;
 
     const bg = scene.add
-      .rectangle(0, -1, 378, 40, bgColor)
-      .setStrokeStyle(1, 0xe5e7eb)
-      .setOrigin(0.5, 0);
+      .rectangle(0, -1, SIZES.TILE_WIDTH, SIZES.TILE_HEIGHT, bgColor)
+      .setStrokeStyle(1, 0xe5e7eb);
+
+    let sixDotsIcon: Phaser.GameObjects.Image | undefined = undefined;
+    if (!isFixed) {
+      sixDotsIcon = scene.add
+        .image(
+          bg.x - bg.width / 2 + PADDING.TEN,
+          bg.y,
+          ASSET_KEYS.ICON_SIX_DOTS,
+        )
+        .setOrigin(0, 0.5);
+    }
+
+    const labelX = sixDotsIcon
+      ? sixDotsIcon.x + SIZES.ICON + PADDING.TEN
+      : bg.x - bg.width / 2 + PADDING.TWENTY;
     const label = scene.add
-      .text(bg.x - bg.width / 2 + PADDING.TWENTY, bg.height / 2, text, {
+      .text(labelX, bg.y, text, {
         fontFamily: FONT_KEYS.SERIF,
-        fontSize: "16px",
-        color: "#111111",
+        fontSize: FONT_SIZES.DEFAULT,
+        color: COLORS.BLACK.hex,
       })
       .setOrigin(0, 0.5);
     this.add([bg, label]);
-    this.setSize(TILE_WIDTH, TILE_HEIGHT).setDepth(TILE_DEPTH);
+    if (sixDotsIcon) {
+      this.add(sixDotsIcon);
+    }
+    this.setSize(SIZES.TILE_WIDTH, SIZES.TILE_HEIGHT).setDepth(TILE_DEPTH);
 
     if (isFixed) {
       this.disableInteractive();
@@ -58,6 +80,7 @@ export class TaskTile extends Phaser.GameObjects.Container {
       (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
         if (!isFixed) {
           this.y = dragY;
+          this.setDepth(TILE_DEPTH + 1);
           this.emit("tile-drag-move", this);
         }
       },

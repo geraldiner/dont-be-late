@@ -1,4 +1,4 @@
-import { COLORS, FONT_KEYS, FONT_SIZES } from "../variables";
+import { COLORS, FONT_KEYS, FONT_SIZES, SIZES } from "../variables";
 
 export class Paragraph extends Phaser.GameObjects.Container {
   constructor(
@@ -12,13 +12,19 @@ export class Paragraph extends Phaser.GameObjects.Container {
     super(scene, x, y);
     scene.add.existing(this);
 
-    const paragraphText = scene.add.text(0, 0, text, {
-      fontFamily: fontFamily ?? FONT_KEYS.SERIF,
-      fontSize: FONT_SIZES.DEFAULT,
-      color: color ?? COLORS.BLACK.hex,
-    });
+    const paragraphText = scene.add.text(
+      x - SIZES.COLUMN_ONE_WIDTH / 2,
+      0,
+      text,
+      {
+        fontFamily: fontFamily ?? FONT_KEYS.SERIF,
+        fontSize: FONT_SIZES.DEFAULT,
+        color: color ?? COLORS.BLACK.hex,
+        wordWrap: { width: SIZES.COLUMN_ONE_WIDTH },
+      },
+    );
 
     this.add(paragraphText);
-    this.setSize(this.width, paragraphText.height);
+    this.setSize(SIZES.COLUMN_ONE_WIDTH, paragraphText.height);
   }
 }

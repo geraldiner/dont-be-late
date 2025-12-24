@@ -27,7 +27,7 @@ export class GameManager {
   public chapter: number = 1;
   public chapterTitle: string = "";
 
-  public level: number = 1;
+  public level: number = 3;
   public levelTitle: string = "";
 
   // Game conditions
@@ -109,7 +109,7 @@ export class GameManager {
   public updateSequence(tiles: Array<string>): void {
     this._currentSequence = tiles;
     this.updateTimes();
-    console.log("Updated sequence:", this._currentSequence);
+    console.log(this._currentSequence);
   }
 
   // Update the current time based on placed tiles

@@ -3,7 +3,7 @@ import { Link } from "./link";
 
 export class StartLink extends Link {
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, "Start");
+    super(scene, x, y, "▶ Start");
   }
 
   onClick(): void {
