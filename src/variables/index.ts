@@ -11,6 +11,5 @@ export * from "./typography";
 export const OUTCOMES = {
   IDEAL: "ideal",
   ON_TIME: "on_time",
-  LATE: "late",
-  FAIL: "fail", // TODO: Will there be a difference between late and fail?
+  FAIL: "fail",
 } as const;

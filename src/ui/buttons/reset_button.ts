@@ -1,4 +1,4 @@
-import { GameManager } from "../../manager/game_manager";
+import { SCENE_KEYS } from "../../variables";
 import { Button } from "./button";
 
 export class ResetButton extends Button {
@@ -7,7 +7,7 @@ export class ResetButton extends Button {
   }
 
   onClick(): void {
-    const gm = GameManager.getInstance();
-    gm.resetLevel(this.scene);
+    this.scene.scene.stop();
+    this.scene.scene.start(SCENE_KEYS.GAME);
   }
 }

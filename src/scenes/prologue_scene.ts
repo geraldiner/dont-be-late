@@ -3,7 +3,8 @@ import { GameManager } from "../manager/game_manager";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
 import { SectionHeadingWithDivider } from "../ui/section_heading_divider";
-import { ASSET_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
+import { PADDING, SCENE_KEYS, SIZES } from "../variables";
+import type { CHAPTERS, ChapterTheme } from "../variables/themes";
 
 export class PrologueScene extends Phaser.Scene {
   constructor() {
@@ -15,6 +16,9 @@ export class PrologueScene extends Phaser.Scene {
     const gm = GameManager.getInstance();
 
     const chapterData = dm.getChapterData(gm.chapter);
+    const { headerImageKey, pageIconKey, accentImageKey } = dm.getChapterTheme(
+      gm.chapterId as (typeof CHAPTERS)[keyof typeof CHAPTERS],
+    ) as ChapterTheme;
     const levelData = chapterData.levels[gm.level - 1];
 
     const breadcrumbs = ["Don't Be Late!", gm.chapterTitle, gm.levelTitle];
@@ -24,10 +28,10 @@ export class PrologueScene extends Phaser.Scene {
       0,
       0,
       breadcrumbs,
-      ASSET_KEYS.HEADER_SCHOOL,
-      ASSET_KEYS.ICON_TRIANGULAR_RULER,
+      headerImageKey,
+      pageIconKey,
       "Don't Be Late for...",
-      ASSET_KEYS.ACCENT_SCHOOL,
+      accentImageKey,
     );
 
     page.addChild(

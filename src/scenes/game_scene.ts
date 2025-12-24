@@ -1,10 +1,12 @@
 import * as Phaser from "phaser";
 
+import { DataManager } from "../manager/data_manager";
 import { GameManager, type Tile } from "../manager/game_manager";
 import { GamePage } from "../ui/pages/game_page";
 import { TaskTile } from "../ui/task_tile";
 import { shuffleArray } from "../utils";
 import { ASSET_KEYS, COLORS, SCENE_KEYS, SIZES } from "../variables";
+import type { CHAPTERS } from "../variables/themes";
 
 export class GameScene extends Phaser.Scene {
   private _fixedTiles: Array<Tile> = [];
@@ -20,7 +22,19 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
     this.cameras.main.fadeIn(300, 207, 172, 140);
+    const dm = DataManager.getInstance();
     const gm = GameManager.getInstance();
+
+    const {
+      headerImageKey,
+      pageIconKey,
+      accentImageKey,
+      mainColor,
+      accentColor,
+    } = dm.getChapterTheme(
+      gm.chapterId as (typeof CHAPTERS)[keyof typeof CHAPTERS],
+    );
+
     gm.setupLevel();
     this._fixedTiles = gm.getFixedTiles();
     this._freeTiles = shuffleArray(gm.getFreeTiles());
@@ -32,8 +46,8 @@ export class GameScene extends Phaser.Scene {
       0,
       0,
       breadcrumbs,
-      ASSET_KEYS.ACCENT_SCHOOL,
-      COLORS.YELLOW.number,
+      accentImageKey,
+      mainColor.number,
     );
     this._page = page;
 

@@ -1,4 +1,5 @@
 import { GameManager } from "../../manager/game_manager";
+import { SCENE_KEYS } from "../../variables";
 import { Button } from "./button";
 
 export class LetsGoButton extends Button {
@@ -8,6 +9,7 @@ export class LetsGoButton extends Button {
 
   onClick(): void {
     const gm = GameManager.getInstance();
-    gm.showOutcomeScreen(this.scene);
+    gm.updateOutcome();
+    this.scene.scene.start(SCENE_KEYS.OUTCOME);
   }
 }

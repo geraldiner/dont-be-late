@@ -1,4 +1,3 @@
-import { OutcomeScreen } from "../game_screens/outcome_screen";
 import { effectHandlers } from "../utils";
 import { OUTCOMES, SCENE_KEYS } from "../variables";
 import { DataManager } from "./data_manager";
@@ -24,10 +23,12 @@ export class GameManager {
   }
 
   // Game states
+  public chapterId: string = "";
+
   public chapter: number = 1;
   public chapterTitle: string = "";
 
-  public level: number = 3;
+  public level: number = 1;
   public levelTitle: string = "";
 
   // Game conditions
@@ -73,6 +74,7 @@ export class GameManager {
     const chapterData = dm.getChapterData(this.chapter);
     const levelData = chapterData.levels[this.level - 1];
     // Level info
+    this.chapterId = chapterData.id;
     this.chapterTitle = chapterData.title;
     this.levelTitle = levelData.title;
     // Tiles
@@ -140,29 +142,20 @@ export class GameManager {
     );
   }
 
-  public showOutcomeScreen(scene: Phaser.Scene): void {
-    this._checkOutcome();
-    new OutcomeScreen(scene, 0, 0);
-  }
-
-  public goNextLevel(scene: Phaser.Scene): void {
+  public advanceLevel(): void {
     this.level += 1;
     if (this.level > 3) {
       this.chapter += 1;
       this.level = 1;
     }
-    if (this.chapter > 1) {
-      scene.scene.stop();
-      scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
-    } else {
-      this.setupLevel();
-      scene.scene.stop();
-      scene.scene.start(SCENE_KEYS.PROLOGUE);
-    }
   }
 
-  private _checkOutcome(): void {
-    // Placeholder logic for determining outcome
+  public shouldGoToEndGame(): boolean {
+    return this.chapter > 1;
+  }
+
+  public updateOutcome(): void {
+    // TODO: Figure out a way to determine between ideal and on time
     const passesConstraints = this._validateConstraints();
     if (!passesConstraints) {
       this._outcome = OUTCOMES.FAIL;
@@ -170,11 +163,9 @@ export class GameManager {
       passesConstraints &&
       this._currentTime.getTime() <= this._idealEndTime.getTime()
     ) {
-      this._outcome = OUTCOMES.IDEAL;
-    } else if (passesConstraints) {
       this._outcome = OUTCOMES.ON_TIME;
     } else {
-      this._outcome = OUTCOMES.LATE;
+      this._outcome = OUTCOMES.FAIL;
     }
     // DEBUG: For testing purposes, always set to ON_TIME
     this._outcome = OUTCOMES.ON_TIME;

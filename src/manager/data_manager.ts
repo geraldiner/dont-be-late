@@ -1,4 +1,9 @@
 import chapter1Data from "../assets/data/chapter_1.json";
+import {
+  type CHAPTERS,
+  CHAPTER_THEME_MAP,
+  type ChapterTheme,
+} from "../variables/themes";
 
 export class DataManager {
   private static instance: DataManager;
@@ -18,5 +23,15 @@ export class DataManager {
         console.error(`Chapter data for chapter ${chapter} not found.`);
         return null;
     }
+  }
+
+  public getChapterTheme(
+    chapterId: (typeof CHAPTERS)[keyof typeof CHAPTERS],
+  ): ChapterTheme | null {
+    if (!Object.hasOwnProperty.call(CHAPTER_THEME_MAP, chapterId)) {
+      console.error(`Theme for chapter ${chapterId} not found.`);
+      return null;
+    }
+    return CHAPTER_THEME_MAP[chapterId];
   }
 }
