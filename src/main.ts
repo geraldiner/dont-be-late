@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 
+import { CreditsScene } from "./scenes/credits_scene";
 import { GameCompleteScene } from "./scenes/game_complete_scene";
 import { GameScene } from "./scenes/game_scene";
 import { OutcomeScene } from "./scenes/outcome_scene";
@@ -27,6 +28,7 @@ const config = {
     GameScene,
     OutcomeScene,
     GameCompleteScene,
+    CreditsScene,
   ],
 };
 

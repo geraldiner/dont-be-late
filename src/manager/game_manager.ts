@@ -58,9 +58,7 @@ export class GameManager {
   }> = [];
 
   private static instance: GameManager;
-  private constructor() {
-    this.setupLevel();
-  }
+  private constructor() {}
   static getInstance(): GameManager {
     if (!GameManager.instance) {
       GameManager.instance = new GameManager();
@@ -175,6 +173,11 @@ export class GameManager {
     this._currentSequence = [];
     this.setupLevel();
     scene.scene.restart();
+  }
+
+  public resetGame(): void {
+    this.chapter = 1;
+    this.level = 1;
   }
 
   private _validateConstraints(): boolean {

@@ -7,7 +7,6 @@ export class ResetButton extends Button {
   }
 
   onClick(): void {
-    this.scene.scene.stop();
     this.scene.scene.start(SCENE_KEYS.GAME);
   }
 }

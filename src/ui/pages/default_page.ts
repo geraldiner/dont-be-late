@@ -62,7 +62,7 @@ export class DefaultPage extends Page {
 
     const accentImage = scene.add.image(
       SIZES.CONTENT_WIDTH - SIZES.ACCENT_IMAGE_WIDTH / 2,
-      SIZES.PAGE_DEFAULT_HEIGHT - SIZES.ACCENT_IMAGE_HEIGHT / 2,
+      contentContainer.y + SIZES.ACCENT_IMAGE_HEIGHT / 2 - PADDING.FORTY + 3,
       accentImageKey,
     );
 

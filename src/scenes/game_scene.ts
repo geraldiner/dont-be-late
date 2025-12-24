@@ -35,7 +35,6 @@ export class GameScene extends Phaser.Scene {
       gm.chapterId as (typeof CHAPTERS)[keyof typeof CHAPTERS],
     );
 
-    gm.setupLevel();
     this._fixedTiles = gm.getFixedTiles();
     this._freeTiles = shuffleArray(gm.getFreeTiles());
 
