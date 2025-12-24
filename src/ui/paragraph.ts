@@ -19,5 +19,6 @@ export class Paragraph extends Phaser.GameObjects.Container {
     });
 
     this.add(paragraphText);
+    this.setSize(this.width, paragraphText.height);
   }
 }

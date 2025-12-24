@@ -1,8 +1,6 @@
 import { DataManager } from "../manager/data_manager";
 import { GameManager } from "../manager/game_manager";
-import { Header } from "../ui/header";
-import { Navbar } from "../ui/navbar";
-import { Page } from "../ui/page";
+import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
 import { SectionHeading } from "../ui/section_heading";
 import { ASSET_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
@@ -19,23 +17,14 @@ export class PrologueScene extends Phaser.Scene {
     const chapterData = dm.getChapterData(gm.chapter);
     const levelData = chapterData.levels[gm.level - 1];
 
-    const navbar = new Navbar(this, 0, PADDING.TWENTY, [
-      "Don't Be Late!",
-      chapterData.title,
-      levelData.title,
-    ]);
+    const breadcrumbs = ["Don't Be Late!", gm.chapterTitle, gm.levelTitle];
 
-    const header = new Header(
+    const page = new DefaultPage(
       this,
       0,
-      navbar.y + SIZES.NAVBAR_HEIGHT,
+      0,
+      breadcrumbs,
       ASSET_KEYS.HEADER_SCHOOL,
-    );
-
-    const page = new Page(
-      this,
-      0,
-      header.y + SIZES.HEADER_HEIGHT,
       ASSET_KEYS.ICON_TRIANGULAR_RULER,
       "Don't Be Late for...",
       ASSET_KEYS.ACCENT_SCHOOL,
@@ -46,7 +35,7 @@ export class PrologueScene extends Phaser.Scene {
         this,
         0,
         0,
-        `${chapterData.title} ${gm.chapter}-${gm.level}: ${levelData.title}`,
+        `${gm.chapterTitle} ${gm.chapter}-${gm.level}: ${gm.levelTitle}`,
       ),
     );
 
@@ -58,11 +47,11 @@ export class PrologueScene extends Phaser.Scene {
     });
 
     this.tweens.add({
-      targets: [navbar, header, page],
+      targets: [page],
       x: -SIZES.PAGE_WIDTH * 2,
       duration: 1000,
       ease: "EaseInOut",
-      delay: 3000,
+      delay: 2700,
       onComplete: () => {
         this.scene.start(SCENE_KEYS.GAME);
       },

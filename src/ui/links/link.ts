@@ -1,21 +1,19 @@
 import { COLORS, FONT_KEYS, FONT_SIZES } from "../../variables";
 
 export abstract class Link extends Phaser.GameObjects.Container {
-  private _text: Phaser.GameObjects.Text;
-
   constructor(scene: Phaser.Scene, x: number, y: number, text: string) {
     super(scene, x, y);
     scene.add.existing(this);
 
-    this._text = scene.add
+    const link = scene.add
       .text(0, 0, text, {
         fontFamily: FONT_KEYS.SERIF,
         fontSize: FONT_SIZES.DEFAULT,
         color: COLORS.BLACK.hex,
       })
       .setOrigin(0.5);
-    this.add([this._text]);
-    this.setSize(this._text.width, this._text.height);
+    this.add([link]);
+    this.setSize(link.width, link.height);
     this.setPosition(this.x + this.width / 2, this.y + this.height / 2);
     this.setInteractive({ useHandCursor: true });
 

@@ -1,10 +1,8 @@
 import * as Phaser from "phaser";
 
-import { Header } from "../ui/header";
 import { StartLink } from "../ui/links/start_link";
-import { Navbar } from "../ui/navbar";
-import { Page } from "../ui/page";
-import { ASSET_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
+import { DefaultPage } from "../ui/pages/default_page";
+import { ASSET_KEYS, SCENE_KEYS } from "../variables";
 
 export class TitleScene extends Phaser.Scene {
   constructor() {
@@ -13,25 +11,20 @@ export class TitleScene extends Phaser.Scene {
 
   public create(): void {
     // DEBUG: Uncomment out to skip title scene
-    // this.scene.start(SCENE_KEYS.PROLOGUE);
+    this.scene.start(SCENE_KEYS.PROLOGUE);
 
-    const navbar = new Navbar(this, 0, PADDING.TWENTY, [
+    const breadcrumbs = [
       "Codedex.io 2025 Game Jam",
       "GeraldineDesu",
       "Don't Be Late!",
-    ]);
+    ];
 
-    const header = new Header(
+    const page = new DefaultPage(
       this,
       0,
-      navbar.y + SIZES.NAVBAR_HEIGHT,
+      0,
+      breadcrumbs,
       ASSET_KEYS.HEADER_FOREST,
-    );
-
-    const page = new Page(
-      this,
-      0,
-      header.y + SIZES.HEADER_HEIGHT,
       ASSET_KEYS.ICON_HERB,
       "Don't Be Late!",
       ASSET_KEYS.ACCENT_FOREST,

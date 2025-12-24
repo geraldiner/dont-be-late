@@ -1,5 +1,3 @@
-import { NONE } from "phaser";
-
 import { COLORS, FONT_KEYS, FONT_SIZES, PADDING, SIZES } from "../variables";
 
 export class SectionHeading extends Phaser.GameObjects.Container {
@@ -26,9 +24,6 @@ export class SectionHeading extends Phaser.GameObjects.Container {
       .setOrigin(0);
 
     this.add([headingText, divider]);
-    this.setSize(
-      SIZES.COLUMN_ONE_WIDTH,
-      headingText.height + divider.height + PADDING.TEN,
-    );
+    this.setSize(this.width, headingText.height + divider.height + PADDING.TEN);
   }
 }
