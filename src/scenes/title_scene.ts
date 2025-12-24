@@ -13,7 +13,7 @@ export class TitleScene extends Phaser.Scene {
 
   public create(): void {
     // DEBUG: Uncomment out to skip title scene
-    // this.scene.start(SCENE_KEYS.GAME);
+    // this.scene.start(SCENE_KEYS.PROLOGUE);
 
     const navbar = new Navbar(this, 0, PADDING.TWENTY, [
       "Codedex.io 2025 Game Jam",

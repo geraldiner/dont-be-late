@@ -2,13 +2,15 @@ import { COLORS, FONT_KEYS, FONT_SIZES, PADDING, SIZES } from "../variables";
 
 export class Page extends Phaser.GameObjects.Container {
   private _childrenContainer: Phaser.GameObjects.Container;
+  private _sidebarContainer: Phaser.GameObjects.Container;
+
   constructor(
     scene: Phaser.Scene,
     x: number,
     y: number,
     iconKey: string,
     title: string,
-    accentImageKey: string,
+    accentImageKey?: string,
   ) {
     super(scene, x, y);
     scene.add.existing(this);
@@ -21,7 +23,6 @@ export class Page extends Phaser.GameObjects.Container {
       COLORS.WHITE.number,
     );
 
-    // DEBUG: Content rectangle should be content container?
     const contentContainer = scene.add.container(
       bg.x - bg.width / 2,
       bg.y - bg.height / 2,
@@ -44,32 +45,37 @@ export class Page extends Phaser.GameObjects.Container {
       },
     );
 
-    const accentImage = scene.add.image(
-      SIZES.CONTENT_WIDTH + SIZES.COLUMN_GAP,
-      SIZES.PAGE_HEIGHT - SIZES.ACCENT_IMAGE_HEIGHT / 2,
-      accentImageKey,
-    );
+    if (accentImageKey) {
+      const accentImage = scene.add.image(
+        SIZES.CONTENT_WIDTH + SIZES.COLUMN_GAP,
+        SIZES.PAGE_HEIGHT - SIZES.ACCENT_IMAGE_HEIGHT / 2,
+        accentImageKey,
+      );
+      contentContainer.add(accentImage);
+    }
 
     const childrenContainer = scene.add.container(
       bg.x - bg.width / 2,
       pageTitle.y + pageTitle.height + PADDING.FORTY,
+      [],
     );
     this._childrenContainer = childrenContainer;
 
-    contentContainer.add([pageIcon, pageTitle, accentImage, childrenContainer]);
+    const sidebarContainer = scene.add.container(0, 0, []);
+    this._sidebarContainer = sidebarContainer;
+
+    contentContainer.add([pageIcon, pageTitle, childrenContainer]);
 
     this.add([bg, contentContainer]);
   }
 
-  public addChild(child: Phaser.GameObjects.Container): void {
-    console.log(this._childrenContainer.getAll());
-    const children = this._childrenContainer.getAll();
+  public addChild(child: Phaser.GameObjects.Container, padding?: number): void {
+    const lastChild = this._childrenContainer.getAt(
+      this._childrenContainer.length - 1,
+    );
     let nextY = 0;
-    if (children) {
-      const lastChild = children[children.length - 1];
-      if (lastChild) {
-        nextY = lastChild.y + lastChild.height + PADDING.TEN;
-      }
+    if (lastChild) {
+      nextY = lastChild.y + lastChild.height + (padding ?? PADDING.THIRTY);
     }
     child.setPosition(child.x, nextY);
     this._childrenContainer.add(child);

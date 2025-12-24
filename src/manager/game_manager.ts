@@ -152,11 +152,12 @@ export class GameManager {
       this.level = 1;
     }
     if (this.chapter > 1) {
-      scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
       scene.scene.stop();
+      scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
     } else {
       this.setupLevel();
-      scene.scene.restart();
+      scene.scene.stop();
+      scene.scene.start(SCENE_KEYS.PROLOGUE);
     }
   }
 
