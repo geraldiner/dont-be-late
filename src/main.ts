@@ -13,7 +13,7 @@ const config = {
   height: 600,
   resolution: window.devicePixelRatio || 1,
   parent: "game-container",
-  backgroundColor: COLORS.LIGHT_BROWN,
+  backgroundColor: COLORS.LIGHT_BROWN.hex,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

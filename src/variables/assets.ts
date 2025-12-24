@@ -1,9 +1,13 @@
 export const ASSET_KEYS = {
+  ACCENT_ENDGAME: "accent_endgame",
+  ACCENT_FOREST: "accent_forest",
+  ACCENT_SCHOOL: "accent_school",
   HEADER_ENDGAME: "header_endgame",
   HEADER_FOREST: "header_forest",
   HEADER_SCHOOL: "header_school",
   ICON_CLOCK: "icon_clock",
   ICON_DISAPPOINTED_EMOJI: "icon_disappointed_emoji",
+  ICON_HERB: "icon_herb",
   ICON_LIST: "icon_list",
   ICON_MEDAL_FIRST: "icon_medal_first",
   ICON_SIX_DOTS: "icon_six_dots",
