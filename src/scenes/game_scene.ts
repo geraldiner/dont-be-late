@@ -5,7 +5,7 @@ import { GameManager, type Tile } from "../manager/game_manager";
 import { GamePage } from "../ui/pages/game_page";
 import { TaskTile } from "../ui/task_tile";
 import { shuffleArray } from "../utils";
-import { ASSET_KEYS, COLORS, SCENE_KEYS, SIZES } from "../variables";
+import { SCENE_KEYS, SIZES } from "../variables";
 import type { CHAPTERS } from "../variables/themes";
 
 export class GameScene extends Phaser.Scene {

@@ -25,5 +25,9 @@ export default defineConfig(
         tsconfigRootDir: process.cwd(),
       },
     },
+    rules: {
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
   },
 );

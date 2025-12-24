@@ -87,7 +87,7 @@ export class DefaultPage extends Page {
   public addChild(child: Phaser.GameObjects.Container, padding?: number): void {
     const lastChild = this._childrenContainer.getAt(
       this._childrenContainer.length - 1,
-    );
+    ) as Phaser.GameObjects.Container | undefined;
     let nextY = 0;
     if (lastChild) {
       nextY = lastChild.y + lastChild.height + (padding ?? PADDING.TWENTY);

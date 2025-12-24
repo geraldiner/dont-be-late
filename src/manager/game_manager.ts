@@ -1,5 +1,5 @@
 import { effectHandlers } from "../utils";
-import { OUTCOMES, SCENE_KEYS } from "../variables";
+import { OUTCOMES } from "../variables";
 import { DataManager } from "./data_manager";
 
 export interface Tile {
