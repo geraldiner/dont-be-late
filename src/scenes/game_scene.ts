@@ -8,7 +8,7 @@ import { ASSET_KEYS, COLORS, SCENE_KEYS, SIZES } from "../variables";
 
 export class GameScene extends Phaser.Scene {
   private _fixedTiles: Array<Tile> = [];
-  private _occupiedIndices: Set<number> = new Set();
+  private _fixedTileIndices: Set<number> = new Set<number>();
   private _freeTiles: Array<Tile> = [];
   private _tileViews: Array<TaskTile> = [];
   private _startY: number = 0;
@@ -54,7 +54,8 @@ export class GameScene extends Phaser.Scene {
         occupied.add(tile.fixedPositionIndex);
       }
     });
-    this._occupiedIndices = occupied;
+    this._fixedTileIndices = new Set(occupied);
+    let nextFreeIndex: number = 0;
     this._freeTiles.forEach((tile, index) => {
       if (!occupied.has(index)) {
         const taskTile = new TaskTile(
@@ -69,6 +70,24 @@ export class GameScene extends Phaser.Scene {
         taskTile.on("tile-drag-start", this.onTileDragStart, this);
         taskTile.on("tile-drag-move", this.onTileDragMove, this);
         taskTile.on("tile-drag-end", this.onTileDragEnd, this);
+        occupied.add(index);
+      } else {
+        while (occupied.has(nextFreeIndex)) {
+          nextFreeIndex += 1;
+        }
+        const taskTile = new TaskTile(
+          this,
+          page.columnOneX + SIZES.COLUMN_ONE_WIDTH / 2,
+          this._startY + nextFreeIndex * SIZES.TILE_HEIGHT,
+          tile.label,
+          tile.key,
+          false,
+        );
+        this._tileViews[nextFreeIndex] = taskTile;
+        taskTile.on("tile-drag-start", this.onTileDragStart, this);
+        taskTile.on("tile-drag-move", this.onTileDragMove, this);
+        taskTile.on("tile-drag-end", this.onTileDragEnd, this);
+        occupied.add(nextFreeIndex);
       }
     });
 
@@ -97,9 +116,21 @@ export class GameScene extends Phaser.Scene {
   }
 
   private _repositionTiles(exclude?: TaskTile) {
-    this._tileViews.forEach((tile) => {
-      if (tile !== exclude) {
-        tile.snapTo(this._startY + this._tileViews.indexOf(tile) * 40);
+    const occupied = new Set<number>(this._fixedTileIndices);
+    // Reposition tiles
+    this._tileViews.forEach((tile, index) => {
+      if (tile && tile !== exclude) {
+        if (occupied.has(index)) {
+          let newIndex = 0;
+          while (occupied.has(newIndex)) {
+            newIndex += 1;
+          }
+          tile.snapTo(this._getYFromIndex(newIndex));
+          occupied.add(newIndex);
+        } else {
+          tile.snapTo(this._getYFromIndex(index));
+          occupied.add(index);
+        }
       }
     });
   }
@@ -110,7 +141,7 @@ export class GameScene extends Phaser.Scene {
     const oldIndex = this._tileViews.indexOf(tile);
     const newIndex = this._getIndexFromY(tile.y);
 
-    if (newIndex !== oldIndex && !this._occupiedIndices.has(newIndex)) {
+    if (newIndex !== oldIndex) {
       this._tileViews.splice(oldIndex, 1);
       this._tileViews.splice(newIndex, 0, tile);
       this._repositionTiles(tile);
@@ -120,14 +151,23 @@ export class GameScene extends Phaser.Scene {
   private onTileDragEnd(tile: TaskTile): void {
     const gm = GameManager.getInstance();
     this._repositionTiles();
+    const occupied = new Set(this._fixedTileIndices);
     const newSequence: Array<string> = [];
     this._fixedTiles.forEach((tile) => {
       newSequence[tile.fixedPositionIndex!] = tile.key;
     });
 
     this._tileViews.forEach((tile, index) => {
-      if (!this._occupiedIndices.has(index)) {
+      if (!occupied.has(index)) {
         newSequence[index] = tile.key;
+        occupied.add(index);
+      } else {
+        let newIndex = 0;
+        while (occupied.has(newIndex)) {
+          newIndex += 1;
+        }
+        newSequence[newIndex] = tile.key;
+        occupied.add(newIndex);
       }
     });
 
