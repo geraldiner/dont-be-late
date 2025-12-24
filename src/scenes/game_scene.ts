@@ -2,9 +2,17 @@ import * as Phaser from "phaser";
 
 import { GameManager, type Tile } from "../manager/game_manager";
 import { LetsGoButton } from "../ui/buttons";
+import { Navbar } from "../ui/navbar";
+import { Page } from "../ui/pages/page";
 import { TaskTile } from "../ui/task_tile";
 import { formatTime, shuffleArray } from "../utils";
-import { FONT_KEYS, PADDING, SCENE_KEYS, TEXTURE_KEYS } from "../variables";
+import {
+  FONT_KEYS,
+  PADDING,
+  SCENE_KEYS,
+  SIZES,
+  TEXTURE_KEYS,
+} from "../variables";
 
 export class GameScene extends Phaser.Scene {
   private _fixedTiles: Array<Tile> = [];
@@ -35,43 +43,10 @@ export class GameScene extends Phaser.Scene {
       .setRounded(6)
       .setStrokeStyle(2, 0x000000)
       .setOrigin(0.5);
-    const titleText = this.add.text(
-      pageBackground.x - pageBackground.width / 2 + PADDING.TWENTY,
-      pageBackground.y - pageBackground.height / 2 + PADDING.TEN,
-      gm.getTitle(),
-      {
-        fontFamily: FONT_KEYS.SERIF,
-        fontSize: "16px",
-        color: "#111111",
-      },
-    );
-    const agendaHeadingBackground = this.add
-      .image(
-        titleText.x,
-        titleText.y + titleText.height + PADDING.TEN,
-        TEXTURE_KEYS.AGENDA_HEADING_ROUNDED_RECTANGLE,
-      )
-      .setOrigin(0);
-    this.add
-      .text(
-        agendaHeadingBackground.x + PADDING.TWENTY,
-        agendaHeadingBackground.height / 2 + agendaHeadingBackground.y,
-        "TODAY'S AGENDA",
-        {
-          fontFamily: FONT_KEYS.SERIF,
-          fontSize: "14px",
-          color: "#111111",
-        },
-      )
-      .setOrigin(0, 0.5);
 
     // Create moveable tiles
     const startY =
-      this.game.canvas.height / 2 -
-      pageBackground.height / 2 +
-      titleText.height +
-      agendaHeadingBackground.height +
-      PADDING.TWENTY;
+      this.game.canvas.height / 2 - pageBackground.height / 2 + PADDING.TWENTY;
     this.startY = startY;
     const occupied = new Set<number>();
 

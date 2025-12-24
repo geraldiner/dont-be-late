@@ -25,12 +25,10 @@ export class GameManager {
 
   // Game states
   public chapter: number = 1;
-  private _chapterTitle: string = "";
+  public chapterTitle: string = "";
+
   public level: number = 1;
-  private _levelTitle: string = "";
-  public getTitle(): string {
-    return `${this._chapterTitle} ${this.chapter}-${this.level}: ${this._levelTitle}`;
-  }
+  public levelTitle: string = "";
 
   // Game conditions
   private _startTime: Date = new Date();
@@ -59,7 +57,9 @@ export class GameManager {
   }> = [];
 
   private static instance: GameManager;
-  private constructor() {}
+  private constructor() {
+    this.setupLevel();
+  }
   static getInstance(): GameManager {
     if (!GameManager.instance) {
       GameManager.instance = new GameManager();
@@ -73,8 +73,8 @@ export class GameManager {
     const chapterData = dm.getChapterData(this.chapter);
     const levelData = chapterData.levels[this.level - 1];
     // Level info
-    this._chapterTitle = chapterData.title;
-    this._levelTitle = levelData.title;
+    this.chapterTitle = chapterData.title;
+    this.levelTitle = levelData.title;
     // Tiles
     this._availableTiles = levelData.availableTiles;
 
