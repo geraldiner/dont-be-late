@@ -1,6 +1,5 @@
 import * as Phaser from "phaser";
 
-import { PreludeScreen } from "../game_screens/prelude_screen";
 import { GameManager, type Tile } from "../manager/game_manager";
 import { LetsGoButton } from "../ui/buttons";
 import { TaskTile } from "../ui/task_tile";
@@ -20,8 +19,6 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
     const gm = GameManager.getInstance();
-    // DEBUG: Comment out to skip prelude screen
-    // new PreludeScreen(this, 0, 0);
     gm.setupLevel();
     this._fixedTiles = gm.getFixedTiles();
     this._freeTiles = shuffleArray(gm.getFreeTiles());
