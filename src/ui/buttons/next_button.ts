@@ -10,7 +10,6 @@ export class NextButton extends Button {
   onClick(): void {
     const gm = GameManager.getInstance();
     gm.advanceLevel();
-    this.scene.scene.stop();
     if (gm.shouldGoToEndGame()) {
       this.scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
     } else {

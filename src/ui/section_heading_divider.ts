@@ -9,6 +9,9 @@ export class SectionHeadingWithDivider extends Phaser.GameObjects.Container {
       fontFamily: FONT_KEYS.SERIF,
       fontSize: FONT_SIZES.H2,
       color: COLORS.BLACK.hex,
+      wordWrap: {
+        width: SIZES.COLUMN_ONE_WIDTH - PADDING.FORTY,
+      },
     });
 
     const divider = scene.add

@@ -1,3 +1,4 @@
+import { GameManager } from "../../manager/game_manager";
 import { SCENE_KEYS } from "../../variables";
 import { Link } from "./link";
 
@@ -7,6 +8,8 @@ export class StartLink extends Link {
   }
 
   onClick(): void {
+    const gm = GameManager.getInstance();
+    gm.setupLevel();
     this.scene.scene.start(SCENE_KEYS.PROLOGUE);
   }
 }
