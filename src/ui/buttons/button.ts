@@ -46,11 +46,16 @@ export abstract class Button extends Phaser.GameObjects.Container {
     });
   }
 
-  public setDisabled(isDisabled: boolean): void {
+  public setIsDisabled(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
     this._bg.setTexture(
       isDisabled ? TEXTURE_KEYS.BUTTON_DISABLED : TEXTURE_KEYS.BUTTON,
     );
+    if (isDisabled) {
+      this.disableInteractive(true)
+    } else {
+      this.setInteractive({ useHandCursor: true})
+    }
   }
 
   public setText(text: string): void {

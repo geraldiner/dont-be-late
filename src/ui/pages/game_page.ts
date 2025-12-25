@@ -8,6 +8,7 @@ import { Page } from "./page";
 export class GamePage extends Page {
   public columnOneX: number = 0;
   public startY: number = 0;
+  public letsGoButton: LetsGoButton;
   private currentTimeText: Phaser.GameObjects.Text = null!;
 
   constructor(
@@ -77,6 +78,8 @@ export class GamePage extends Page {
         PADDING.ONE_TWENTY -
         PADDING.TWENTY,
     );
+    letsGoButton.setIsDisabled(true)
+    this.letsGoButton = letsGoButton;
 
     columnOneContainer.add([agendaHeading, letsGoButton]);
 

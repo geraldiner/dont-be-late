@@ -15,6 +15,7 @@ export class GameScene extends Phaser.Scene {
   private _tileViews: Array<TaskTile> = [];
   private _startY: number = 0;
   private _page: GamePage = null!;
+  private _isFirstMove: boolean = true;
 
   constructor() {
     super({ key: SCENE_KEYS.GAME });
@@ -185,5 +186,9 @@ export class GameScene extends Phaser.Scene {
 
     gm.updateSequence(newSequence);
     this._page.updateCurrentTimeText();
+    if (this._isFirstMove) {
+      this._isFirstMove = false;
+      this._page.letsGoButton.setIsDisabled(false);
+    }
   }
 }
