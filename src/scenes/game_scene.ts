@@ -22,6 +22,12 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
     this.cameras.main.fadeIn(300, 207, 172, 140);
+    this.tweens.add({
+      targets: [this.cameras.main],
+      duration: 777,
+      y: { from: 600, to: 0 },
+      ease: "Sine.easeInOut",
+    });
     const dm = DataManager.getInstance();
     const gm = GameManager.getInstance();
 
@@ -102,13 +108,6 @@ export class GameScene extends Phaser.Scene {
         taskTile.on("tile-drag-end", this.onTileDragEnd, this);
         occupied.add(nextFreeIndex);
       }
-    });
-
-    this.tweens.add({
-      targets: [this],
-      alpha: { from: 0, to: 1 },
-      duration: 1500,
-      ease: "EaseInOut",
     });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {

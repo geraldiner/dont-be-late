@@ -3,7 +3,7 @@ import { GameManager } from "../manager/game_manager";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
 import { SectionHeadingWithDivider } from "../ui/section_heading_divider";
-import { PADDING, SCENE_KEYS, SIZES } from "../variables";
+import { PADDING, SCENE_KEYS } from "../variables";
 import type { CHAPTERS, ChapterTheme } from "../variables/themes";
 
 export class PrologueScene extends Phaser.Scene {
@@ -12,6 +12,14 @@ export class PrologueScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.cameras.main.fadeIn(300, 207, 172, 140);
+    this.tweens.add({
+      targets: [this.cameras.main],
+      duration: 777,
+      y: { from: 600, to: 0 },
+      ease: "Sine.easeInOut",
+    });
+
     const dm = DataManager.getInstance();
     const gm = GameManager.getInstance();
 
@@ -30,7 +38,7 @@ export class PrologueScene extends Phaser.Scene {
       breadcrumbs,
       headerImageKey,
       pageIconKey,
-      "Don't Be Late for...",
+      `Don't Be Late for ${gm.chapterTitle}`,
       accentImageKey,
     );
 
@@ -39,7 +47,7 @@ export class PrologueScene extends Phaser.Scene {
         this,
         0,
         0,
-        `${gm.chapterTitle} ${gm.chapter}-${gm.level}: ${gm.levelTitle}`,
+        `${gm.chapter}-${gm.level}: ${gm.levelTitle}`,
       ),
     );
 
@@ -51,12 +59,11 @@ export class PrologueScene extends Phaser.Scene {
     });
 
     this.tweens.add({
-      targets: [page],
-      x: -SIZES.PAGE_WIDTH * 2,
-      alpha: { from: 1, to: 0 },
-      duration: 1000,
-      ease: "EaseInOut",
-      delay: 2700,
+      targets: [this.cameras.main],
+      duration: 777,
+      y: { from: 0, to: 600 },
+      ease: "Sine.easeInOut",
+      delay: 2777,
       onComplete: () => {
         this.scene.start(SCENE_KEYS.GAME);
       },
