@@ -1,10 +1,10 @@
 import { TILE_KEYS } from "../variables";
 
 interface EffectRule {
-  type: string;
-  extraMinutes?: number;
+  id: string;
+  minutesToApply: number;
   target?: string;
-  exclude?: Array<string>;
+  excludedTiles?: Array<string>;
 }
 
 type EffectHandler = (
@@ -14,7 +14,31 @@ type EffectHandler = (
 ) => number;
 
 export const effectHandlers: Record<string, EffectHandler> = {
-  scrollingSecondAfterAlarm(sequence, index) {
-    return index === 1 && sequence[index - 1] === TILE_KEYS.ALARM ? 20 : 0;
+  beforeCoffee(sequence, index, rule) {
+    const tilesBeforeCoffee = sequence
+      .slice(0, index)
+      .filter((key) => !rule.excludedTiles.includes(key));
+    return rule.minutesToApply * tilesBeforeCoffee.length;
+  },
+  breakfastAndPackedLunchKitchenBonus(sequence, index, rule) {
+    const targetIndex = sequence.indexOf(rule.target);
+    return targetIndex - 1 === index || targetIndex + 1 === index
+      ? rule.minutesToApply
+      : 0;
+  },
+  checkEmailsFirst(sequence, index, rule) {
+    return index === 0 ? rule.minutesToApply : 0;
+  },
+  makeCopiesMultiplier(sequence, index, rule) {
+    return rule.minutesToApply * (index === 0 ? index + 1 : index)
+  },
+  pickUpMaterialsAtPTC(sequence, index, rule) {
+    const targetIndex = sequence.indexOf(rule.target);
+    return targetIndex + 1 === index ? rule.minutesToApply : 0;
+  },
+  scrollingSecondAfterAlarm(sequence, index, rule) {
+    return index === 1 && sequence[index - 1] === rule.target
+      ? rule.minutesToApply
+      : 0;
   },
 };

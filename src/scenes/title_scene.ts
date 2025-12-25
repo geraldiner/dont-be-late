@@ -13,7 +13,7 @@ export class TitleScene extends Phaser.Scene {
 
   public create(): void {
     // DEBUG: Uncomment out to skip title scene
-    // this.scene.start(SCENE_KEYS.GAME);
+    // this.scene.start(SCENE_KEYS.PROLOGUE);
 
     this.cameras.main.fadeIn(300, 207, 172, 140);
     this.tweens.add({
