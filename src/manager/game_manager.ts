@@ -7,8 +7,7 @@ export interface Tile {
   label: string;
   duration: number;
   fixedPositionIndex?: number;
-  penalties?: Array<{ type: string; extraMinutes: number }>;
-  bonuses?: Array<{ type: string; reducedMinutes: number }>;
+  effects?: Array<{ id: string; minutesToApply: number }>;
 }
 
 export class GameManager {
@@ -28,7 +27,7 @@ export class GameManager {
   public chapter: number = 1;
   public chapterTitle: string = "";
 
-  public level: number = 1;
+  public level: number = 3;
   public levelTitle: string = "";
 
   // Game conditions
@@ -52,7 +51,7 @@ export class GameManager {
 
   private _constraints: Array<{
     type: string;
-    tileKey?: string;
+    tileKey: string;
     position?: number;
     second?: string;
   }> = [];
@@ -109,7 +108,6 @@ export class GameManager {
   public updateSequence(tiles: Array<string>): void {
     this._currentSequence = tiles;
     this.updateTimes();
-    console.log(this._currentSequence);
   }
 
   // Update the current time based on placed tiles
@@ -121,16 +119,10 @@ export class GameManager {
       const tile = this._availableTiles.find((t) => t.key === tileKey);
       if (tile) {
         accruedMinutes += tile.duration;
-        tile.penalties?.forEach((penalty) => {
-          const handler = effectHandlers[penalty.type];
+        tile.effects?.forEach((effect) => {
+          const handler = effectHandlers[effect.id];
           if (handler) {
-            accruedMinutes += handler(this._currentSequence, i, penalty);
-          }
-        });
-        tile.bonuses?.forEach((bonus) => {
-          const handler = effectHandlers[bonus.type];
-          if (handler) {
-            accruedMinutes -= handler(this._currentSequence, i, bonus);
+            accruedMinutes += handler(this._currentSequence, i, effect);
           }
         });
       }
@@ -153,20 +145,22 @@ export class GameManager {
   }
 
   public updateOutcome(): void {
-    // TODO: Figure out a way to determine between ideal and on time
     const passesConstraints = this._validateConstraints();
-    if (!passesConstraints) {
-      this._outcome = OUTCOMES.FAIL;
+    if (
+      passesConstraints &&
+      this._currentTime.getTime() < this._idealEndTime.getTime()
+    ) {
+      this._outcome = OUTCOMES.IDEAL;
     } else if (
       passesConstraints &&
-      this._currentTime.getTime() <= this._idealEndTime.getTime()
+      this._currentTime.getTime() < this._targetTime.getTime()
     ) {
       this._outcome = OUTCOMES.ON_TIME;
     } else {
       this._outcome = OUTCOMES.FAIL;
     }
     // DEBUG: For testing purposes, always set to ON_TIME
-    this._outcome = OUTCOMES.ON_TIME;
+    // this._outcome = OUTCOMES.ON_TIME;
   }
 
   public resetLevel(scene: Phaser.Scene): void {
@@ -188,7 +182,6 @@ export class GameManager {
       if (index === -1) {
         return false;
       }
-
       if (constraint.type === "mustBeFirst" && index !== 0) {
         return false;
       } else if (
@@ -209,9 +202,6 @@ export class GameManager {
         }
       }
     }
-    return (
-      new Set(this._currentSequence.filter((t) => t !== undefined)).size ===
-      this._currentSequence.length
-    );
+    return true;
   }
 }

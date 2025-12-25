@@ -15,10 +15,11 @@
           "key": "scroll",
           "label": "📱 Scroll a Bit",
           "duration": 15,
-          "penalties": [
+          "effects": [
             {
-              "type": "scrollingSecondAfterAlarm",
-              "extraMinutes": 20
+              "id": "scrollingSecondAfterAlarm",
+              "minutesToApply": 20,
+              "target": "alarm"
             }
           ]
         },
@@ -46,12 +47,17 @@
       ],
       "availableTiles": [
         { "key": "alarm", "label": "⏰ Alarm Goes Off", "duration": 0 },
-
         {
           "key": "coffee",
           "label": "☕ Make Coffee",
           "duration": 10,
-          "penalties": [{ "type": "beforeCoffee", "extraMinutes": 5 }]
+          "effects": [
+            {
+              "id": "beforeCoffee",
+              "minutesToApply": 5,
+              "excludedTiles": ["alarm"]
+            }
+          ]
         },
         { "key": "kid", "label": "👶 Wake Kids", "duration": 15 },
         {
@@ -63,10 +69,11 @@
           "key": "lunchbox",
           "label": "🥪 Pack Lunches",
           "duration": 15,
-          "bonuses": [
+          "effects": [
             {
-              "type": "kitchenBonus",
-              "reducedMinutes": 5
+              "id": "breakfastAndPackedLunchKitchenBonus",
+              "minutesToApply": -15,
+              "target": "food"
             }
           ]
         },
@@ -74,10 +81,11 @@
           "key": "scroll",
           "label": "📱 Scroll a Bit",
           "duration": 15,
-          "penalties": [
+          "effects": [
             {
-              "type": "scrollingSecondAfterAlarm",
-              "extraMinutes": 20
+              "id": "scrollingSecondAfterAlarm",
+              "minutesToApply": 20,
+              "target": "alarm"
             }
           ]
         },
@@ -91,10 +99,11 @@
       ],
       "startTime": "5:30 AM",
       "targetTime": "7:25 AM",
+      "idealEndTime": "7:20 AM",
       "constraints": [
         { "type": "mustBeFirst", "tileKey": "alarm" },
         { "type": "mustBeLast", "tileKey": "van" },
-        { "type": "mustComeBefore", "before": "kid", "after": "hoodie" }
+        { "type": "mustComeBefore", "tileKey": "kid", "second": "hoodie" }
       ]
     },
     {
@@ -117,12 +126,20 @@
         {
           "key": "email",
           "label": "📧 Check Emails",
-          "duration": 10
+          "duration": 10,
+          "effects": [
+            { "id": "checkEmailsFirst", "minutesToApply": 20}
+          ]
         },
         {
           "key": "lego",
           "label": "🪀 Pick Up Materials",
-          "duration": 20
+          "duration": 20,
+          "effects": [
+            {
+              "id": "pickUpMaterialsAtPTC", "minutesToApply": -25, "target": "group"
+            }
+          ]
         },
         {
           "key": "charge",
@@ -132,7 +149,13 @@
         {
           "key": "folders",
           "label": "📄 Make Copies",
-          "duration": 2
+          "duration": 2,
+          "effects": [
+            {
+              "id": "makeCopiesMultiplier",
+              "minutesToApply": 2
+            }
+          ]
         },
         {
           "key": "group",
@@ -151,7 +174,9 @@
       "idealEndTime": "",
       "constraints": [
         { "type": "mustBe", "tileKey": "group", "position": 3 },
-        { "type": "mustBeLast", "tileKey": "bell" }
+        { "type": "mustBeLast", "tileKey": "bell" },
+        { "type": "mustBeBefore", "tileKey": "open_door", "second": "charge" },
+        { "type": "mustBeBefore", "tileKey": "email", "second": "group" }
       ]
     }
   ]
