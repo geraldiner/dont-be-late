@@ -11,6 +11,13 @@ export class CreditsScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.cameras.main.fadeIn(300, 207, 172, 140);
+    this.tweens.add({
+      targets: [this.cameras.main],
+      duration: 777,
+      y: { from: 600, to: 0 },
+      ease: "Sine.easeInOut",
+    });
     const breadcrumbs = [
       "Codedex.io 2025 Game Jam",
       "GeraldineDesu",

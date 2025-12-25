@@ -13,6 +13,13 @@ export class OutcomeScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.cameras.main.fadeIn(300, 207, 172, 140);
+    this.tweens.add({
+      targets: [this.cameras.main],
+      duration: 777,
+      y: { from: 600, to: 0 },
+      ease: "Power2",
+    });
     const dm = DataManager.getInstance();
     const gm = GameManager.getInstance();
 
@@ -43,7 +50,7 @@ export class OutcomeScene extends Phaser.Scene {
         this,
         0,
         0,
-        `${gm.chapterTitle} ${gm.chapter}-${gm.level}: ${gm.levelTitle}`,
+        `${gm.chapter}-${gm.level}: ${gm.levelTitle}`,
       ),
     );
 

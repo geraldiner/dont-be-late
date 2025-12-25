@@ -10,10 +10,19 @@ export class NextButton extends Button {
   onClick(): void {
     const gm = GameManager.getInstance();
     gm.advanceLevel();
-    if (gm.shouldGoToEndGame()) {
-      this.scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
-    } else {
-      this.scene.scene.start(SCENE_KEYS.PROLOGUE);
-    }
+    this.scene.tweens.add({
+      targets: [this.scene.cameras.main],
+      duration: 777,
+      y: { from: 0, to: 600 },
+      ease: "Sine.easeInOut",
+      onComplete: () => {
+        if (gm.shouldGoToEndGame()) {
+          this.scene.scene.start(SCENE_KEYS.GAME_COMPLETE);
+        } else {
+          gm.setupLevel();
+          this.scene.scene.start(SCENE_KEYS.PROLOGUE);
+        }
+      },
+    });
   }
 }

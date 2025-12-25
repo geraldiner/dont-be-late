@@ -10,6 +10,14 @@ export class LetsGoButton extends Button {
   onClick(): void {
     const gm = GameManager.getInstance();
     gm.updateOutcome();
-    this.scene.scene.start(SCENE_KEYS.OUTCOME);
+    this.scene.tweens.add({
+      targets: [this.scene.cameras.main],
+      duration: 777,
+      y: { from: 0, to: 600 },
+      ease: "Sine.easeInOut",
+      onComplete: () => {
+        this.scene.scene.start(SCENE_KEYS.OUTCOME);
+      },
+    });    
   }
 }
