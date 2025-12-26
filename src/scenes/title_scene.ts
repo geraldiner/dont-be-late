@@ -4,7 +4,7 @@ import { CreditsLink } from "../ui/links/credits_link";
 import { StartLink } from "../ui/links/start_link";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
-import { IMAGE_KEYS, PADDING, SCENE_KEYS } from "../variables";
+import { AUDIO_KEYS, IMAGE_KEYS, PADDING, SCENE_KEYS } from "../variables";
 import type AudioScene from "./audio_scene";
 
 export class TitleScene extends Phaser.Scene {
@@ -25,7 +25,9 @@ export class TitleScene extends Phaser.Scene {
       ease: "Sine.easeInOut",
     });
     const audioScene = this.scene.get(SCENE_KEYS.AUDIO) as AudioScene;
-    audioScene.playBgm();
+    if (!audioScene.sound.get(AUDIO_KEYS.BACKGROUND)?.isPlaying) {
+      audioScene.playBgm();
+    }
 
     const breadcrumbs = [
       "Codedex.io 2025 Game Jam",
@@ -52,6 +54,16 @@ export class TitleScene extends Phaser.Scene {
         "A puzzle game about putting events in the correct order to make it on time.",
       ),
     );
+
+    page.addChild(
+      new Paragraph(
+        this,
+        0,
+        0,
+        "Due to browser settings, you may need to click anywhere first to enable audio.",
+      ),
+    );
+
     page.addChild(new StartLink(this, 0, 0), PADDING.FORTY);
     page.addChild(new CreditsLink(this, 0, 0));
   }

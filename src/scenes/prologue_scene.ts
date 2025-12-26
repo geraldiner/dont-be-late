@@ -64,7 +64,7 @@ export class PrologueScene extends Phaser.Scene {
       duration: 777,
       y: { from: 0, to: 600 },
       ease: "Sine.easeInOut",
-      delay: 2777,
+      delay: 4343,
       onComplete: () => {
         this.scene.start(SCENE_KEYS.GAME);
       },
