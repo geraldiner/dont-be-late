@@ -27,7 +27,7 @@ export class GameManager {
   public chapter: number = 1;
   public chapterTitle: string = "";
 
-  public level: number = 3;
+  public level: number = 1;
   public levelTitle: string = "";
 
   // Game conditions
