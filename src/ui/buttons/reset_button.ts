@@ -7,6 +7,7 @@ export class ResetButton extends Button {
   }
 
   onClick(): void {
+    this.playSound();
     this.scene.tweens.add({
       targets: [this.scene.cameras.main],
       duration: 777,

@@ -3,7 +3,7 @@ import * as Phaser from "phaser";
 import { MainMenuLink } from "../ui/links/main_menu_link";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
-import { ASSET_KEYS, PADDING, SCENE_KEYS } from "../variables";
+import { AUDIO_KEYS, IMAGE_KEYS, PADDING, SCENE_KEYS } from "../variables";
 
 export class CreditsScene extends Phaser.Scene {
   constructor() {
@@ -11,6 +11,7 @@ export class CreditsScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.sound.play(AUDIO_KEYS.SCENE_TRANSITION);
     this.cameras.main.fadeIn(300, 207, 172, 140);
     this.tweens.add({
       targets: [this.cameras.main],
@@ -29,10 +30,10 @@ export class CreditsScene extends Phaser.Scene {
       0,
       0,
       breadcrumbs,
-      ASSET_KEYS.HEADER_FOREST,
-      ASSET_KEYS.ICON_HERB,
+      IMAGE_KEYS.HEADER_FOREST,
+      IMAGE_KEYS.ICON_HERB,
       "Credits",
-      ASSET_KEYS.ACCENT_FOREST,
+      IMAGE_KEYS.ACCENT_FOREST,
     );
 
     page.addChild(

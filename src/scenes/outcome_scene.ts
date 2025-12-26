@@ -4,7 +4,13 @@ import { NextButton, ResetButton } from "../ui/buttons";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
 import { SectionHeadingWithDivider } from "../ui/section_heading_divider";
-import { ASSET_KEYS, OUTCOMES, PADDING, SCENE_KEYS } from "../variables";
+import {
+  AUDIO_KEYS,
+  IMAGE_KEYS,
+  OUTCOMES,
+  PADDING,
+  SCENE_KEYS,
+} from "../variables";
 import type { CHAPTERS, ChapterTheme } from "../variables/themes";
 
 export class OutcomeScene extends Phaser.Scene {
@@ -13,6 +19,7 @@ export class OutcomeScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.sound.play(AUDIO_KEYS.SCENE_TRANSITION);
     this.cameras.main.fadeIn(300, 207, 172, 140);
     this.tweens.add({
       targets: [this.cameras.main],
@@ -27,12 +34,13 @@ export class OutcomeScene extends Phaser.Scene {
       gm.chapterId as (typeof CHAPTERS)[keyof typeof CHAPTERS],
     ) as ChapterTheme;
     const succeeded = gm.outcome !== OUTCOMES.FAIL;
+    this.sound.play(succeeded ? AUDIO_KEYS.SUCCESS : AUDIO_KEYS.FAIL);
 
     const breadcrumbs = ["Don't Be Late!", gm.chapterTitle, gm.levelTitle];
     const titleText = succeeded ? "Success!" : "Oh no!";
     const pageIcon = succeeded
-      ? ASSET_KEYS.ICON_MEDAL_FIRST
-      : ASSET_KEYS.ICON_DISAPPOINTED_EMOJI;
+      ? IMAGE_KEYS.ICON_MEDAL_FIRST
+      : IMAGE_KEYS.ICON_DISAPPOINTED_EMOJI;
 
     const page = new DefaultPage(
       this,

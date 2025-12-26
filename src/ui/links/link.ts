@@ -1,4 +1,11 @@
-import { COLORS, FONT_KEYS, FONT_SIZES } from "../../variables";
+import type AudioScene from "../../scenes/audio_scene";
+import {
+  AUDIO_KEYS,
+  COLORS,
+  FONT_KEYS,
+  FONT_SIZES,
+  SCENE_KEYS,
+} from "../../variables";
 
 export abstract class Link extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene, x: number, y: number, text: string) {
@@ -31,4 +38,9 @@ export abstract class Link extends Phaser.GameObjects.Container {
   }
 
   abstract onClick(): void;
+
+  playSound(): void {
+    const audioScene = this.scene.scene.get(SCENE_KEYS.AUDIO) as AudioScene;
+    audioScene.playSfx(AUDIO_KEYS.MOUSE_CLICK);
+  }
 }

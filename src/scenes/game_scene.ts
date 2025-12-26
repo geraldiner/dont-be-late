@@ -5,7 +5,7 @@ import { GameManager, type Tile } from "../manager/game_manager";
 import { GamePage } from "../ui/pages/game_page";
 import { TaskTile } from "../ui/task_tile";
 import { shuffleArray } from "../utils";
-import { SCENE_KEYS, SIZES } from "../variables";
+import { AUDIO_KEYS, SCENE_KEYS, SIZES } from "../variables";
 import type { CHAPTERS } from "../variables/themes";
 
 export class GameScene extends Phaser.Scene {
@@ -22,6 +22,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.sound.play(AUDIO_KEYS.SCENE_TRANSITION);
     this.cameras.main.fadeIn(300, 207, 172, 140);
     this.tweens.add({
       targets: [this.cameras.main],
@@ -113,6 +114,7 @@ export class GameScene extends Phaser.Scene {
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this._tileViews = [];
+      this._isFirstMove = true;
     });
   }
 

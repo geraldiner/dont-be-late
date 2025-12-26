@@ -8,6 +8,7 @@ export class NextButton extends Button {
   }
 
   onClick(): void {
+    this.playSound();
     const gm = GameManager.getInstance();
     gm.advanceLevel();
     this.scene.tweens.add({

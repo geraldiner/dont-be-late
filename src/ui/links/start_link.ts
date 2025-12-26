@@ -8,6 +8,7 @@ export class StartLink extends Link {
   }
 
   onClick(): void {
+    this.playSound();
     const gm = GameManager.getInstance();
     gm.setupLevel();
     this.scene.tweens.add({

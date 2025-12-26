@@ -1,4 +1,12 @@
-import { FONT_KEYS, PADDING, SIZES, TEXTURE_KEYS } from "../../variables";
+import type AudioScene from "../../scenes/audio_scene";
+import {
+  AUDIO_KEYS,
+  FONT_KEYS,
+  PADDING,
+  SCENE_KEYS,
+  SIZES,
+  TEXTURE_KEYS,
+} from "../../variables";
 
 export abstract class Button extends Phaser.GameObjects.Container {
   private _text: Phaser.GameObjects.Text;
@@ -52,13 +60,18 @@ export abstract class Button extends Phaser.GameObjects.Container {
       isDisabled ? TEXTURE_KEYS.BUTTON_DISABLED : TEXTURE_KEYS.BUTTON,
     );
     if (isDisabled) {
-      this.disableInteractive(true)
+      this.disableInteractive(true);
     } else {
-      this.setInteractive({ useHandCursor: true})
+      this.setInteractive({ useHandCursor: true });
     }
   }
 
   public setText(text: string): void {
     this._text.setText(text);
+  }
+
+  playSound(): void {
+    const audioScene = this.scene.scene.get(SCENE_KEYS.AUDIO) as AudioScene;
+    audioScene.playSfx(AUDIO_KEYS.MOUSE_CLICK);
   }
 }

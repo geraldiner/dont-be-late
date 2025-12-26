@@ -1,3 +1,11 @@
+import AudioBackground from "../assets/audio/background.mp3";
+import AudioDragEnd from "../assets/audio/drag_end.mp3";
+import AudioDragStart from "../assets/audio/drag_start.mp3";
+import AudioEndgame from "../assets/audio/endgame.mp3";
+import AudioFail from "../assets/audio/fail.mp3";
+import AudioMouseClick from "../assets/audio/mouse_click.mp3";
+import AudioSceneTransition from "../assets/audio/scene_transition.mp3";
+import AudioSuccess from "../assets/audio/success.mp3";
 import NotoSerifFont from "../assets/fonts/NotoSerif-VariableFont_wdth,wght.ttf";
 import AccentEndgame from "../assets/images/accents/accent_endgame.png";
 import AccentForest from "../assets/images/accents/accent_forest.png";
@@ -16,9 +24,10 @@ import IconThreeDots from "../assets/images/icons/icon_three_dots.png";
 import IconTriangularRuler from "../assets/images/icons/icon_triangular_ruler.png";
 import IconTrophy from "../assets/images/icons/icon_trophy.png";
 import {
-  ASSET_KEYS,
+  AUDIO_KEYS,
   COLORS,
   FONT_KEYS,
+  IMAGE_KEYS,
   SCENE_KEYS,
   SIZES,
   TEXTURE_KEYS,
@@ -30,26 +39,36 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   public preload(): void {
+    // Load audio
+    this.load.audio(AUDIO_KEYS.BACKGROUND, AudioBackground);
+    this.load.audio(AUDIO_KEYS.ENDGAME, AudioEndgame);
+    this.load.audio(AUDIO_KEYS.DRAG_END, AudioDragEnd);
+    this.load.audio(AUDIO_KEYS.DRAG_START, AudioDragStart);
+    this.load.audio(AUDIO_KEYS.FAIL, AudioFail);
+    this.load.audio(AUDIO_KEYS.MOUSE_CLICK, AudioMouseClick);
+    this.load.audio(AUDIO_KEYS.SCENE_TRANSITION, AudioSceneTransition);
+    this.load.audio(AUDIO_KEYS.SUCCESS, AudioSuccess);
+
     // Load font
     this.load.font(FONT_KEYS.SERIF, NotoSerifFont);
 
     // Load images
-    this.load.image(ASSET_KEYS.ACCENT_FOREST, AccentForest);
-    this.load.image(ASSET_KEYS.ACCENT_ENDGAME, AccentEndgame);
-    this.load.image(ASSET_KEYS.ACCENT_SCHOOL, AccentSchool);
-    this.load.image(ASSET_KEYS.HEADER_ENDGAME, HeaderEndgame);
-    this.load.image(ASSET_KEYS.HEADER_FOREST, HeaderForest);
-    this.load.image(ASSET_KEYS.HEADER_SCHOOL, HeaderSchool);
-    this.load.image(ASSET_KEYS.ICON_CLOCK, IconClock);
-    this.load.image(ASSET_KEYS.ICON_DISAPPOINTED_EMOJI, IconDisappointedEmoji);
-    this.load.image(ASSET_KEYS.ICON_HERB, IconHerb);
-    this.load.image(ASSET_KEYS.ICON_LIST, IconList);
-    this.load.image(ASSET_KEYS.ICON_MEDAL_FIRST, IconMedalFirst);
-    this.load.image(ASSET_KEYS.ICON_SIX_DOTS, IconSixDots);
-    this.load.image(ASSET_KEYS.ICON_STAR, IconStar);
-    this.load.image(ASSET_KEYS.ICON_THREE_DOTS, IconThreeDots);
-    this.load.image(ASSET_KEYS.ICON_TRIANGULAR_RULER, IconTriangularRuler);
-    this.load.image(ASSET_KEYS.ICON_TROPHY, IconTrophy);
+    this.load.image(IMAGE_KEYS.ACCENT_FOREST, AccentForest);
+    this.load.image(IMAGE_KEYS.ACCENT_ENDGAME, AccentEndgame);
+    this.load.image(IMAGE_KEYS.ACCENT_SCHOOL, AccentSchool);
+    this.load.image(IMAGE_KEYS.HEADER_ENDGAME, HeaderEndgame);
+    this.load.image(IMAGE_KEYS.HEADER_FOREST, HeaderForest);
+    this.load.image(IMAGE_KEYS.HEADER_SCHOOL, HeaderSchool);
+    this.load.image(IMAGE_KEYS.ICON_CLOCK, IconClock);
+    this.load.image(IMAGE_KEYS.ICON_DISAPPOINTED_EMOJI, IconDisappointedEmoji);
+    this.load.image(IMAGE_KEYS.ICON_HERB, IconHerb);
+    this.load.image(IMAGE_KEYS.ICON_LIST, IconList);
+    this.load.image(IMAGE_KEYS.ICON_MEDAL_FIRST, IconMedalFirst);
+    this.load.image(IMAGE_KEYS.ICON_SIX_DOTS, IconSixDots);
+    this.load.image(IMAGE_KEYS.ICON_STAR, IconStar);
+    this.load.image(IMAGE_KEYS.ICON_THREE_DOTS, IconThreeDots);
+    this.load.image(IMAGE_KEYS.ICON_TRIANGULAR_RULER, IconTriangularRuler);
+    this.load.image(IMAGE_KEYS.ICON_TROPHY, IconTrophy);
 
     // Generate button textures
     // Buttons
@@ -73,7 +92,10 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.scene.start(SCENE_KEYS.TITLE);
+    this.scene.scene.time.delayedCall(1000, () => {
+      this.scene.launch(SCENE_KEYS.AUDIO).sendToBack();
+      this.scene.start(SCENE_KEYS.TITLE);
+    });
   }
 
   private _drawRoundedRectangle(

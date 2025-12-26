@@ -3,7 +3,7 @@ import { GameManager } from "../manager/game_manager";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
 import { SectionHeadingWithDivider } from "../ui/section_heading_divider";
-import { PADDING, SCENE_KEYS } from "../variables";
+import { AUDIO_KEYS, PADDING, SCENE_KEYS } from "../variables";
 import type { CHAPTERS, ChapterTheme } from "../variables/themes";
 
 export class PrologueScene extends Phaser.Scene {
@@ -12,6 +12,7 @@ export class PrologueScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.sound.play(AUDIO_KEYS.SCENE_TRANSITION);
     this.cameras.main.fadeIn(300, 207, 172, 140);
     this.tweens.add({
       targets: [this.cameras.main],

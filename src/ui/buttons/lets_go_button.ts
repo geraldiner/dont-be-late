@@ -8,6 +8,7 @@ export class LetsGoButton extends Button {
   }
 
   onClick(): void {
+    this.playSound();
     const gm = GameManager.getInstance();
     gm.updateOutcome();
     this.scene.tweens.add({
@@ -18,6 +19,6 @@ export class LetsGoButton extends Button {
       onComplete: () => {
         this.scene.scene.start(SCENE_KEYS.OUTCOME);
       },
-    });    
+    });
   }
 }
