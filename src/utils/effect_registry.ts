@@ -1,5 +1,3 @@
-import { TILE_KEYS } from "../variables";
-
 interface EffectRule {
   id: string;
   minutesToApply: number;
@@ -30,7 +28,8 @@ export const effectHandlers: Record<string, EffectHandler> = {
     return index === 0 ? rule.minutesToApply : 0;
   },
   makeCopiesMultiplier(sequence, index, rule) {
-    return rule.minutesToApply * (index === 0 ? index + 1 : index)
+    const tier = Math.floor((index + 1) / 2);
+    return (tier === 0 ? 1 : tier) * rule.minutesToApply;
   },
   pickUpMaterialsAtPTC(sequence, index, rule) {
     const targetIndex = sequence.indexOf(rule.target);

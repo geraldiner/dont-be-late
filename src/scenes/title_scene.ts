@@ -4,7 +4,7 @@ import { CreditsLink } from "../ui/links/credits_link";
 import { StartLink } from "../ui/links/start_link";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
-import { AUDIO_KEYS, IMAGE_KEYS, PADDING, SCENE_KEYS } from "../variables";
+import { IMAGE_KEYS, PADDING, SCENE_KEYS } from "../variables";
 import type AudioScene from "./audio_scene";
 
 export class TitleScene extends Phaser.Scene {

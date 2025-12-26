@@ -184,20 +184,18 @@ export class GameManager {
       }
       if (constraint.type === "mustBeFirst" && index !== 0) {
         return false;
-      } else if (
+      }
+      if (
         constraint.type === "mustBeLast" &&
         index !== this._currentSequence.length - 1
       ) {
         return false;
       }
-      if (
-        constraint.type === "mustComeBefore" &&
-        constraint.second != undefined
-      ) {
+      if (constraint.type === "mustBeBefore" && constraint.second) {
         const secondIndex = this._currentSequence.findIndex(
           (t) => t === constraint.second,
         );
-        if (index >= secondIndex) {
+        if (index > secondIndex) {
           return false;
         }
       }

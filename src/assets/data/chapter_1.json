@@ -109,8 +109,8 @@
     {
       "title": "Mr. Sensei is starting a new unit",
       "sceneStartText": [
-        "I can't be late for the conference this morning",
-        "I also have a lot to set up before the first bell"
+        "I need to charge my laptop in class before the first bell rings",
+        "I should also double-check the parent-teacher conference location"
       ],
       "availableTiles": [
         {
@@ -127,9 +127,7 @@
           "key": "email",
           "label": "📧 Check Emails",
           "duration": 10,
-          "effects": [
-            { "id": "checkEmailsFirst", "minutesToApply": 20}
-          ]
+          "effects": [{ "id": "checkEmailsFirst", "minutesToApply": 20 }]
         },
         {
           "key": "lego",
@@ -137,7 +135,9 @@
           "duration": 20,
           "effects": [
             {
-              "id": "pickUpMaterialsAtPTC", "minutesToApply": -25, "target": "group"
+              "id": "pickUpMaterialsAtPTC",
+              "minutesToApply": -20,
+              "target": "group"
             }
           ]
         },
@@ -153,7 +153,7 @@
           "effects": [
             {
               "id": "makeCopiesMultiplier",
-              "minutesToApply": 2
+              "minutesToApply": 4
             }
           ]
         },
@@ -166,12 +166,12 @@
         {
           "key": "open_door",
           "label": "🚪 Go To Classroom",
-          "duration": 10
+          "duration": 15
         }
       ],
       "startTime": "6:45 AM",
       "targetTime": "8:25 AM",
-      "idealEndTime": "",
+      "idealEndTime": "8:02 AM",
       "constraints": [
         { "type": "mustBe", "tileKey": "group", "position": 3 },
         { "type": "mustBeLast", "tileKey": "bell" },

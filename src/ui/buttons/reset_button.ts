@@ -14,7 +14,7 @@ export class ResetButton extends Button {
       y: { from: 0, to: 600 },
       ease: "Sine.easeInOut",
       onComplete: () => {
-        this.scene.scene.start(SCENE_KEYS.GAME);
+        this.scene.scene.start(SCENE_KEYS.PROLOGUE);
       },
     });
   }
