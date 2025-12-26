@@ -1,5 +1,5 @@
-import { ASSET_KEYS } from "./assets";
 import { COLORS, type Color } from "./colors";
+import { IMAGE_KEYS } from "./images";
 
 const CHAPTERS = {
   SCHOOL: "school",
@@ -18,9 +18,9 @@ const CHAPTER_THEME_MAP: Record<
   ChapterTheme
 > = {
   [CHAPTERS.SCHOOL]: {
-    headerImageKey: ASSET_KEYS.HEADER_SCHOOL,
-    pageIconKey: ASSET_KEYS.ICON_TRIANGULAR_RULER,
-    accentImageKey: ASSET_KEYS.ACCENT_SCHOOL,
+    headerImageKey: IMAGE_KEYS.HEADER_SCHOOL,
+    pageIconKey: IMAGE_KEYS.ICON_TRIANGULAR_RULER,
+    accentImageKey: IMAGE_KEYS.ACCENT_SCHOOL,
     mainColor: COLORS.YELLOW,
     accentColor: COLORS.LIGHT_YELLOW,
   },

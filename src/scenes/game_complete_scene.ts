@@ -6,7 +6,7 @@ import { MainMenuLink } from "../ui/links/main_menu_link";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
 import { SectionHeadingWithDivider } from "../ui/section_heading_divider";
-import { ASSET_KEYS, PADDING, SCENE_KEYS } from "../variables";
+import { AUDIO_KEYS, IMAGE_KEYS, PADDING, SCENE_KEYS } from "../variables";
 
 export class GameCompleteScene extends Phaser.Scene {
   constructor() {
@@ -14,6 +14,8 @@ export class GameCompleteScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.sound.play(AUDIO_KEYS.SCENE_TRANSITION);
+    this.sound.play(AUDIO_KEYS.ENDGAME);
     this.cameras.main.fadeIn(300, 207, 172, 140);
     this.tweens.add({
       targets: [this.cameras.main],
@@ -32,10 +34,10 @@ export class GameCompleteScene extends Phaser.Scene {
       0,
       0,
       breadcrumbs,
-      ASSET_KEYS.HEADER_ENDGAME,
-      ASSET_KEYS.ICON_TROPHY,
+      IMAGE_KEYS.HEADER_ENDGAME,
+      IMAGE_KEYS.ICON_TROPHY,
       "Congratulations!",
-      ASSET_KEYS.ACCENT_ENDGAME,
+      IMAGE_KEYS.ACCENT_ENDGAME,
     );
 
     page.addChild(

@@ -1,5 +1,6 @@
-export * from "./assets";
+export * from "./audio";
 export * from "./colors";
+export * from "./images";
 export * from "./padding";
 export * from "./scenes";
 export * from "./shapes";

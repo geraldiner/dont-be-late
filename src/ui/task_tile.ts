@@ -1,8 +1,9 @@
 import {
-  ASSET_KEYS,
+  AUDIO_KEYS,
   COLORS,
   FONT_KEYS,
   FONT_SIZES,
+  IMAGE_KEYS,
   PADDING,
   SIZES,
 } from "../variables";
@@ -40,7 +41,7 @@ export class TaskTile extends Phaser.GameObjects.Container {
         .image(
           bg.x - bg.width / 2 + PADDING.TEN,
           bg.y,
-          ASSET_KEYS.ICON_SIX_DOTS,
+          IMAGE_KEYS.ICON_SIX_DOTS,
         )
         .setOrigin(0, 0.5);
     }
@@ -72,6 +73,7 @@ export class TaskTile extends Phaser.GameObjects.Container {
       if (!isFixed) {
         this.setDepth(TILE_DEPTH + 1);
         this.emit("tile-drag-start", this);
+        this.scene.sound.play(AUDIO_KEYS.DRAG_START);
       }
     });
 
@@ -90,6 +92,7 @@ export class TaskTile extends Phaser.GameObjects.Container {
       if (!isFixed) {
         this.setDepth(TILE_DEPTH);
         this.emit("tile-drag-end", this);
+        this.scene.sound.play(AUDIO_KEYS.DRAG_END, { volume: 0.2 });
       }
     });
   }
@@ -101,5 +104,6 @@ export class TaskTile extends Phaser.GameObjects.Container {
       duration: 150,
       ease: "Cubic.Out",
     });
+    this.scene.sound.play(AUDIO_KEYS.DRAG_START, { volume: 0.1 });
   }
 }

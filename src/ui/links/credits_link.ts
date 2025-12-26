@@ -7,6 +7,7 @@ export class CreditsLink extends Link {
   }
 
   onClick(): void {
+    this.playSound();
     this.scene.tweens.add({
       targets: [this.scene.cameras.main],
       duration: 777,

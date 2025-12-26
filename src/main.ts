@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 
+import AudioScene from "./scenes/audio_scene";
 import { CreditsScene } from "./scenes/credits_scene";
 import { GameCompleteScene } from "./scenes/game_complete_scene";
 import { GameScene } from "./scenes/game_scene";
@@ -23,6 +24,7 @@ const config = {
   },
   scene: [
     PreloadScene,
+    AudioScene,
     TitleScene,
     PrologueScene,
     GameScene,
