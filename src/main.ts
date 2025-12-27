@@ -4,6 +4,7 @@ import AudioScene from "./scenes/audio_scene";
 import { CreditsScene } from "./scenes/credits_scene";
 import { GameCompleteScene } from "./scenes/game_complete_scene";
 import { GameScene } from "./scenes/game_scene";
+import { LevelSelectScene } from "./scenes/level_select_scene";
 import { OutcomeScene } from "./scenes/outcome_scene";
 import { PreloadScene } from "./scenes/preload_scene";
 import { PrologueScene } from "./scenes/prologue_scene";
@@ -26,6 +27,7 @@ const config = {
     PreloadScene,
     AudioScene,
     TitleScene,
+    LevelSelectScene,
     PrologueScene,
     GameScene,
     OutcomeScene,

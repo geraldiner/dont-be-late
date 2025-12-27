@@ -4,12 +4,13 @@ import { Link } from "./link";
 
 export class StartLink extends Link {
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, "▶ Start");
+    super(scene, x, y, "▶ Start New Game");
   }
 
   onClick(): void {
     this.playSound();
     const gm = GameManager.getInstance();
+    gm.resetGame();
     gm.setupLevel();
     this.scene.tweens.add({
       targets: [this.scene.cameras.main],

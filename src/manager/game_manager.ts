@@ -1,5 +1,5 @@
 import { effectHandlers } from "../utils";
-import { OUTCOMES } from "../variables";
+import { GAME_CONSTANTS, OUTCOMES } from "../variables";
 import { DataManager } from "./data_manager";
 
 export interface Tile {
@@ -9,6 +9,11 @@ export interface Tile {
   fixedPositionIndex?: number;
   effects?: Array<{ id: string; minutesToApply: number }>;
 }
+
+type SaveData = {
+  highestLevelReached: string;
+  levelsCompleted?: Array<string>;
+};
 
 export class GameManager {
   // Tiles
@@ -24,10 +29,10 @@ export class GameManager {
   // Game states
   public chapterId: string = "";
 
-  public chapter: number = 1;
+  public chapter: number;
   public chapterTitle: string = "";
 
-  public level: number = 1;
+  public level: number;
   public levelTitle: string = "";
 
   // Game conditions
@@ -55,6 +60,16 @@ export class GameManager {
     position?: number;
     second?: string;
   }> = [];
+
+  // Player progress
+  private _highestLevelReached: string;
+  public get highestLevelReached(): string {
+    return this._highestLevelReached;
+  }
+  private _levelsCompleted: Set<string> = new Set();
+  public get levelsCompleted(): Set<string> {
+    return this._levelsCompleted;
+  }
 
   private static instance: GameManager;
   private constructor() {}
@@ -159,6 +174,10 @@ export class GameManager {
     } else {
       this._outcome = OUTCOMES.FAIL;
     }
+    if (this._outcome !== OUTCOMES.FAIL) {
+      const levelId = `${this.chapter}-${this.level}`;
+      this.save(levelId);
+    }
     // DEBUG: For testing purposes, always set to ON_TIME
     // this._outcome = OUTCOMES.ON_TIME;
   }
@@ -172,6 +191,8 @@ export class GameManager {
   public resetGame(): void {
     this.chapter = 1;
     this.level = 1;
+    this._levelsCompleted = new Set();
+    this._highestLevelReached = "1-1";
   }
 
   private _validateConstraints(): boolean {
@@ -201,5 +222,72 @@ export class GameManager {
       }
     }
     return true;
+  }
+
+  public loadSave(): boolean {
+    const dataString = localStorage.getItem(GAME_CONSTANTS.SAVE_DATA_KEY);
+    if (!dataString) {
+      this._highestLevelReached = "1-1";
+      this.chapter = 1;
+      this.level = 1;
+      return false;
+    } else {
+      const data: SaveData = JSON.parse(dataString);
+      // Update the level data to be one more than the saved level
+      const [savedChapter, savedLevel] = data.highestLevelReached
+        .split("-")
+        .map(Number);
+      const dm = DataManager.getInstance();
+      const chapterData = dm.getChapterData(savedChapter);
+      // If the saved level is the last level of the chapter, move to the next chapter
+
+      if (savedLevel >= chapterData.levels.length) {
+        if (savedChapter >= dm.getAllChapterData().length) {
+          // If it's the last chapter, stay at the last level
+          this.chapter = savedChapter;
+        } else {
+          this.chapter = savedChapter + 1;
+          this.level = 1;
+        }
+      } else {
+        this.chapter = savedChapter;
+        this.level = savedLevel + 1;
+      }
+
+      this._highestLevelReached = `${this.chapter}-${this.level}`;
+      if (data.levelsCompleted.length) {
+        this._levelsCompleted = new Set(data.levelsCompleted);
+      } else {
+        this._levelsCompleted = new Set();
+      }
+      return true;
+    }
+  }
+
+  private save(levelId: string): void {
+    if (this._isLevelAfter(levelId, this._highestLevelReached)) {
+      this._highestLevelReached = levelId;
+      this._levelsCompleted.add(levelId);
+      const saveData: SaveData = {
+        highestLevelReached: this._highestLevelReached,
+        levelsCompleted: Array.from(this._levelsCompleted) || [],
+      };
+      localStorage.setItem(
+        GAME_CONSTANTS.SAVE_DATA_KEY,
+        JSON.stringify(saveData),
+      );
+    }
+  }
+
+  private _isLevelAfter(levelIdA: string, levelIdB: string): boolean {
+    const [chapterA, levelA] = levelIdA.split("-").map(Number);
+    const [chapterB, levelB] = levelIdB.split("-").map(Number);
+    if (chapterA > chapterB) {
+      return true;
+    }
+    if (chapterA === chapterB && levelA >= levelB) {
+      return true;
+    }
+    return false;
   }
 }
