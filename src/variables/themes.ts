@@ -3,6 +3,7 @@ import { IMAGE_KEYS } from "./images";
 
 const CHAPTERS = {
   SCHOOL: "school",
+  WORK: "work",
 } as const;
 
 type ChapterTheme = {
@@ -10,7 +11,6 @@ type ChapterTheme = {
   pageIconKey: string;
   accentImageKey: string;
   mainColor: Color;
-  accentColor: Color;
 };
 
 const CHAPTER_THEME_MAP: Record<
@@ -22,7 +22,12 @@ const CHAPTER_THEME_MAP: Record<
     pageIconKey: IMAGE_KEYS.ICON_TRIANGULAR_RULER,
     accentImageKey: IMAGE_KEYS.ACCENT_SCHOOL,
     mainColor: COLORS.YELLOW,
-    accentColor: COLORS.LIGHT_YELLOW,
+  },
+  [CHAPTERS.WORK]: {
+    headerImageKey: IMAGE_KEYS.HEADER_WORK,
+    pageIconKey: IMAGE_KEYS.ICON_WHITE_COLLAR,
+    accentImageKey: IMAGE_KEYS.ACCENT_WORK,
+    mainColor: COLORS.BLUE,
   },
 };
 

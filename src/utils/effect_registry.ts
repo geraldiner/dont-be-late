@@ -27,6 +27,14 @@ export const effectHandlers: Record<string, EffectHandler> = {
   checkEmailsFirst(sequence, index, rule) {
     return index === 0 ? rule.minutesToApply : 0;
   },
+  choresResetBetweenWork(sequence, index, rule) {
+    const previousTileKey = sequence[index - 1];
+    const afterTileKey = sequence[index + 1];
+    return previousTileKey?.startsWith(rule.target) &&
+      afterTileKey?.startsWith(rule.target)
+      ? rule.minutesToApply
+      : 0;
+  },
   makeCopiesMultiplier(sequence, index, rule) {
     const tier = Math.floor((index + 1) / 2);
     return (tier === 0 ? 1 : tier) * rule.minutesToApply;
@@ -34,6 +42,13 @@ export const effectHandlers: Record<string, EffectHandler> = {
   pickUpMaterialsAtPTC(sequence, index, rule) {
     const targetIndex = sequence.indexOf(rule.target);
     return targetIndex + 1 === index ? rule.minutesToApply : 0;
+  },
+  scrollingAfterNonWork(sequence, index, rule) {
+    const previousTileKey = sequence[index - 1];
+    if (previousTileKey && !previousTileKey.startsWith(rule.target)) {
+      return rule.minutesToApply;
+    }
+    return 0;
   },
   scrollingSecondAfterAlarm(sequence, index, rule) {
     return index === 1 && sequence[index - 1] === rule.target

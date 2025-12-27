@@ -32,7 +32,7 @@
         }
       ],
       "startTime": "6:00 AM",
-      "targetTime": "7:00 AM",
+      "cutoffTime": "7:00 AM",
       "idealEndTime": "6:55 AM",
       "constraints": [
         { "type": "mustBeFirst", "tileKey": "alarm" },
@@ -98,7 +98,7 @@
         }
       ],
       "startTime": "5:30 AM",
-      "targetTime": "7:25 AM",
+      "cutoffTime": "7:25 AM",
       "idealEndTime": "7:20 AM",
       "constraints": [
         { "type": "mustBeFirst", "tileKey": "alarm" },
@@ -170,7 +170,7 @@
         }
       ],
       "startTime": "6:45 AM",
-      "targetTime": "8:25 AM",
+      "cutoffTime": "8:25 AM",
       "idealEndTime": "8:02 AM",
       "constraints": [
         { "type": "mustBe", "tileKey": "group", "position": 3 },

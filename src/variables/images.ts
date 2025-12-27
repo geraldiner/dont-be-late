@@ -2,9 +2,11 @@ export const IMAGE_KEYS = {
   ACCENT_ENDGAME: "accent_endgame",
   ACCENT_FOREST: "accent_forest",
   ACCENT_SCHOOL: "accent_school",
+  ACCENT_WORK: "accent_work",
   HEADER_ENDGAME: "header_endgame",
   HEADER_FOREST: "header_forest",
   HEADER_SCHOOL: "header_school",
+  HEADER_WORK: "header_work",
   ICON_CLOCK: "icon_clock",
   ICON_DISAPPOINTED_EMOJI: "icon_disappointed_emoji",
   ICON_HERB: "icon_herb",
@@ -15,4 +17,5 @@ export const IMAGE_KEYS = {
   ICON_THREE_DOTS: "icon_three_dots",
   ICON_TRIANGULAR_RULER: "icon_triangular_ruler",
   ICON_TROPHY: "icon_trophy",
+  ICON_WHITE_COLLAR: "icon_white_collar",
 } as const;

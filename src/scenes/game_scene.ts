@@ -33,15 +33,10 @@ export class GameScene extends Phaser.Scene {
     const dm = DataManager.getInstance();
     const gm = GameManager.getInstance();
 
-    const {
-      headerImageKey,
-      pageIconKey,
-      accentImageKey,
-      mainColor,
-      accentColor,
-    } = dm.getChapterTheme(
-      gm.chapterId as (typeof CHAPTERS)[keyof typeof CHAPTERS],
-    );
+    const { headerImageKey, pageIconKey, accentImageKey, mainColor } =
+      dm.getChapterTheme(
+        gm.chapterId as (typeof CHAPTERS)[keyof typeof CHAPTERS],
+      );
 
     this._fixedTiles = gm.getFixedTiles();
     this._freeTiles = shuffleArray(gm.getFreeTiles());
