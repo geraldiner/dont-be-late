@@ -78,7 +78,7 @@ export class GamePage extends Page {
         PADDING.ONE_TWENTY -
         PADDING.TWENTY,
     );
-    letsGoButton.setIsDisabled(true)
+    letsGoButton.setIsDisabled(true);
     this.letsGoButton = letsGoButton;
 
     columnOneContainer.add([agendaHeading, letsGoButton]);
@@ -114,20 +114,20 @@ export class GamePage extends Page {
       .setSize(SIZES.COLUMN_TWO_WIDTH, SIZES.TITLE_BG_HEIGHT);
     this.currentTimeText = currentTimeText;
 
-    const targetTimeHeading = new SectionHeadingWithBackground(
+    const cutoffTimeHeading = new SectionHeadingWithBackground(
       scene,
       columnTwoContainer.width / 2,
       currentTimeText.y + currentTimeText.height + PADDING.TWENTY,
-      "target time",
+      "cutoff time",
       SIZES.COLUMN_TWO_WIDTH,
       color,
     );
 
-    const targetTimeText = scene.add
+    const cutoffTimeText = scene.add
       .text(
         0,
-        targetTimeHeading.y + targetTimeHeading.height + PADDING.TEN,
-        formatTime(gm.targetTime),
+        cutoffTimeHeading.y + cutoffTimeHeading.height + PADDING.TEN,
+        formatTime(gm.cutoffTime),
         {
           fontFamily: FONT_KEYS.SERIF,
           fontSize: FONT_SIZES.DEFAULT,
@@ -140,8 +140,8 @@ export class GamePage extends Page {
     columnTwoContainer.add([
       currentTimeHeading,
       currentTimeText,
-      targetTimeHeading,
-      targetTimeText,
+      cutoffTimeHeading,
+      cutoffTimeText,
     ]);
 
     this.add([
@@ -156,7 +156,7 @@ export class GamePage extends Page {
   public updateCurrentTimeText(): void {
     const gm = GameManager.getInstance();
     this.currentTimeText.setText(formatTime(gm.currentTime));
-    if (gm.currentTime.getTime() > gm.targetTime.getTime()) {
+    if (gm.currentTime.getTime() > gm.cutoffTime.getTime()) {
       this.currentTimeText.setColor("#b31515ff");
     } else {
       this.currentTimeText.setColor("#2cb335ff");

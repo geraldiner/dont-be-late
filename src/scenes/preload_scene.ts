@@ -10,9 +10,11 @@ import NotoSerifFont from "../assets/fonts/NotoSerif-VariableFont_wdth,wght.ttf"
 import AccentEndgame from "../assets/images/accents/accent_endgame.png";
 import AccentForest from "../assets/images/accents/accent_forest.png";
 import AccentSchool from "../assets/images/accents/accent_school.png";
+import AccentWork from "../assets/images/accents/accent_work.png";
 import HeaderEndgame from "../assets/images/headers/header_endgame.jpg";
 import HeaderForest from "../assets/images/headers/header_forest.jpg";
 import HeaderSchool from "../assets/images/headers/header_school.jpg";
+import HeaderWork from "../assets/images/headers/header_work.jpg";
 import IconClock from "../assets/images/icons/icon_clock.png";
 import IconDisappointedEmoji from "../assets/images/icons/icon_disappointed_emoji.png";
 import IconHerb from "../assets/images/icons/icon_herb.png";
@@ -23,6 +25,7 @@ import IconStar from "../assets/images/icons/icon_star.png";
 import IconThreeDots from "../assets/images/icons/icon_three_dots.png";
 import IconTriangularRuler from "../assets/images/icons/icon_triangular_ruler.png";
 import IconTrophy from "../assets/images/icons/icon_trophy.png";
+import IconWhiteCollar from "../assets/images/icons/icon_white_collar.png";
 import {
   AUDIO_KEYS,
   COLORS,
@@ -56,9 +59,11 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(IMAGE_KEYS.ACCENT_FOREST, AccentForest);
     this.load.image(IMAGE_KEYS.ACCENT_ENDGAME, AccentEndgame);
     this.load.image(IMAGE_KEYS.ACCENT_SCHOOL, AccentSchool);
+    this.load.image(IMAGE_KEYS.ACCENT_WORK, AccentWork);
     this.load.image(IMAGE_KEYS.HEADER_ENDGAME, HeaderEndgame);
     this.load.image(IMAGE_KEYS.HEADER_FOREST, HeaderForest);
     this.load.image(IMAGE_KEYS.HEADER_SCHOOL, HeaderSchool);
+    this.load.image(IMAGE_KEYS.HEADER_WORK, HeaderWork);
     this.load.image(IMAGE_KEYS.ICON_CLOCK, IconClock);
     this.load.image(IMAGE_KEYS.ICON_DISAPPOINTED_EMOJI, IconDisappointedEmoji);
     this.load.image(IMAGE_KEYS.ICON_HERB, IconHerb);
@@ -69,6 +74,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(IMAGE_KEYS.ICON_THREE_DOTS, IconThreeDots);
     this.load.image(IMAGE_KEYS.ICON_TRIANGULAR_RULER, IconTriangularRuler);
     this.load.image(IMAGE_KEYS.ICON_TROPHY, IconTrophy);
+    this.load.image(IMAGE_KEYS.ICON_WHITE_COLLAR, IconWhiteCollar);
 
     // Generate button textures
     // Buttons

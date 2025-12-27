@@ -44,9 +44,9 @@ export class GameManager {
   public get currentTime(): Date {
     return this._currentTime;
   }
-  private _targetTime: Date = new Date();
-  public get targetTime(): Date {
-    return this._targetTime;
+  private _cutoffTime: Date = new Date();
+  public get cutoffTime(): Date {
+    return this._cutoffTime;
   }
   private _idealEndTime: Date = new Date();
   private _outcome: string = "You made it on time!";
@@ -97,8 +97,8 @@ export class GameManager {
       `${new Date().toDateString()} ${levelData.startTime}`,
     );
     this._currentTime = this._startTime;
-    this._targetTime = new Date(
-      `${this._currentTime.toDateString()} ${levelData.targetTime}`,
+    this._cutoffTime = new Date(
+      `${this._currentTime.toDateString()} ${levelData.cutoffTime}`,
     );
     // Level rules
     this._idealEndTime = new Date(
@@ -168,7 +168,7 @@ export class GameManager {
       this._outcome = OUTCOMES.IDEAL;
     } else if (
       passesConstraints &&
-      this._currentTime.getTime() <= this._targetTime.getTime()
+      this._currentTime.getTime() < this._cutoffTime.getTime()
     ) {
       this._outcome = OUTCOMES.ON_TIME;
     } else {

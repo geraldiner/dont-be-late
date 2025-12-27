@@ -42,7 +42,9 @@ export class LevelSelectScene extends Phaser.Scene {
       const chapterNum = i + 1;
       if (chapterNum <= gm.chapter) {
         // Add chapter title to page
-        page.addChild(new Paragraph(this, 0, 0, `1. ${chapter.title}`));
+        page.addChild(
+          new Paragraph(this, 0, 0, `${chapterNum}. ${chapter.title}`),
+        );
         for (let j = 0; j < chapter.levels.length; j++) {
           const level = chapter.levels[j];
           const levelNum = j + 1;
