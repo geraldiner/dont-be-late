@@ -5,7 +5,7 @@
     {
       "title": "Chansey is working from home",
       "sceneStartText": [
-        "Hopefully I can get some chores and work done before lunch. ",
+        "Hopefully I can get some chores and work done before lunch.",
         "Sometimes a break between work tasks is a good reset."
       ],
       "availableTiles": [
@@ -69,6 +69,69 @@
       "constraints": [
         { "type": "mustBe", "tileKey": "work_standup", "position": 2 },
         { "type": "mustBeLast", "tileKey": "lunch" }
+      ]
+    },
+    {
+      "title": "Rosalia needs to be in the office",
+      "sceneStartText": [
+        "I really need to fix up my slides before the project meeting.",
+        "I can't get sucked into troubleshooting or checking emails for too long, better check them early."
+      ],
+      "availableTiles": [
+        {
+          "key": "commute",
+          "label": "🚗 Drive to Office",
+          "duration": 30
+        },
+        { "key": "lunch", "label": "🥪 Have Lunch", "duration": 30 },
+        {
+          "key": "standup",
+          "label": "🙋‍♂️ Standup Meeting",
+          "duration": 20,
+          "fixedPositionIndex": 1
+        },
+        {
+          "key": "focus",
+          "label": "🌊 Focused Work",
+          "duration": 50
+        },
+        {
+          "key": "troubleshoot",
+          "label": "🔬 Troubleshoot with Coworker",
+          "duration": 20,
+          "effects": [
+            {
+              "id": "troubleshootingMultiplier",
+              "minutesToApply": 5
+            }
+          ]
+        },
+        {
+          "key": "meeting",
+          "label": "📓 Project Meeting",
+          "duration": 35
+        },
+        {
+          "key": "email",
+          "label": "📧 Check Emails",
+          "duration": 15,
+          "effects": [
+            {
+              "id": "checkEmailsBeforeLunch",
+              "minutesToApply": 10,
+              "target": "lunch"
+            }
+          ]
+        }
+      ],
+      "startTime": "8:30 AM",
+      "cutoffTime": "12:10 PM",
+      "idealEndTime": "11:40 AM",
+      "constraints": [
+        { "type": "mustBeFirst", "tileKey": "commute" },
+        { "type": "mustBeLast", "tileKey": "lunch" },
+        { "type": "mustBe", "tileKey": "standup", "position": 1 },
+        { "type": "mustBeBefore", "tileKey": "focus", "second": "meeting" }
       ]
     }
   ]

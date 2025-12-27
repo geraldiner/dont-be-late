@@ -24,6 +24,10 @@ export const effectHandlers: Record<string, EffectHandler> = {
       ? rule.minutesToApply
       : 0;
   },
+  checkEmailsBeforeLunch(sequence, index, rule) {
+    const lunchIndex = sequence.indexOf(rule.target);
+    return index === lunchIndex - 1 ? rule.minutesToApply : 0;
+  },
   checkEmailsFirst(sequence, index, rule) {
     return index === 0 ? rule.minutesToApply : 0;
   },
@@ -54,5 +58,8 @@ export const effectHandlers: Record<string, EffectHandler> = {
     return index === 1 && sequence[index - 1] === rule.target
       ? rule.minutesToApply
       : 0;
+  },
+  troubleshootingMultiplier(sequence, index, rule) {
+    return (index + 1) * rule.minutesToApply;
   },
 };
