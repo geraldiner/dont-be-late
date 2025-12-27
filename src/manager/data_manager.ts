@@ -25,6 +25,10 @@ export class DataManager {
     }
   }
 
+  public getAllChapterData(): any[] {
+    return [chapter1Data];
+  }
+
   public getChapterTheme(
     chapterId: (typeof CHAPTERS)[keyof typeof CHAPTERS],
   ): ChapterTheme | null {

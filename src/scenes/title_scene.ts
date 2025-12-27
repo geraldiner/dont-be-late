@@ -1,5 +1,7 @@
 import * as Phaser from "phaser";
 
+import { GameManager } from "../manager/game_manager";
+import { ContinueLink } from "../ui/links/continue_link";
 import { CreditsLink } from "../ui/links/credits_link";
 import { StartLink } from "../ui/links/start_link";
 import { DefaultPage } from "../ui/pages/default_page";
@@ -28,6 +30,9 @@ export class TitleScene extends Phaser.Scene {
     if (!audioScene.sound.get(AUDIO_KEYS.BACKGROUND)?.isPlaying) {
       audioScene.playBgm();
     }
+
+    const gm = GameManager.getInstance();
+    const hasSaveData = gm.loadSave();
 
     const breadcrumbs = [
       "Codedex.io 2025 Game Jam",
@@ -64,7 +69,14 @@ export class TitleScene extends Phaser.Scene {
       ),
     );
 
-    page.addChild(new StartLink(this, 0, 0), PADDING.FORTY);
+    if (hasSaveData) {
+      page.addChild(new ContinueLink(this, 0, 0), PADDING.FORTY);
+    }
+
+    page.addChild(
+      new StartLink(this, 0, 0),
+      hasSaveData ? PADDING.TWENTY : PADDING.FORTY,
+    );
     page.addChild(new CreditsLink(this, 0, 0));
   }
 }

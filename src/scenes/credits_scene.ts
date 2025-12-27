@@ -19,11 +19,7 @@ export class CreditsScene extends Phaser.Scene {
       y: { from: 600, to: 0 },
       ease: "Sine.easeInOut",
     });
-    const breadcrumbs = [
-      "Codedex.io 2025 Game Jam",
-      "GeraldineDesu",
-      "Don't Be Late!",
-    ];
+    const breadcrumbs = ["Don't Be Late!", "Credits"];
 
     const page = new DefaultPage(
       this,

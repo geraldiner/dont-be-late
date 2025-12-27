@@ -14,3 +14,7 @@ export const OUTCOMES = {
   ON_TIME: "on_time",
   FAIL: "fail",
 } as const;
+
+export const GAME_CONSTANTS = {
+  SAVE_DATA_KEY: "dont_be_late_save_data",
+} as const;
