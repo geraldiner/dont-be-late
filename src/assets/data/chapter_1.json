@@ -103,7 +103,7 @@
       "constraints": [
         { "type": "mustBeFirst", "tileKey": "alarm" },
         { "type": "mustBeLast", "tileKey": "van" },
-        { "type": "mustComeBefore", "tileKey": "kid", "second": "hoodie" }
+        { "type": "mustBeBefore", "tileKey": "kid", "second": "hoodie" }
       ]
     },
     {
