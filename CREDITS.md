@@ -32,11 +32,22 @@ All photographs are provided by **Pexels** and are free to use under the Pexels 
   Source: https://www.pexels.com/photo/close-up-shot-of-dices-on-a-yellow-surface-6532588/  
   License: Pexels License
 
-### Icons
+- **Spacious Conference Room With Glass Doors**
+  Source: https://www.pexels.com/photo/spacious-conference-room-with-glass-doors-7511753/
+  License: Pexels License
+
+- **Blue Glass Vase with Plant on White Wooden Table**
+  Source: https://www.pexels.com/photo/blue-glass-vase-with-plant-on-white-wooden-table-8004111/
+  License: Pexels License
+
+### Icons / Emoji Icons
 
 - **Phosphor Icons**  
   Source: https://phosphoricons.com/  
   License: MIT License
+
+- **Emojiterra**
+  Source: https://emojiterra.com
 
 ## 🎵 Audio
 

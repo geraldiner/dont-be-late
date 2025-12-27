@@ -1,52 +1,14 @@
 {
-  "id": "school",
-  "title": "School",
+  "id": "work",
+  "title": "Work",
   "levels": [
     {
-      "title": "Seito has an 8am class",
+      "title": "Chansey is working from home",
       "sceneStartText": [
-        "The alarm goes off at 6am.",
-        "Seito must catch the 7am train."
+        "Hopefully I can get some chores and work done before lunch. ",
+        "Sometimes a break between work tasks is a good reset."
       ],
       "availableTiles": [
-        { "key": "alarm", "label": "⏰ Alarm Goes Off", "duration": 0 },
-        { "key": "backpack", "label": "💼 Pack Bag", "duration": 15 },
-        {
-          "key": "scroll",
-          "label": "📱 Scroll a Bit",
-          "duration": 15,
-          "effects": [
-            {
-              "id": "scrollingSecondAfterAlarm",
-              "minutesToApply": 20,
-              "target": "alarm"
-            }
-          ]
-        },
-        { "key": "toilet", "label": "🚽 Get Ready", "duration": 20 },
-        {
-          "key": "train",
-          "label": "🚃 Catch Train",
-          "duration": 5,
-          "fixedPositionIndex": 4
-        }
-      ],
-      "startTime": "6:00 AM",
-      "targetTime": "7:00 AM",
-      "idealEndTime": "6:55 AM",
-      "constraints": [
-        { "type": "mustBeFirst", "tileKey": "alarm" },
-        { "type": "mustBeLast", "tileKey": "train" }
-      ]
-    },
-    {
-      "title": "Toto needs to get the kids to school",
-      "sceneStartText": [
-        "I should have coffee before the kids wake up.",
-        "Maybe we can save time making breakfast and packing lunches."
-      ],
-      "availableTiles": [
-        { "key": "alarm", "label": "⏰ Alarm Goes Off", "duration": 0 },
         {
           "key": "coffee",
           "label": "☕ Make Coffee",
@@ -59,124 +21,54 @@
             }
           ]
         },
-        { "key": "kid", "label": "👶 Wake Kids", "duration": 15 },
-        {
-          "key": "food",
-          "label": "🍳 Make Breakfast",
-          "duration": 20
-        },
-        {
-          "key": "lunchbox",
-          "label": "🥪 Pack Lunches",
-          "duration": 15,
-          "effects": [
-            {
-              "id": "breakfastAndPackedLunchKitchenBonus",
-              "minutesToApply": -15,
-              "target": "food"
-            }
-          ]
-        },
+        { "key": "lunch", "label": "🥪 Have Lunch", "duration": 30 },
         {
           "key": "scroll",
           "label": "📱 Scroll a Bit",
+          "duration": 10,
+          "effects": [
+            {
+              "id": "scrollingAfterNonWork",
+              "minutesToApply": 10,
+              "target": "work_"
+            }
+          ]
+        },
+        {
+          "key": "work_standup",
+          "label": "🙋‍♂️ Standup Meeting",
+          "duration": 20,
+          "fixedPositionIndex": 2
+        },
+        {
+          "key": "work_focus",
+          "label": "🌊 Focused Work",
+          "duration": 50
+        },
+        {
+          "key": "chores",
+          "label": "🧹 Quick Chores",
           "duration": 15,
           "effects": [
             {
-              "id": "scrollingSecondAfterAlarm",
-              "minutesToApply": 20,
-              "target": "alarm"
-            }
-          ]
-        },
-        { "key": "hoodie", "label": "👕 Get Kids Ready", "duration": 30 },
-        {
-          "key": "van",
-          "label": "🚐 Load & Go",
-          "duration": 20,
-          "fixedPositionIndex": 7
-        }
-      ],
-      "startTime": "5:30 AM",
-      "targetTime": "7:25 AM",
-      "idealEndTime": "7:20 AM",
-      "constraints": [
-        { "type": "mustBeFirst", "tileKey": "alarm" },
-        { "type": "mustBeLast", "tileKey": "van" },
-        { "type": "mustBeBefore", "tileKey": "kid", "second": "hoodie" }
-      ]
-    },
-    {
-      "title": "Mr. Sensei is starting a new unit",
-      "sceneStartText": [
-        "I need to charge my laptop in class before the first bell rings.",
-        "I should also double-check the parent-teacher conference location."
-      ],
-      "availableTiles": [
-        {
-          "key": "bell",
-          "label": "🔔 First Bell Rings",
-          "duration": 0
-        },
-        {
-          "key": "board",
-          "label": "🏫 Setup Classroom",
-          "duration": 10
-        },
-        {
-          "key": "email",
-          "label": "📧 Check Emails",
-          "duration": 10,
-          "effects": [{ "id": "checkEmailsFirst", "minutesToApply": 20 }]
-        },
-        {
-          "key": "lego",
-          "label": "🪀 Pick Up Materials",
-          "duration": 20,
-          "effects": [
-            {
-              "id": "pickUpMaterialsAtPTC",
-              "minutesToApply": -20,
-              "target": "group"
+              "id": "choresResetBetweenWork",
+              "minutesToApply": -10,
+              "target": "work_"
             }
           ]
         },
         {
-          "key": "charge",
-          "label": "🔌 Charge Laptop",
-          "duration": 1
-        },
-        {
-          "key": "folders",
-          "label": "📄 Make Copies",
-          "duration": 2,
-          "effects": [
-            {
-              "id": "makeCopiesMultiplier",
-              "minutesToApply": 4
-            }
-          ]
-        },
-        {
-          "key": "group",
-          "label": "📞 Parent Conference",
-          "duration": 35,
-          "fixedPositionIndex": 3
-        },
-        {
-          "key": "open_door",
-          "label": "🚪 Go To Classroom",
+          "key": "work_slack",
+          "label": "💬 Check Slack",
           "duration": 15
         }
       ],
-      "startTime": "6:45 AM",
-      "targetTime": "8:25 AM",
-      "idealEndTime": "8:02 AM",
+      "startTime": "9:00 AM",
+      "cutoffTime": "11:25 AM",
+      "idealEndTime": "11:05 AM",
       "constraints": [
-        { "type": "mustBe", "tileKey": "group", "position": 3 },
-        { "type": "mustBeLast", "tileKey": "bell" },
-        { "type": "mustBeBefore", "tileKey": "open_door", "second": "charge" },
-        { "type": "mustBeBefore", "tileKey": "email", "second": "group" }
+        { "type": "mustBe", "tileKey": "work_standup", "position": 2 },
+        { "type": "mustBeLast", "tileKey": "lunch" }
       ]
     }
   ]
