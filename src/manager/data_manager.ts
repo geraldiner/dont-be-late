@@ -1,4 +1,5 @@
 import chapter1Data from "../assets/data/chapter_1.json";
+import chapter2Data from "../assets/data/chapter_2.json";
 import {
   type CHAPTERS,
   CHAPTER_THEME_MAP,
@@ -19,6 +20,8 @@ export class DataManager {
     switch (chapter) {
       case 1:
         return chapter1Data;
+      case 2:
+        return chapter2Data;
       default:
         console.error(`Chapter data for chapter ${chapter} not found.`);
         return null;
@@ -26,7 +29,7 @@ export class DataManager {
   }
 
   public getAllChapterData(): any[] {
-    return [chapter1Data];
+    return [chapter1Data, chapter2Data];
   }
 
   public getChapterTheme(
