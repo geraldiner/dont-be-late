@@ -92,10 +92,8 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.scene.scene.time.delayedCall(1000, () => {
-      this.scene.launch(SCENE_KEYS.AUDIO).sendToBack();
-      this.scene.start(SCENE_KEYS.TITLE);
-    });
+    this.scene.launch(SCENE_KEYS.AUDIO).sendToBack();
+    this.scene.start(SCENE_KEYS.TITLE);
   }
 
   private _drawRoundedRectangle(
