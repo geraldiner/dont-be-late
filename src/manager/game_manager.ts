@@ -148,12 +148,12 @@ export class GameManager {
     const passesConstraints = this._validateConstraints();
     if (
       passesConstraints &&
-      this._currentTime.getTime() < this._idealEndTime.getTime()
+      this._currentTime.getTime() <= this._idealEndTime.getTime()
     ) {
       this._outcome = OUTCOMES.IDEAL;
     } else if (
       passesConstraints &&
-      this._currentTime.getTime() < this._targetTime.getTime()
+      this._currentTime.getTime() <= this._targetTime.getTime()
     ) {
       this._outcome = OUTCOMES.ON_TIME;
     } else {
