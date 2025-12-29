@@ -23,6 +23,7 @@ import IconMedalFirst from "../assets/images/icons/icon_medal_first.png";
 import IconSixDots from "../assets/images/icons/icon_six_dots_gray.png";
 import IconStar from "../assets/images/icons/icon_star.png";
 import IconThreeDots from "../assets/images/icons/icon_three_dots.png";
+import IconTooltip from "../assets/images/icons/icon_tooltip.png";
 import IconTriangularRuler from "../assets/images/icons/icon_triangular_ruler.png";
 import IconTrophy from "../assets/images/icons/icon_trophy.png";
 import IconWhiteCollar from "../assets/images/icons/icon_white_collar.png";
@@ -72,6 +73,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(IMAGE_KEYS.ICON_SIX_DOTS, IconSixDots);
     this.load.image(IMAGE_KEYS.ICON_STAR, IconStar);
     this.load.image(IMAGE_KEYS.ICON_THREE_DOTS, IconThreeDots);
+    this.load.image(IMAGE_KEYS.ICON_TOOLTIP, IconTooltip);
     this.load.image(IMAGE_KEYS.ICON_TRIANGULAR_RULER, IconTriangularRuler);
     this.load.image(IMAGE_KEYS.ICON_TROPHY, IconTrophy);
     this.load.image(IMAGE_KEYS.ICON_WHITE_COLLAR, IconWhiteCollar);

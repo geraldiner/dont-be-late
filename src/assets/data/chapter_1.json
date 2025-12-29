@@ -4,7 +4,7 @@
   "levels": [
     {
       "title": "Seito has an 8am class",
-      "sceneStartText": [
+      "hints": [
         "The alarm goes off at 6am.",
         "Seito must catch the 7am train."
       ],
@@ -41,7 +41,7 @@
     },
     {
       "title": "Toto needs to get the kids to school",
-      "sceneStartText": [
+      "hints": [
         "I should have coffee before the kids wake up.",
         "Maybe we can save time making breakfast and packing lunches."
       ],
@@ -108,7 +108,7 @@
     },
     {
       "title": "Mr. Sensei is starting a new unit",
-      "sceneStartText": [
+      "hints": [
         "I need to charge my laptop in class before the first bell rings.",
         "I should also double-check the parent-teacher conference location."
       ],

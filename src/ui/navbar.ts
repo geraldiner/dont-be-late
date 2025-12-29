@@ -8,6 +8,7 @@ import {
 } from "../variables";
 import { HoverTooltip } from "./hover_tooltip";
 import { CreditsLink } from "./links/credits_link";
+import { LevelSelectLink } from "./links/level_select_link";
 import { MainMenuLink } from "./links/main_menu_link";
 
 export class Navbar extends Phaser.GameObjects.Container {
@@ -127,10 +128,10 @@ export class Navbar extends Phaser.GameObjects.Container {
 
     iconsContainer.add([
       clockIcon,
-      clockIconTooltip,
       starIcon,
-      starIconTooltip,
       threeDotsIcon,
+      clockIconTooltip,
+      starIconTooltip,
       threeDotsIconTooltip,
     ]);
 
@@ -140,13 +141,15 @@ export class Navbar extends Phaser.GameObjects.Container {
 
   private _showMenuModal(): void {
     this.scene.cameras.main.fadeIn(180, 207, 172, 140);
-    const overlay = this.scene.add.rectangle(
-      this.scene.game.canvas.width / 2,
-      this.scene.game.canvas.height / 2,
-      this.scene.game.canvas.width,
-      this.scene.game.canvas.height,
-      COLORS.LIGHT_BROWN.number,
-    );
+    const overlay = this.scene.add
+      .rectangle(
+        this.scene.game.canvas.width / 2,
+        this.scene.game.canvas.height / 2,
+        this.scene.game.canvas.width,
+        this.scene.game.canvas.height,
+        COLORS.LIGHT_BROWN.number,
+      )
+      .setDepth(999);
 
     const modal = this.scene.add.container(
       this.scene.game.canvas.width / 2,
@@ -162,14 +165,29 @@ export class Navbar extends Phaser.GameObjects.Container {
         SIZES.PAGE_WIDTH - PADDING.ONE_TWENTY * 4,
         COLORS.WHITE.number,
       )
-      .setOrigin(0.5)
-      .setDepth(301);
-    modal.setSize(modalBg.width, modalBg.height);
+      .setOrigin(0.5);
+    modal.setSize(modalBg.width, modalBg.height).setDepth(1000);
 
     const menuLink = new MainMenuLink(this.scene, modalBg.x, -PADDING.FORTY);
-    const creditsLink = new CreditsLink(this.scene, modalBg.x, PADDING.TEN);
+    const levelSelectLink = new LevelSelectLink(
+      this.scene,
+      modalBg.x,
+      PADDING.TWENTY,
+    );
+    const creditsLink = new CreditsLink(
+      this.scene,
+      modalBg.x,
+      levelSelectLink.y + levelSelectLink.height + PADDING.TWENTY,
+    );
     menuLink.setPosition(modalBg.x, -PADDING.FORTY);
-    creditsLink.setPosition(modalBg.x, PADDING.TEN);
+    levelSelectLink.setPosition(
+      modalBg.x,
+      menuLink.y + menuLink.height + PADDING.TWENTY,
+    );
+    creditsLink.setPosition(
+      modalBg.x,
+      levelSelectLink.y + levelSelectLink.height + PADDING.TWENTY,
+    );
 
     const closeLink = this.scene.add
       .text(
@@ -197,6 +215,6 @@ export class Navbar extends Phaser.GameObjects.Container {
         });
       });
 
-    modal.add([modalBg, menuLink, creditsLink, closeLink]);
+    modal.add([modalBg, menuLink, levelSelectLink, creditsLink, closeLink]);
   }
 }

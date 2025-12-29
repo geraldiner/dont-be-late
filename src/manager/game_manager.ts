@@ -156,7 +156,9 @@ export class GameManager {
   }
 
   public shouldGoToEndGame(): boolean {
-    return this.chapter > 1;
+    const dm = DataManager.getInstance();
+    const totalChapters = dm.getAllChapterData().length;
+    return this.chapter > totalChapters;
   }
 
   public updateOutcome(): void {

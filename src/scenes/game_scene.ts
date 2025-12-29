@@ -2,10 +2,20 @@ import * as Phaser from "phaser";
 
 import { DataManager } from "../manager/data_manager";
 import { GameManager, type Tile } from "../manager/game_manager";
+import { HoverTooltip } from "../ui/hover_tooltip";
 import { GamePage } from "../ui/pages/game_page";
 import { TaskTile } from "../ui/task_tile";
 import { shuffleArray } from "../utils";
-import { AUDIO_KEYS, SCENE_KEYS, SIZES } from "../variables";
+import {
+  AUDIO_KEYS,
+  COLORS,
+  FONT_KEYS,
+  FONT_SIZES,
+  IMAGE_KEYS,
+  PADDING,
+  SCENE_KEYS,
+  SIZES,
+} from "../variables";
 import type { CHAPTERS } from "../variables/themes";
 
 export class GameScene extends Phaser.Scene {
@@ -106,6 +116,68 @@ export class GameScene extends Phaser.Scene {
         occupied.add(nextFreeIndex);
       }
     });
+
+    const seeHintsContainer = this.add.container(
+      page.columnOneX + SIZES.COLUMN_ONE_WIDTH + PADDING.THIRTY,
+      page.startY +
+        SIZES.PAGE_GAME_HEIGHT -
+        SIZES.ACCENT_IMAGE_HEIGHT -
+        PADDING.ONE_TWENTY,
+      [],
+    );
+
+    const seeHintsBackground = this.add
+      .rectangle(0, 0, SIZES.COLUMN_TWO_WIDTH, SIZES.TITLE_BG_HEIGHT)
+      .setOrigin(0, 0.5)
+      .setInteractive({ useHandCursor: true });
+
+    const tooltipIcon = this.add
+      .image(0, 0, IMAGE_KEYS.ICON_TOOLTIP)
+      .setOrigin(0, 0.5)
+      .setSize(SIZES.ICON, SIZES.ICON);
+
+    const seeHintsText = this.add
+      .text(
+        tooltipIcon.x + tooltipIcon.width + PADDING.TEN / 2,
+        0,
+        "See hints again",
+        {
+          fontFamily: FONT_KEYS.SERIF,
+          fontSize: FONT_SIZES.DEFAULT,
+          color: COLORS.BLACK.hex,
+        },
+      )
+      .setOrigin(0, 0.5);
+
+    seeHintsBackground.setSize(
+      tooltipIcon.width + PADDING.TEN / 2 + seeHintsText.width,
+      SIZES.ICON,
+    );
+
+    const levelData = dm.getChapterData(gm.chapter).levels[gm.level - 1];
+    const hints = levelData.hints.join("\n\n");
+
+    const seeHintsTooltip = new HoverTooltip(
+      this,
+      seeHintsBackground.x + seeHintsBackground.width / 2,
+      seeHintsBackground.y + seeHintsBackground.height,
+      hints,
+      { width: SIZES.COLUMN_TWO_WIDTH - PADDING.TWENTY },
+    );
+
+    seeHintsBackground.on("pointerover", () => {
+      seeHintsTooltip.show();
+    });
+    seeHintsBackground.on("pointerout", () => {
+      seeHintsTooltip.hide();
+    });
+
+    seeHintsContainer.add([
+      seeHintsBackground,
+      tooltipIcon,
+      seeHintsText,
+      seeHintsTooltip,
+    ]);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this._tileViews = [];

@@ -35,47 +35,52 @@ export class LevelSelectScene extends Phaser.Scene {
     const dm = DataManager.getInstance();
     const gameData = dm.getAllChapterData();
     const gm = GameManager.getInstance();
+    const highestLevelReached = gm.highestLevelReached;
+    const [highestChapter, highestLevel] = highestLevelReached
+      .split("-")
+      .map((numStr) => parseInt(numStr, 10));
 
     // Filter levels that are unlocked
-    for (let i = 0; i < gameData.length; i++) {
+    for (let i = 0; i <= highestChapter - 1; i++) {
       const chapter = gameData[i];
       const chapterNum = i + 1;
-      if (chapterNum <= gm.chapter) {
-        // Add chapter title to page
-        page.addChild(
-          new Paragraph(this, 0, 0, `${chapterNum}. ${chapter.title}`),
-        );
-        for (let j = 0; j < chapter.levels.length; j++) {
-          const level = chapter.levels[j];
-          const levelNum = j + 1;
-          const padding = j === 0 ? PADDING.TWENTY : PADDING.TEN;
-          // Add level link to chapter section
-          // Add a checkmark for passed levels
-          if (gm.levelsCompleted.has(`${chapterNum}-${levelNum}`)) {
-            page.addChild(
-              new GoToLevelLink(
-                this,
-                0,
-                0,
-                chapterNum,
-                levelNum,
-                `✓ ${level.title}`,
-              ),
-              padding,
-            );
-          } else {
-            page.addChild(
-              new GoToLevelLink(
-                this,
-                0,
-                0,
-                chapterNum,
-                levelNum,
-                `○ ${level.title}`,
-              ),
-              padding,
-            );
-          }
+      // Add chapter title to page
+      page.addChild(
+        new Paragraph(this, 0, 0, `${chapterNum}. ${chapter.title}`),
+      );
+      for (let j = 0; j < chapter.levels.length; j++) {
+        const level = chapter.levels[j];
+        const levelNum = j + 1;
+        const padding = j === 0 ? PADDING.TWENTY : PADDING.TEN;
+        // Add level link to chapter section
+        // Add a checkmark for passed levels
+        if (gm.levelsCompleted.has(`${chapterNum}-${levelNum}`)) {
+          page.addChild(
+            new GoToLevelLink(
+              this,
+              0,
+              0,
+              chapterNum,
+              levelNum,
+              `✓ ${level.title}`,
+            ),
+            padding,
+          );
+        } else if (
+          chapterNum === highestChapter &&
+          levelNum === highestLevel + 1
+        ) {
+          page.addChild(
+            new GoToLevelLink(
+              this,
+              0,
+              0,
+              chapterNum,
+              levelNum,
+              `○ ${level.title}`,
+            ),
+            padding,
+          );
         }
       }
     }

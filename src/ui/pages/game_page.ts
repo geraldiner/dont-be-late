@@ -51,13 +51,12 @@ export class GamePage extends Page {
       )
       .setOrigin(0);
 
-    const columnOneContainer = scene.add
-      .container(
-        bg.x + PADDING.ONE_TWENTY - SIZES.PAGE_WIDTH / 2,
-        bg.y - SIZES.PAGE_GAME_HEIGHT / 2 + PADDING.TWENTY,
-        [],
-      )
-      .setDepth(200);
+    const columnOneContainer = scene.add.container(
+      bg.x + PADDING.ONE_TWENTY - SIZES.PAGE_WIDTH / 2,
+      bg.y - SIZES.PAGE_GAME_HEIGHT / 2 + PADDING.TWENTY,
+      [],
+    );
+
     columnOneContainer.setSize(SIZES.COLUMN_ONE_WIDTH, 0);
     const agendaHeading = new SectionHeadingWithBackground(
       scene,

@@ -1,9 +1,10 @@
 import { DataManager } from "../manager/data_manager";
 import { GameManager } from "../manager/game_manager";
+import { ContinueButton } from "../ui/buttons/continue_button";
 import { DefaultPage } from "../ui/pages/default_page";
 import { Paragraph } from "../ui/paragraph";
 import { SectionHeadingWithDivider } from "../ui/section_heading_divider";
-import { AUDIO_KEYS, PADDING, SCENE_KEYS } from "../variables";
+import { AUDIO_KEYS, PADDING, SCENE_KEYS, SIZES } from "../variables";
 import type { CHAPTERS, ChapterTheme } from "../variables/themes";
 
 export class PrologueScene extends Phaser.Scene {
@@ -52,22 +53,20 @@ export class PrologueScene extends Phaser.Scene {
       ),
     );
 
-    levelData.sceneStartText.forEach((line: string, index: number) => {
+    levelData.hints.forEach((line: string, index: number) => {
       page.addChild(
         new Paragraph(this, 0, 0, line),
         index === 0 ? PADDING.TWENTY : undefined,
       );
     });
 
-    this.tweens.add({
-      targets: [this.cameras.main],
-      duration: 777,
-      y: { from: 0, to: 600 },
-      ease: "Sine.easeInOut",
-      delay: 4343,
-      onComplete: () => {
-        this.scene.start(SCENE_KEYS.GAME);
-      },
-    });
+    page.addChild(
+      new ContinueButton(
+        this,
+        0,
+        SIZES.PAGE_DEFAULT_HEIGHT - SIZES.BUTTON_HEIGHT,
+      ),
+      PADDING.FORTY,
+    );
   }
 }

@@ -15,6 +15,7 @@ export const IMAGE_KEYS = {
   ICON_SIX_DOTS: "icon_six_dots",
   ICON_STAR: "icon_star",
   ICON_THREE_DOTS: "icon_three_dots",
+  ICON_TOOLTIP: "icon_tooltip",
   ICON_TRIANGULAR_RULER: "icon_triangular_ruler",
   ICON_TROPHY: "icon_trophy",
   ICON_WHITE_COLLAR: "icon_white_collar",

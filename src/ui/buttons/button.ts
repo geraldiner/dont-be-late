@@ -1,6 +1,7 @@
 import type AudioScene from "../../scenes/audio_scene";
 import {
   AUDIO_KEYS,
+  COLORS,
   FONT_KEYS,
   PADDING,
   SCENE_KEYS,
@@ -24,7 +25,7 @@ export abstract class Button extends Phaser.GameObjects.Container {
     this._text = scene.add
       .text(0, 0, text, {
         fontSize: "14px",
-        color: "#000000",
+        color: COLORS.BLACK.hex,
         align: "center",
         fontFamily: FONT_KEYS.SERIF,
       })

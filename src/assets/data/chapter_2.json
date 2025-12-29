@@ -4,7 +4,7 @@
   "levels": [
     {
       "title": "Chansey is working from home",
-      "sceneStartText": [
+      "hints": [
         "Hopefully I can get some chores and work done before lunch.",
         "Sometimes a break between work tasks is a good reset."
       ],
@@ -73,7 +73,7 @@
     },
     {
       "title": "Rosalia needs to be in the office",
-      "sceneStartText": [
+      "hints": [
         "I really need to fix up my slides before the project meeting.",
         "I can't get sucked into troubleshooting or checking emails for too long, better check them early."
       ],

@@ -8,7 +8,7 @@ import {
   SIZES,
 } from "../variables";
 
-const TILE_DEPTH = 200;
+const TILE_DEPTH = 300;
 
 export class TaskTile extends Phaser.GameObjects.Container {
   private _key: string = "";
