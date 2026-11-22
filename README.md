@@ -5,8 +5,6 @@ Made for Codedex's 2025 December Montly Challenge Game Jam, with the theme of "T
 ## Credits
 
 See full list of credits [here](https://github.com/geraldiner/dont-be-late/blob/main/CREDITS.md).
-
-
 ## 🚀 Other Projects
 
 Check out other stuff I've worked on:
